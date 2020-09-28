@@ -8,7 +8,6 @@
     "version": "1.0.0",
     "require": {
         "php": ">=7.2.5",
-		"ext-swoole" : ">4.4.0",
 		"nikic/fast-route": "^1.3",
         "wenjianwzz/tool": "^1.0",
 		"symfony/console": "^5.0",
