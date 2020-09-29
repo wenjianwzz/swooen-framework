@@ -61,9 +61,8 @@ class Application extends Container {
         }
     }
 
-	protected function createRouter(\Swooen\Http\Routes\RouteLoader $loader, $allowHost=['localhost(:\d+)?$', '\/\/127\.\d+\.\d+.\d+(:\d+)?$', '\/\/10\.\d+\.\d+.\d+(:\d+)?$', '\/\/192\.168\.\d+.\d+(:\d+)?$']) {
-        $router = new \Swooen\Http\Routes\Router();
-        $router->setCorsHosts($allowHost);
+	protected function createRouter(\Swooen\Http\Routes\RouteLoader $loader) {
+        $router = $this->make(\Swooen\Http\Routes\Router::class);
 		foreach ($loader->getRoutes() as $route) {
 			$router->addRoute($route);
         }
