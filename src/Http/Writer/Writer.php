@@ -14,7 +14,7 @@ class Writer {
         header("{$name}: {$value}");
     }
 
-    public function cookie(string $name, $value = "", int $expire = 0, $path = "" , $domain = "" , bool $secure = false, $httponly = false) {
+    public function cookie(string $name, string $value = "", int $expire = 0, string $path = "" , string $domain = "" , bool $secure = false, $httponly = false, string $samesite = '') {
         setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
     }
 

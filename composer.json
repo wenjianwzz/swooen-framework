@@ -17,7 +17,8 @@
 		"dragonmantank/cron-expression": "^1.2",
 		"monolog/monolog": "^2.0",
 		"illuminate/support": "^7.1",
-		"illuminate/config": "^7.1"
+		"illuminate/config": "^7.1",
+        "symfony/mime": "^5.0"
     },
     "require-dev": {
     },
