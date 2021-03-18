@@ -13,7 +13,7 @@ class WebSocketController {
 
 	protected $eventChannel;
     
-    public function __invoke(\Swooen\Core\Container $container, \Swoole\Http\Request $req, WebSocketConnection $connection) {
+    public function __invoke(\Swooen\Core\Container $container, \Swooen\Http\Request $req, WebSocketConnection $connection) {
 		if ($this->connect($container, $req, $connection)) {
 			$connection->accept();
 		} else {
@@ -51,19 +51,19 @@ class WebSocketController {
     /**
 	 * 控制连接，如果返回false将会终止连接
      */
-	public function connect(\Swooen\Core\Container $container, \Swoole\Http\Request $req, WebSocketConnection $connection) {
+	public function connect(\Swooen\Core\Container $container, \Swooen\Http\Request $req, WebSocketConnection $connection) {
 		return true;
 	}
 
 	/**
 	 * 连接之后执行
 	 */
-	public function connected(\Swooen\Core\Container $container, \Swoole\Http\Request $req, WebSocketConnection $connection) {
+	public function connected(\Swooen\Core\Container $container, \Swooen\Http\Request $req, WebSocketConnection $connection) {
 	}
 
-	public function data($data, \Swooen\Core\Container $container, \Swoole\Http\Request $req, WebSocketConnection $writer) {
+	public function data($data, \Swooen\Core\Container $container, \Swooen\Http\Request $req, WebSocketConnection $writer) {
 	}
 
-	public function close(\Swooen\Core\Container $container, \Swoole\Http\Request $req) {
+	public function close(\Swooen\Core\Container $container, \Swooen\Http\Request $req) {
 	}
 }
