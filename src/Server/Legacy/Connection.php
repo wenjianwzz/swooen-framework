@@ -1,33 +1,55 @@
 <?php
-namespace Swooen\Server\Protocal\Legacy;
+namespace Swooen\Server\Legacy;
 
 use Swooen\Communication\Connection as ConnectionInterface;
 use Swooen\Communication\Package;
+use Swooen\Server\Legacy\Parser\ParserInterface;
 
 /**
- * 封装各种类型协议，负责监听通讯，将请求统一成固定格式
- * 
+ * 传统请求响应下的处理
  * @author WZZ
  */
 class Connection implements ConnectionInterface {
+
+	/**
+	 * @var ParserInterface[]
+	 */
+	protected $contentParsers = [];
 	
+	public function registerContentParser(ParserInterface ...$parser) {
+		array_unshift($this->contentParsers, ...$parser);
+	}
+
 	/**
 	 * 获取下一个数据包
 	 * @return Package
 	 */
-	public function next() {}
+	public function next() {
+		$request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+		$body = [];
+		foreach ($this->contentParsers as $parser) {
+			if ($parser->accept($request->getContentType())) {
+				return $parser->parse($request->getContent());
+			}
+		}
+		return new HttpRequestPackage($request, $body);
+	}
 
 	/**
 	 * 是否可以给对方发送数据包
 	 * @return boolean
 	 */
-	public function canPush() {}
+	public function canPush() {
+		return false;
+	}
 
 	/**
 	 * 给对方发送数据包
 	 * @return boolean
 	 */
-	public function push(Package $package) {}
+	public function push(Package $package) {
+		return false;
+	}
 
 	/**
 	 * 终止连接，并向对方发送终止原因

@@ -1,7 +1,5 @@
 <?php
-namespace Swooen\Http\Parser;
-
-use Symfony\Component\HttpFoundation\ParameterBag;
+namespace Swooen\Server\Legacy\Parser;
 
 /**
  * 解析报文
@@ -15,6 +13,7 @@ interface ParserInterface {
 
     /**
      * 解析
+     * @return array
      */
     public function parse($content);
 

@@ -1,7 +1,6 @@
 <?php
-namespace Swooen\Http\Parser;
+namespace Swooen\Server\Legacy\Parser;
 use \Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * JSON请求解析

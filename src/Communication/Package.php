@@ -16,13 +16,25 @@ interface Package {
 	 * 获取输入
 	 * @return mixed
 	 */
-	public function input(string $key);
+	public function input(string $key, $default=null);
+
+	/**
+	 * 所有输入作为一个数组返回
+	 * @return array
+	 */
+	public function inputs();
 
 	/**
 	 * 获取元数据
 	 * @return mixed
 	 */
-	public function meta(string $key);
+	public function meta(string $key, $default=null);
+
+	/**
+	 * 所有元数据
+	 * @return array
+	 */
+	public function metas();
 
 	/**
 	 * 获取数据包类型
