@@ -4,10 +4,11 @@
 namespace Swooen;
 
 use Psr\Log\LoggerInterface;
+use Swooen\Communication\Route\Router;
 use Swooen\Communication\StdoutWriter;
 use Swooen\Communication\Writer;
 use Swooen\Container\Container;
-use Swooen\Exceptions\Handler;
+use Swooen\Exception\Handler;
 
 class Application extends Container {
     
@@ -50,9 +51,10 @@ class Application extends Container {
             // 连接建立完成，开始使用连接的错误处理
             $handler = $conn->has(Handler::class)?$conn->get(Handler::class):$this->make(Handler::class);
             $writer = $conn->has(Writer::class)?$conn->get(Writer::class):$this->make(Writer::class);
+            $router = Router::makeByContainer($this);
             $package = $conn->next();
             try {
-                
+                $router->dispatch();
             } catch (\Throwable $t) {
             }
         } catch (\Throwable $t) {

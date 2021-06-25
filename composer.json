@@ -28,7 +28,7 @@
     "autoload": {
         "psr-4": { "Swooen\\": "src" },
         "files": [
-            "src/helpers.php"
+            "src/Util/helpers.php"
         ]
     },
     "minimum-stability": "stable",

@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Exceptions;
+namespace Swooen\Exception;
 
 use Psr\Log\LoggerInterface;
 use Swooen\Communication\Writer;
