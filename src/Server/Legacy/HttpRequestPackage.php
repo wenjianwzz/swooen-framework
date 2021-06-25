@@ -2,7 +2,8 @@
 namespace Swooen\Server\Legacy;
 
 use Illuminate\Support\Arr;
-use Swooen\Communication\ArrayPackage;
+use Swooen\Communication\BasicPackage;
+use Swooen\Communication\IPAwarePackage;
 use Swooen\Communication\RouteablePackage;
 
 /**
@@ -10,7 +11,7 @@ use Swooen\Communication\RouteablePackage;
  * 
  * @author WZZ
  */
-class HttpRequestPackage extends ArrayPackage implements RouteablePackage {
+class HttpRequestPackage extends BasicPackage implements RouteablePackage, IPAwarePackage {
 
 	/**
 	 * @var \Symfony\Component\HttpFoundation\Request
@@ -23,10 +24,15 @@ class HttpRequestPackage extends ArrayPackage implements RouteablePackage {
 		$params = array_merge($request->request->all(), $request->query->all());
 		$this->inputs = array_merge($params, $parsedBody);
 		$this->metas = $request->headers->all();
+		$this->cookies = $request->cookies->all();
 	}
 
 	public function getRoutePath() {
 		return $this->request->getMethod().' '.$this->request->getPathInfo();
+	}
+
+	public function getIP() {
+		return $this->request->getClientIp();
 	}
 	
 }

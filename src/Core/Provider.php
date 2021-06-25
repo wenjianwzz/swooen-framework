@@ -1,12 +1,11 @@
 <?php
 namespace Swooen\Core;
 
-abstract class Provider {
+use Swooen\Container\Provider as ContainerProvider;
 
-	/**
-	 * Register any application services.
-	 *
-	 * @return void
-	 */
-	public function register(Container $container) {}
+/**
+ * @deprecated
+ */
+abstract class Provider extends ContainerProvider{
+
 }

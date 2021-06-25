@@ -3,20 +3,18 @@ namespace Swooen\Communication;
 
 use Illuminate\Support\Arr;
 
-/**
- * 封装来往通信报文
- * 
- * @author WZZ
- */
-class ArrayPackage implements Package {
+class BasicPackage implements Package {
 
 	protected $inputs;
 
 	protected $metas;
 
-	public function __construct(array $inputs, array $metas) {
+	protected $cookies;
+
+	public function __construct(array $inputs, array $metas, array $cookies) {
 		$this->inputs = $inputs;
 		$this->metas = $metas;
+		$this->cookies = $cookies;
 	}
 
 	public function input(string $key, $default=null) {
@@ -35,20 +33,20 @@ class ArrayPackage implements Package {
 		return $this->metas;
 	}
 
-	/**
-	 * 获取数据包类型
-	 * @return int
-	 */
 	public function getType() {
 		return self::TYPE_ARRAY;
 	}
 
-	/**
-	 * 获取原始输入内容
-	 * @return string
-	 */
 	public function raw() {
 		return false;
+	}
+
+	public function cookie($key, $default=null) {
+		return Arr::get($this->cookies, $key, $default);
+	}
+
+	public function cookies() {
+		return $this->cookies;
 	}
 	
 }

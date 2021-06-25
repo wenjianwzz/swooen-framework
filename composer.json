@@ -31,7 +31,7 @@
             "src/helpers.php"
         ]
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "repositories": {
         "wenjianwzz-tools": {
             "type": "vcs",

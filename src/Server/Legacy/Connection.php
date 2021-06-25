@@ -3,13 +3,14 @@ namespace Swooen\Server\Legacy;
 
 use Swooen\Communication\Connection as ConnectionInterface;
 use Swooen\Communication\Package;
+use Swooen\Container\Container;
 use Swooen\Server\Legacy\Parser\ParserInterface;
 
 /**
  * 传统请求响应下的处理
  * @author WZZ
  */
-class Connection implements ConnectionInterface {
+class Connection extends Container implements ConnectionInterface {
 
 	/**
 	 * @var ParserInterface[]
@@ -29,7 +30,7 @@ class Connection implements ConnectionInterface {
 		$body = [];
 		foreach ($this->contentParsers as $parser) {
 			if ($parser->accept($request->getContentType())) {
-				return $parser->parse($request->getContent());
+				$body = $parser->parse($request->getContent());
 			}
 		}
 		return new HttpRequestPackage($request, $body);
@@ -39,8 +40,8 @@ class Connection implements ConnectionInterface {
 	 * 是否可以给对方发送数据包
 	 * @return boolean
 	 */
-	public function canPush() {
-		return false;
+	public function canWrite() {
+		return true;
 	}
 
 	/**
@@ -48,7 +49,12 @@ class Connection implements ConnectionInterface {
 	 * @return boolean
 	 */
 	public function push(Package $package) {
-		return false;
+		echo $package->raw();
+		return true;
+	}
+
+	public function write(string $content) {
+		echo $content;
 	}
 
 	/**
