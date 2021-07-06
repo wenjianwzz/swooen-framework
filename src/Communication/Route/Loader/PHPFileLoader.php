@@ -14,7 +14,7 @@ class PHPFileLoader extends ArrayLoader {
     }
     
     public function add($path) {
-        $this->routes += require $path;
+        array_push($this->routes, ...require $path);
     }
 
     public function getRoutes() {

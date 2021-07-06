@@ -59,8 +59,7 @@ class Application extends Container {
                     $package = $conn->next();
                     $route = $router->dispatch($package);
                     $action = $route->getAction();
-                    $handlerContext = $handlerFactory->createContext($this, $conn, $route, $router);
-                    $handlerContext->instance(Writer::class, $writer);
+                    $handlerContext = $handlerFactory->createContext($this, $conn, $route, $router, $package, $writer);
                     $action = $handlerFactory->parse($action);
                     $handlerContext->call($action, $route->getParams());
                 } catch (\Throwable $t) {

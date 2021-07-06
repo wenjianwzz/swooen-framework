@@ -28,7 +28,7 @@ class HttpRequestPackage extends BasicPackage implements RouteablePackage, IPAwa
 	}
 
 	public function getRoutePath() {
-		return str_replace('//', '/', $this->request->getPathInfo());
+		return $this->request->getMethod().' '.str_replace('//', '/', $this->request->getPathInfo());
 	}
 
 	public function getIP() {
