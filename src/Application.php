@@ -23,7 +23,6 @@ class Application extends Container {
 
     public function __construct($basePath) {
         $this->basePath = $basePath;
-        $this->singleton(\Illuminate\Config\Repository::class);
         $this->resourceDir = $this->basePath('resources');
         $this->instance(self::class, $this);
         $this->instance(parent::class, $this);

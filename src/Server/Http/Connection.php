@@ -12,6 +12,8 @@ use Swooen\Server\Http\Parser\ParserInterface;
  */
 class Connection extends Container implements ConnectionInterface {
 
+	protected $packageGot = 0;
+
 	/**
 	 * @var ParserInterface[]
 	 */
@@ -78,6 +80,8 @@ class Connection extends Container implements ConnectionInterface {
 	 * 缓冲区是否存在更多对方发送的数据包
 	 * @return boolean
 	 */
-	public function hasNext() {}
+	public function hasNext() {
+		return $this->packageGot++ <= 0;
+	}
 
 }

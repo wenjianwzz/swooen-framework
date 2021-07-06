@@ -9,8 +9,9 @@ class PHPFileConfigLoader implements ConfigLoader {
         $this->addConfigFile($name, $path);
     }
 
-    public function addConfigFile(string $name, string $path) {
-        $this->files = [$name, $path];
+    public function addConfigFile(string $name, string $path): self {
+        $this->files[] = [$name, $path];
+        return $this;
     }
 
     public function load(ConfigRepository $configRepository) {
