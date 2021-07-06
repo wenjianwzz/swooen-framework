@@ -13,6 +13,6 @@
 
 $app = require __DIR__.'/../bootstrap/app.php';
 assert($app instanceof \Swooen\Application);
-$app->bind(\Swooen\Communication\ConnectionFactory::class, \Swooen\Server\Legacy\GlobalToConnectionFactory::class);
+$app->bind(\Swooen\Communication\ConnectionFactory::class, \Swooen\Server\Http\GlobalToConnectionFactory::class);
 $app->run();
 

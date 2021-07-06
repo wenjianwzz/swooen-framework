@@ -5,7 +5,6 @@ use Swooen\Communication\Package;
 use Swooen\Communication\Route\Loader\RouteLoader;
 use Swooen\Communication\RouteablePackage;
 use Swooen\Util\ReverseMake;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 /**
  * 路由

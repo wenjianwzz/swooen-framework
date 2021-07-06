@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Server\Legacy;
+namespace Swooen\Server\Http;
 
 use Illuminate\Support\Arr;
 use Swooen\Communication\BasicPackage;

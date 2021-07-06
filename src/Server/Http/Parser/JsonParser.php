@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Server\Legacy\Parser;
+namespace Swooen\Server\Http\Parser;
 use \Illuminate\Support\Str;
 
 /**

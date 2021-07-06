@@ -1,10 +1,10 @@
 <?php
-namespace Swooen\Server\Legacy;
+namespace Swooen\Server\Http;
 
 use Swooen\Communication\Connection as ConnectionInterface;
 use Swooen\Communication\Package;
 use Swooen\Container\Container;
-use Swooen\Server\Legacy\Parser\ParserInterface;
+use Swooen\Server\Http\Parser\ParserInterface;
 
 /**
  * 传统请求响应下的处理
