@@ -52,17 +52,19 @@ class Application extends Container {
             $handler = $conn->has(Handler::class)?$conn->get(Handler::class):$this->make(Handler::class);
             $writer = $conn->has(Writer::class)?$conn->get(Writer::class):$this->make(Writer::class);
             $router = Router::makeByContainer($this);
-            $package = $conn->next();
-            try {
-                $route = $router->dispatch($package);
-                $this->call($route->getAction(), [
-                    'route' => $route,
-                    'connection' => $conn,
-                    'package' => $package
-                ]);
-            } catch (\Throwable $t) {
-                $handler->report($t, $logger);
-                $handler->render($t, $writer);
+            while ($conn->hasNext()) {
+                try {
+                    $package = $conn->next();
+                    $route = $router->dispatch($package);
+                    $this->call($route->getAction(), [
+                        'route' => $route,
+                        'connection' => $conn,
+                        'package' => $package
+                    ]);
+                } catch (\Throwable $t) {
+                    $handler->report($t, $logger);
+                    $handler->render($t, $writer);
+                }
             }
         } catch (\Throwable $t) {
             try {
