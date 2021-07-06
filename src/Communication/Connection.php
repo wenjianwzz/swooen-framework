@@ -1,6 +1,8 @@
 <?php
 namespace Swooen\Communication;
 
+use Swooen\Container\ContainerInterface;
+
 /**
  * 代表和对端建立的连接，负责和对端进行通信
  * 

@@ -4,6 +4,7 @@
 namespace Swooen;
 
 use Psr\Log\LoggerInterface;
+use Swooen\Communication\Route\Handler\HandlerFactory;
 use Swooen\Communication\Route\Router;
 use Swooen\Communication\StdoutWriter;
 use Swooen\Communication\Writer;
@@ -50,16 +51,18 @@ class Application extends Container {
             // 连接建立完成，开始使用连接的错误处理
             $handler = $conn->has(Handler::class)?$conn->get(Handler::class):$this->make(Handler::class);
             $writer = $conn->has(Writer::class)?$conn->get(Writer::class):$this->make(Writer::class);
+            $handlerFactory = $conn->has(HandlerFactory::class)?$conn->get(HandlerFactory::class):$this->make(HandlerFactory::class);
+            assert($handlerFactory instanceof HandlerFactory);
             $router = Router::makeByContainer($this);
             while ($conn->hasNext()) {
                 try {
                     $package = $conn->next();
                     $route = $router->dispatch($package);
-                    $this->call($route->getAction(), [
-                        'route' => $route,
-                        'connection' => $conn,
-                        'package' => $package
-                    ]);
+                    $action = $route->getAction();
+                    $handlerContext = $handlerFactory->createContext($this, $conn, $route, $router);
+                    $handlerContext->instance(Writer::class, $writer);
+                    $action = $handlerFactory->parse($action);
+                    $handlerContext->call($action, $route->getParams());
                 } catch (\Throwable $t) {
                     $handler->report($t, $logger);
                     $handler->render($t, $writer);

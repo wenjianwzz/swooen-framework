@@ -15,7 +15,7 @@ class Route {
 
     protected $params = [];
 
-    public function __construct($path, callable $action) {
+    public function __construct($path, $action) {
         $this->path = $path;
         $this->action = $action;
     }
@@ -41,19 +41,24 @@ class Route {
     /**
      * 添加参数
      */
-    public function setParam($name, $value) {
+    public function setParam($name, $value) : self {
         $this->params[$name] = $value;
+        return $this;
     }
 
     public function getParam($name, $default=NULL) {
         return isset($this->params[$name])?$this->params[$name]:$default;
     }
 
+    public function getParams() {
+        return $this->params;
+    }
+
 
     /**
      * Get the value of action
      */
-    public function getAction(): callable {
+    public function getAction() {
         return $this->action;
     }
 

@@ -2,6 +2,7 @@
 namespace Swooen\Server\Http;
 
 use Swooen\Communication\ConnectionFactory;
+use Swooen\Communication\Writer;
 use Swooen\Server\Http\Parser\JsonParser;
 
 /**
@@ -14,6 +15,7 @@ class GlobalToConnectionFactory implements ConnectionFactory {
 	public function make() {
 		$connection = new Connection();
 		$connection->registerContentParser(new JsonParser());
+		$connection->instance(Writer::class, $connection);
 		return $connection;
 	}
 

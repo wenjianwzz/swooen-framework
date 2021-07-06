@@ -9,6 +9,17 @@ class StdoutWriter implements Writer {
 
 	public function write(string $content) {
         echo $content;
+		return true;
+    }
+	
+	public function writeMeta(string $name, string $value) {
+        echo $name, $value, PHP_EOL;
+		return true;
+    }
+	
+	public function writeCookie(string $name, string $value, string $ttl) {
+        echo $name, $value, $ttl, PHP_EOL;
+		return true;
     }
 
 }

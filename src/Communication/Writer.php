@@ -14,5 +14,17 @@ interface Writer {
 	 * @return boolean
 	 */
 	public function write(string $content);
+	
+	/**
+	 * 写入元数据
+	 * @return boolean
+	 */
+	public function writeMeta(string $name, string $value);
+	
+	/**
+	 * 写入追踪数据
+	 * @return boolean
+	 */
+	public function writeCookie(string $name, string $value, string $ttl);
 
 }

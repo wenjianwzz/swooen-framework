@@ -4,6 +4,7 @@ namespace Swooen\Container;
 class Container implements \Psr\Container\ContainerInterface {
 
     protected $binds = [];
+    
     /**
      * 已经创建的实例，直接返回
      */
@@ -23,10 +24,6 @@ class Container implements \Psr\Container\ContainerInterface {
      * 单例
      */
     const OPTION_ALIAS = 0x0004;
-
-    public function __construct() {
-        $this->instance(self::class, $this);
-    }
 
     public function destroy() {
         unset($this->binds);
@@ -148,7 +145,7 @@ class Container implements \Psr\Container\ContainerInterface {
 	 * @param array $paramters 参数字典
 	 * @return mixed
 	 */
-	public function call(callable $call, array $paramters) {
+	public function call(callable $call, array $paramters=[]) {
         $dependencies = self::getMethodDependencies($call, $paramters, [$this, 'make']);
 		return $call(...$dependencies);
 	}
