@@ -2,6 +2,7 @@
 namespace Swooen\Communication\Route;
 
 use Swooen\Communication\Package;
+use Swooen\Communication\Route\Exception\NotFoundException;
 use Swooen\Communication\Route\Loader\RouteLoader;
 use Swooen\Communication\RouteablePackage;
 use Swooen\Util\ReverseMake;
@@ -55,11 +56,11 @@ class Router {
      */
 	public function dispatch(Package $package) {
         $dispatcher = $this->createDispatcher();
+        $routePath = static::ROUTE_PACKAGE_NOT_ROUTEABLE;
         if ($package instanceof RouteablePackage) {
-            $found = $dispatcher->dispatch(static::METHOD, $package->getRoutePath());
-        } else {
-            $found = $dispatcher->dispatch(static::METHOD, static::ROUTE_PACKAGE_NOT_ROUTEABLE);
+            $routePath = $package->getRoutePath();
         }
+        $found = $dispatcher->dispatch(static::METHOD, $routePath);
         switch ($found[0]) {
             case \FastRoute\Dispatcher::FOUND:
                 $route = clone $found[1];
@@ -67,6 +68,6 @@ class Router {
                 $route->setParams($found[2]);
                 return $route;
         }
-        return false;
+        throw new NotFoundException('no route for '.$routePath);
 	}
 }

@@ -35,3 +35,12 @@
 
 #### 不可路由数据包
 会指定路由到`<NOT_ROUTEABLE>`对应的处理器
+
+##
+1. Server 创建Connection
+2. Connection 获取 客户端输入，得到Package
+3. 路由分发Package，调用控制器
+
+### 是控制器直接回发，还是由外层调度回发
+控制器回发
+ 

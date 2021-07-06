@@ -14,5 +14,10 @@
 $app = require __DIR__.'/../bootstrap/app.php';
 assert($app instanceof \Swooen\Application);
 $app->bind(\Swooen\Communication\ConnectionFactory::class, \Swooen\Server\Http\GlobalToConnectionFactory::class);
+$app->bind(\Swooen\Communication\Route\Loader\RouteLoader::class, function() {
+    return new \Swooen\Communication\Route\Loader\PHPFileLoader(
+        __DIR__.'/../routes/v1.php'
+    );
+});
 $app->run();
 

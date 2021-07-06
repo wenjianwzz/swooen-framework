@@ -54,8 +54,15 @@ class Application extends Container {
             $router = Router::makeByContainer($this);
             $package = $conn->next();
             try {
-                $router->dispatch();
+                $route = $router->dispatch($package);
+                $this->call($route->getAction(), [
+                    'route' => $route,
+                    'connection' => $conn,
+                    'package' => $package
+                ]);
             } catch (\Throwable $t) {
+                $handler->report($t, $logger);
+                $handler->render($t, $writer);
             }
         } catch (\Throwable $t) {
             try {

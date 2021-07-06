@@ -30,7 +30,7 @@ class Handler {
 			// $writer->write(isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : $e->getMessage());
 		} else {
 		}
-		$writer->write($e->getMessage()."\n".$e->getTraceAsString());
+		$writer->write($e->getFile().':'.$e->getLine()."\n".$e->getMessage()."\n".$e->getTraceAsString());
 	}
 
 }
