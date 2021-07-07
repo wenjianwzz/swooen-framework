@@ -6,7 +6,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Providers\MiddlewareProvider;
-use Swooen\Core\Container;
+use Swooen\Container\Container;
 use Swooen\Http\Routes\Router;
 use Swooen\Http\ServePipeline;
 use Swooen\Http\ServeStatic;
