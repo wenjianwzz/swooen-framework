@@ -8,10 +8,6 @@ namespace Swooen\Communication;
  */
 interface Package {
 
-	const TYPE_RAW = 0x0001;
-
-	const TYPE_ARRAY = 0x0002;
-
 	/**
 	 * 获取输入
 	 * @return mixed
@@ -19,8 +15,8 @@ interface Package {
 	public function input(string $key, $default=null);
 
 	/**
-	 * 所有输入作为一个数组返回
-	 * @return array
+	 * 所有输入作为一个数组返回, 仅当输入可以转换成数组的时候
+	 * @return mixed
 	 */
 	public function inputs();
 
@@ -37,27 +33,21 @@ interface Package {
 	public function metas();
 
 	/**
-	 * 获取Cookie数据
-	 * @return mixed
+	 * 是否是数组类型
+	 * @return boolean
 	 */
-	public function cookie(string $key, $default=null);
+	public function isArray();
 
 	/**
-	 * 所有Cookie数据
-	 * @return array
+	 * 是否是字符串类型
+	 * @return boolean
 	 */
-	public function cookies();
+	public function isString();
 
 	/**
-	 * 获取数据包类型
-	 * @return int
-	 */
-	public function getType();
-
-	/**
-	 * 获取原始内容类型
+	 * 获取字符串数据
 	 * @return string
 	 */
-	public function raw();
+	public function getString();
 	
 }

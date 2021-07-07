@@ -15,21 +15,18 @@ use Swooen\Communication\Route\Route;
 class HandlerHook {
 
     /**
-     * 是否应该停止，停止意味着之后的钩子和处理器都不会触发。对此Package的处理结束
-     */
-    public function willStop() {
-        return false;
-    }
-
-    /**
      * 当处理器触发之前调用
-     * @
+     * 返回Package，该Package将会作为输入Package向下传递
+     * 如果对Packge不做处理，应当原样返回
+     * 如果返回NULL，则表示不再继续往下执行
+     * @return Package
      */
     public function before(HandlerContext $context, Route $route, Package $package, Connection $connection) {
     }
 
     /**
      * 当处理器触发之后调用
+     * @return void
      */
     public function after(HandlerContext $context, Route $route, Package $package, Connection $connection) {
     }

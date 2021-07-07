@@ -3,6 +3,13 @@ namespace Swooen\Communication;
 
 interface Writer {
 	
+
+	/**
+	 * 给对方发送数据包
+	 * @return boolean
+	 */
+	public function push(Package $package);
+	
 	/**
 	 * 是否可以给对方发送数据包
 	 * @return boolean
@@ -21,10 +28,4 @@ interface Writer {
 	 */
 	public function writeMeta(string $name, string $value);
 	
-	/**
-	 * 写入追踪数据
-	 * @return boolean
-	 */
-	public function writeCookie(string $name, string $value, string $expire);
-
 }

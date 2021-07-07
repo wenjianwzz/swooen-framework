@@ -1,7 +1,6 @@
 <?php
 namespace Swooen\Server\Http;
 
-use Illuminate\Support\Arr;
 use Swooen\Communication\BasicPackage;
 use Swooen\Communication\IPAwarePackage;
 use Swooen\Communication\RouteablePackage;
@@ -24,7 +23,6 @@ class HttpRequestPackage extends BasicPackage implements RouteablePackage, IPAwa
 		$params = array_merge($request->request->all(), $request->query->all());
 		$this->inputs = array_merge($params, $parsedBody);
 		$this->metas = $request->headers->all() + ['http-method' => $this->request->getMethod()];
-		$this->cookies = $request->cookies->all();
 	}
 
 	public function getRoutePath() {

@@ -9,12 +9,9 @@ class BasicPackage implements Package {
 
 	protected $metas;
 
-	protected $cookies;
-
-	public function __construct(array $inputs, array $metas, array $cookies) {
+	public function __construct(array $inputs, array $metas) {
 		$this->inputs = $inputs;
 		$this->metas = $metas;
-		$this->cookies = $cookies;
 	}
 
 	public function input(string $key, $default=null) {
@@ -33,20 +30,16 @@ class BasicPackage implements Package {
 		return $this->metas;
 	}
 
-	public function getType() {
-		return self::TYPE_ARRAY;
+	public function isArray() {
+		return true;
 	}
 
-	public function raw() {
+	public function isString() {
 		return false;
 	}
 
-	public function cookie($key, $default=null) {
-		return Arr::get($this->cookies, $key, $default);
-	}
-
-	public function cookies() {
-		return $this->cookies;
+	public function getString() {
+		return '';
 	}
 	
 }

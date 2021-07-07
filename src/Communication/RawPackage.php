@@ -3,45 +3,25 @@ namespace Swooen\Communication;
 
 use Illuminate\Support\Arr;
 
-class RawPackage implements Package {
+class RawPackage extends BasicPackage {
 
 	protected $content;
 
-	public function __construct($content)
-	{
+	public function __construct($content, array $metas) {
+		parent::__construct([], $metas);
 		$this->content = $content;
 	}
 
-	public function input(string $key, $default=null) {
-		return null;
+	public function isArray() {
+		return false;
 	}
 
-	public function meta(string $key, $default=null) {
-		return null;
+	public function isString() {
+		return true;
 	}
 
-	public function inputs() {
-		return [];
-	}
-
-	public function metas() {
-		return [];
-	}
-
-	public function getType() {
-		return self::TYPE_RAW;
-	}
-
-	public function raw() {
+	public function getString() {
 		return $this->content;
-	}
-
-	public function cookie($key, $default=null) {
-		return null;
-	}
-
-	public function cookies() {
-		return [];
 	}
 	
 }

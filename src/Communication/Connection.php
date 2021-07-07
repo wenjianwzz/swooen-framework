@@ -24,12 +24,6 @@ interface Connection extends \Psr\Container\ContainerInterface {
 	public function end(string $reason);
 
 	/**
-	 * 给对方发送数据包
-	 * @return boolean
-	 */
-	public function push(Package $package);
-
-	/**
 	 * 当前连接是否终止
 	 * @return boolean
 	 */
