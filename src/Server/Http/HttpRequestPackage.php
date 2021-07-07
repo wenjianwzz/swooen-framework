@@ -21,7 +21,7 @@ class HttpRequestPackage extends BasicPackage implements RouteablePackage, IPAwa
 		$this->request = $request;
 		$this->parsedBody = $parsedBody;
 		$params = array_merge($request->request->all(), $request->query->all());
-		$this->inputs = array_merge($params, $parsedBody);
+		$this->inputs = $parsedBody?array_merge($params, $parsedBody):$params;
 		$this->metas = array_map('reset', $request->headers->all()) + ['http-method' => $this->request->getMethod()];
 	}
 
