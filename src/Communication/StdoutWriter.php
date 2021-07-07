@@ -17,8 +17,8 @@ class StdoutWriter implements Writer {
 		return true;
     }
 	
-	public function writeCookie(string $name, string $value, string $ttl) {
-        echo $name, $value, $ttl, PHP_EOL;
+	public function writeCookie(string $name, string $value, string $expire) {
+        echo $name, $value, $expire, PHP_EOL;
 		return true;
     }
 

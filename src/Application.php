@@ -5,6 +5,7 @@ namespace Swooen;
 
 use Psr\Log\LoggerInterface;
 use Swooen\Communication\Route\Handler\HandlerFactory;
+use Swooen\Communication\Route\Hook\HandlerHook;
 use Swooen\Communication\Route\Router;
 use Swooen\Communication\StdoutWriter;
 use Swooen\Communication\Writer;
@@ -50,16 +51,24 @@ class Application extends Container {
             $conn = $factory->make();
             // 连接建立完成，开始使用连接的错误处理
             $handler = $conn->has(Handler::class)?$conn->get(Handler::class):$this->make(Handler::class);
-            $writer = $conn->has(Writer::class)?$conn->get(Writer::class):$this->make(Writer::class);
+            $writer = $conn->getWriter();
             $handlerFactory = $conn->has(HandlerFactory::class)?$conn->get(HandlerFactory::class):$this->make(HandlerFactory::class);
             assert($handlerFactory instanceof HandlerFactory);
             $router = Router::makeByContainer($this);
-            while ($conn->hasNext()) {
+            $reader = $conn->getReader();
+            while ($reader->hasNext()) {
                 try {
-                    $package = $conn->next();
+                    $package = $reader->next();
                     $route = $router->dispatch($package);
                     $action = $route->getAction();
                     $handlerContext = $handlerFactory->createContext($this, $conn, $route, $router, $package, $writer);
+                    /**
+                     * @var HandlerHook[]
+                     */
+                    $hookers = array_map([$handlerContext, 'make'], $route->getHooks());
+                    foreach($hookers as $hooker) {
+                        $hooker->before($handlerContext, $route, $package, $conn, $writer);
+                    }
                     $action = $handlerFactory->parse($action);
                     $handlerContext->call($action, $route->getParams());
                 } catch (\Throwable $t) {

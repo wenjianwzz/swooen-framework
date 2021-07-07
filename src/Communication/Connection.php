@@ -1,15 +1,23 @@
 <?php
 namespace Swooen\Communication;
 
-use Swooen\Container\ContainerInterface;
-
 /**
  * 代表和对端建立的连接，负责和对端进行通信
  * 
  * @author WZZ
  */
-interface Connection extends \Psr\Container\ContainerInterface, Writer, Reader {
+interface Connection extends \Psr\Container\ContainerInterface {
 	
+	/**
+	 * @return \Swooen\Communication\Writer
+	 */
+	public function getWriter();
+
+	/**
+	 * @return \Swooen\Communication\Reader
+	 */
+	public function getReader();
+
 	/**
 	 * 终止连接，并向对方发送终止原因
 	 */

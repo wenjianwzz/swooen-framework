@@ -25,6 +25,6 @@ interface Writer {
 	 * 写入追踪数据
 	 * @return boolean
 	 */
-	public function writeCookie(string $name, string $value, string $ttl);
+	public function writeCookie(string $name, string $value, string $expire);
 
 }

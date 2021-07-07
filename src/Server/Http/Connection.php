@@ -4,7 +4,6 @@ namespace Swooen\Server\Http;
 use Swooen\Communication\Connection as ConnectionInterface;
 use Swooen\Communication\Package;
 use Swooen\Container\Container;
-use Swooen\Server\Http\Parser\ParserInterface;
 
 /**
  * 传统请求响应下的处理
@@ -12,38 +11,19 @@ use Swooen\Server\Http\Parser\ParserInterface;
  */
 class Connection extends Container implements ConnectionInterface {
 
-	protected $packageGot = 0;
 
 	/**
-	 * @var ParserInterface[]
+	 * @return \Swooen\Communication\Writer
 	 */
-	protected $contentParsers = [];
-	
-	public function registerContentParser(ParserInterface ...$parser) {
-		array_unshift($this->contentParsers, ...$parser);
+	public function getWriter() {
+		return $this->make(\Swooen\Communication\Writer::class);
 	}
 
 	/**
-	 * 获取下一个数据包
-	 * @return Package
+	 * @return \Swooen\Communication\Reader
 	 */
-	public function next() {
-		$request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
-		$body = [];
-		foreach ($this->contentParsers as $parser) {
-			if ($parser->accept($request->getContentType())) {
-				$body = $parser->parse($request->getContent());
-			}
-		}
-		return new HttpRequestPackage($request, $body);
-	}
-
-	/**
-	 * 是否可以给对方发送数据包
-	 * @return boolean
-	 */
-	public function canWrite() {
-		return true;
+	public function getReader() {
+		return $this->make(\Swooen\Communication\Reader::class);
 	}
 
 	/**
@@ -51,29 +31,15 @@ class Connection extends Container implements ConnectionInterface {
 	 * @return boolean
 	 */
 	public function push(Package $package) {
-		// TODO 
-		return $this->write($package->raw());
+		return $this->getWriter()->write($package->raw());
 	}
-
-	public function write(string $content) {
-		echo $content;
-		return true;
-	}
-	
-	public function writeMeta(string $name, string $value) {
-        header("{$name}: {$value}");
-		return true;
-    }
-	
-	public function writeCookie(string $name, string $value, string $ttl) {
-        echo $name, $value, $ttl, PHP_EOL;
-		return true;
-    }
 
 	/**
 	 * 终止连接，并向对方发送终止原因
 	 */
-	public function end(string $reason) {}
+	public function end(string $reason) {
+		return $this->getWriter()->write($reason);
+	}
 
 	/**
 	 * 当前连接是否终止
@@ -85,14 +51,8 @@ class Connection extends Container implements ConnectionInterface {
 	 * 是否是数据流
 	 * @return boolean
 	 */
-	public function isStream() {}
-
-	/**
-	 * 缓冲区是否存在更多对方发送的数据包
-	 * @return boolean
-	 */
-	public function hasNext() {
-		return $this->packageGot++ <= 0;
+	public function isStream() {
+		return false;
 	}
 
 }

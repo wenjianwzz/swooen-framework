@@ -1,6 +1,6 @@
 <?php
 namespace Swooen\Communication\Route;
-
+use Swooen\Communication\Route\Hook\HandlerHook;
 /**
  * 路由
  * 
@@ -14,6 +14,8 @@ class Route {
     protected $action;
 
     protected $params = [];
+
+    protected $hooks = [];
 
     public function __construct($path, $action) {
         $this->path = $path;
@@ -67,5 +69,22 @@ class Route {
      */
     public function getPath() {
         return $this->path;
+    }
+
+    /**
+     * Get the value of hooks
+     * @return string[]
+     */
+    public function getHooks() {
+        return $this->hooks;
+    }
+
+    /**
+     * Set the value of hooks
+     * @param string[] $hooks
+     */
+    public function setHooks($hooks): self {
+        $this->hooks = $hooks;
+        return $this;
     }
 }

@@ -5,6 +5,7 @@ use Illuminate\Support\Str;
 use Swooen\Application;
 use Swooen\Communication\Connection;
 use Swooen\Communication\Package;
+use Swooen\Communication\Route\Hook\HandlerContextHook;
 use Swooen\Communication\Route\Route;
 use Swooen\Communication\Route\Router;
 use Swooen\Communication\Writer;
