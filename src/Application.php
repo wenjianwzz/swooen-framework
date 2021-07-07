@@ -67,7 +67,7 @@ class Application extends Container {
                      */
                     $hookers = array_map([$handlerContext, 'make'], $route->getHooks());
                     foreach($hookers as $hooker) {
-                        $package = $hooker->before($handlerContext, $route, $package, $conn, $writer);
+                        $package = $hooker->before($handlerContext, $route, $package, $conn);
                         if (empty($package)) {
                             // 退出处理流程
                             break;
@@ -75,9 +75,13 @@ class Application extends Container {
                     }
                     if ($package) {
                         $action = $handlerFactory->parse($action);
-                        $handlerContext->call($action, $route->getParams());
+                        $returnPackage = $handlerContext->call($action, $route->getParams());
                         for ($i = count($hookers)-1; $i >= 0; --$i) {
-                            
+                            $hooker = $hookers[$i];
+                            $returnPackage = $hooker->after($handlerContext, $route, $conn, $returnPackage);
+                        }
+                        if ($returnPackage) {
+                            $conn->getWriter()->send($returnPackage);
                         }
                     }
                 } catch (\Throwable $t) {

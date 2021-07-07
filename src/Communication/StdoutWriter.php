@@ -7,7 +7,7 @@ class StdoutWriter implements Writer {
 	 * 给对方发送数据包
 	 * @return boolean
 	 */
-	public function push(Package $package) {
+	public function send(Package $package) {
         if ($metas = $package->metas()) {
             array_map(function($name, $value) {
                 $this->writeMeta($name, $value);

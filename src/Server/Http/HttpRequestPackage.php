@@ -22,7 +22,7 @@ class HttpRequestPackage extends BasicPackage implements RouteablePackage, IPAwa
 		$this->parsedBody = $parsedBody;
 		$params = array_merge($request->request->all(), $request->query->all());
 		$this->inputs = array_merge($params, $parsedBody);
-		$this->metas = $request->headers->all() + ['http-method' => $this->request->getMethod()];
+		$this->metas = array_map('reset', $request->headers->all()) + ['http-method' => $this->request->getMethod()];
 	}
 
 	public function getRoutePath() {

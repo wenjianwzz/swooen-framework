@@ -22,12 +22,16 @@ class HandlerHook {
      * @return Package
      */
     public function before(HandlerContext $context, Route $route, Package $package, Connection $connection) {
+        return $package;
     }
 
     /**
      * 当处理器触发之后调用
-     * @return void
+     * 返回Package，该Package将会作为返回Package向下传递
+     * 如果对Packge不做处理，应当原样返回
+     * @return Package
      */
-    public function after(HandlerContext $context, Route $route, Package $package, Connection $connection) {
+    public function after(HandlerContext $context, Route $route, Connection $connection, Package $returnPackage=null) {
+        return $returnPackage;
     }
 }

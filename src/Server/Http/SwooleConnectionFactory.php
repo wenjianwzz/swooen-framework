@@ -13,7 +13,6 @@ class SwooleConnectionFactory implements ConnectionFactory {
 	
 	public function make() {
 		$connection = new Connection();
-		$connection->registerContentParser(new JsonParser());
 		return $connection;
 	}
 

@@ -50,7 +50,7 @@ class HandlerFactory {
             return function(\Swooen\Container\Container $container, HandlerContext $handlerContext, Route $route) use ($action) {
                 list($controller, $method) = explode('@', $action);
                 $controller = $container->make($controller);
-                $handlerContext->call([$controller, $method], $route->getParams());
+                return $handlerContext->call([$controller, $method], $route->getParams());
             };
         }
     }

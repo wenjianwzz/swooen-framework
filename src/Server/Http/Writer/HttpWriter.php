@@ -18,11 +18,6 @@ class HttpWriter extends StdoutWriter {
 	public function canWrite() {
 		return !$this->headerSent;
 	}
-
-	public function write(string $content) {
-		echo $content;
-		return true;
-	}
 	
 	public function writeMeta(string $name, string $value) {
 		$this->headerSent = true;

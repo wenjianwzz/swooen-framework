@@ -8,7 +8,7 @@ interface Writer {
 	 * 给对方发送数据包
 	 * @return boolean
 	 */
-	public function push(Package $package);
+	public function send(Package $package);
 	
 	/**
 	 * 是否可以给对方发送数据包

@@ -10,7 +10,8 @@ use Swooen\Communication\Package;
 class JsonWriter extends HttpWriter {
 
     public function pack(Package $package) {
-        return json_encode($package);
+		header('Content-Type: application/json');
+        return json_encode($package->inputs());
     }
 
 }

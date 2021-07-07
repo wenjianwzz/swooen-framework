@@ -17,9 +17,10 @@ class Route {
 
     protected $hooks = [];
 
-    public function __construct($path, $action) {
+    public function __construct($path, $action, $hooks=[]) {
         $this->path = $path;
         $this->action = $action;
+        $this->hooks = $hooks;
     }
 
     public function __clone() {
