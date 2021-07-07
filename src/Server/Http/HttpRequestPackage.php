@@ -20,7 +20,7 @@ class HttpRequestPackage extends BasicPackage implements RouteablePackage, IPAwa
 	public function __construct(\Symfony\Component\HttpFoundation\Request $request, $parsedBody) {
 		$this->request = $request;
 		$this->parsedBody = $parsedBody;
-		$params = array_merge($request->request->all(), $request->query->all());
+		$params = array_merge($request->request?$request->request->all():[], $request->query?$request->query->all():[]);
 		$this->inputs = $parsedBody?array_merge($params, $parsedBody):$params;
 		$this->metas = array_map('reset', $request->headers->all()) + ['http-method' => $this->request->getMethod()];
 	}
