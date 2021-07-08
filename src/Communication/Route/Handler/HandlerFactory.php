@@ -24,7 +24,7 @@ class HandlerFactory {
     public function createContext(Application $app, Connection $connection, Route $route, Router $router, Package $package, Writer $writer) {
         $context = HandlerContext::create();
         $context->instance(Application::class, $app);
-        $context->instance(\Swooen\Container\Container::class, $this);
+        $context->instance(\Swooen\Container\Container::class, $context);
         $context->instance(Connection::class, $connection);
         $context->instance(Route::class, $route);
         $context->instance(Router::class, $router);
