@@ -2,7 +2,6 @@
 namespace Swooen\Server\Swoole\Redis;
 
 use Swooen\Communication\Reader;
-use Swooen\Server\Http\Parser\ParserInterface;
 
 /**
  * @author WZZ
@@ -15,10 +14,6 @@ class RedisCommandReader implements Reader {
 	 */
 	public function hasNext() {
 		return $this->packageGot++ <= 0;
-	}
-
-	public function registerContentParser(ParserInterface ...$parser) {
-		array_unshift($this->contentParsers, ...$parser);
 	}
 
 	/**
