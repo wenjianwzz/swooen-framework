@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Server\Http;
+namespace Swooen\Server\Swoole\Redis;
 
 use Swooen\Communication\Reader;
 use Swooen\Server\Http\Parser\ParserInterface;
@@ -7,14 +7,7 @@ use Swooen\Server\Http\Parser\ParserInterface;
 /**
  * @author WZZ
  */
-class HttpReader implements Reader {
-
-	protected $packageGot = 0;
-
-	/**
-	 * @var ParserInterface[]
-	 */
-	protected $contentParsers = [];
+class RedisCommandReader implements Reader {
 
 	/**
 	 * 缓冲区是否存在更多对方发送的数据包
