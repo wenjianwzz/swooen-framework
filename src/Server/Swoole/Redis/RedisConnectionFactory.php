@@ -31,15 +31,20 @@ class RedisConnectionFactory implements ConnectionFactory {
 					$ip = isset($info['remote_ip'])?$info['remote_ip']:'';
 					$connection = new RedisConnection();
 					$connection->instance(Reader::class, new RedisCommandReader($ip));
-					$connection->instance(Writer::class, new RedisWriter());
+					$connection->instance(Writer::class, new RedisWriter($this->server, $fd));
+					$connection->instance(\Swooen\Exception\Handler::class, new RedisExceptionHandler());
 					$this->connections[$fd] = $connection;
+					go(function() use ($connection, $fd) {
+						var_dump('new conntection: '. $fd);
+						($this->callback)($connection);
+						var_dump('finish conntection: '. $fd);
+					});
 				} else {
 					$connection = $this->connections[$fd];
 				}
 				$reader = $connection->getReader();
 				assert($reader instanceof RedisCommandReader);
 				$reader->queueCommand($cmd, $data);
-				return $this->server->send($fd, Server::format(Server::STRING, 'debug['.$fd.']['. $cmd.']: '. json_encode($data)));
 			});
 		}
 	}

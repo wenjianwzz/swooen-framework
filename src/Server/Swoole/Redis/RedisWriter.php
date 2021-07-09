@@ -3,8 +3,20 @@ namespace Swooen\Server\Swoole\Redis;
 
 use Swooen\Communication\Package;
 use Swooen\Communication\Writer;
+use Swoole\Redis\Server;
 
 class RedisWriter implements Writer {
+
+    protected $server;
+
+    protected $fd;
+
+	protected $closed = false;
+
+    public function __construct(Server $server, $fd) {
+        $this->server = $server;
+        $this->fd = $fd;
+    }
 
 	/**
 	 * 给对方发送数据包
@@ -31,17 +43,35 @@ class RedisWriter implements Writer {
     }
 	
 	public function canWrite() {
-        return true;
+        return $this->closed;
+    }
+
+    public function writeType($type, string $message) {
+        $this->server->send($this->fd, Server::format($type, $message));
     }
 
 	public function write(string $content) {
-        echo $content;
+        $this->writeType(Server::STRING, $content);
 		return true;
     }
 	
 	public function writeMeta(string $name, string $value) {
-        echo $name, $value, PHP_EOL;
 		return true;
     }
+
+	/**
+	 * Get the value of closed
+	 */
+	public function isClosed() {
+		return $this->closed;
+	}
+
+	/**
+	 * Set the value of closed
+	 */
+	public function setClosed($closed): self {
+		$this->closed = $closed;
+		return $this;
+	}
 
 }
