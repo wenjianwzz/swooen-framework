@@ -10,8 +10,7 @@ interface ConnectionFactory {
 	
 	/**
 	 * 开始监听, 获得新的连接
-	 * @return Connection
 	 */
-	public function make();
+	public function onConnection(callable $callback);
 
 }

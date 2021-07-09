@@ -4,6 +4,7 @@
 namespace Swooen;
 
 use Psr\Log\LoggerInterface;
+use Swooen\Communication\Connection;
 use Swooen\Communication\Route\Handler\HandlerFactory;
 use Swooen\Communication\Route\Hook\HandlerHook;
 use Swooen\Communication\Route\Router;
@@ -45,16 +46,22 @@ class Application extends Container {
      */
     public function run() {
         $logger = $this->has(LoggerInterface::class)?$this->get(LoggerInterface::class):null;
+        $handler = $this->make(Handler::class);
+        $writer = $this->make(Writer::class);
         try {
             $factory = $this->make(\Swooen\Communication\ConnectionFactory::class);
             assert($factory instanceof \Swooen\Communication\ConnectionFactory);
-            $conn = $factory->make();
+            $router = Router::makeByContainer($this);
+            $handlerFactory = $this->make(HandlerFactory::class);
+            assert($handlerFactory instanceof HandlerFactory);
+        } catch (\Throwable $t) {
+            $handler->report($t, $logger);
+            $handler->render($t, $writer);
+        }
+        $factory->onConnection(function(Connection $conn) use ($logger, $router, $handlerFactory) {
             // 连接建立完成，开始使用连接的错误处理
             $handler = $conn->has(Handler::class)?$conn->get(Handler::class):$this->make(Handler::class);
             $writer = $conn->getWriter();
-            $handlerFactory = $conn->has(HandlerFactory::class)?$conn->get(HandlerFactory::class):$this->make(HandlerFactory::class);
-            assert($handlerFactory instanceof HandlerFactory);
-            $router = Router::makeByContainer($this);
             $reader = $conn->getReader();
             while ($reader->hasNext()) {
                 try {
@@ -89,15 +96,6 @@ class Application extends Container {
                     $handler->render($t, $writer);
                 }
             }
-        } catch (\Throwable $t) {
-            try {
-                $handler = $this->make(Handler::class);
-                $writer = $this->make(Writer::class);
-                $handler->report($t, $logger);
-                $handler->render($t, $writer);
-            } catch (\Throwable $t) {
-                // 什么也不干
-            }
-        }
+        });
     }
 }

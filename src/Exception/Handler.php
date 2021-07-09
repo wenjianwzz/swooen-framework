@@ -12,25 +12,27 @@ class Handler {
 	];
 
 	public function report(\Throwable $e, LoggerInterface $logger = null) {
-		foreach ($this->dontReport as $type) {
-			if (is_a($e, $type)) {
+		try {
+			if (empty($logger)) {
 				return;
 			}
-		}
-		if ($logger) {
+			foreach ($this->dontReport as $type) {
+				if (is_a($e, $type)) {
+					return;
+				}
+			}
 			$logger->error($e);
+		} catch (\Throwable $t2) {
+			// 无法继续处理
 		}
 	}
 
 	public function render(\Throwable $e, Writer $writer) {
-		if ($e instanceof HttpException) {
-			// $writer->status($e->getStatusCode());
-			// $code = $e->getStatusCode();
-			// $writer->write($code. ' ');
-			// $writer->write(isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : $e->getMessage());
-		} else {
+		try {
+			$writer->write($e->getFile().':'.$e->getLine()."\n".$e->getMessage()."\n".$e->getTraceAsString());
+		} catch (\Throwable $t2) {
+			// 无法继续处理
 		}
-		$writer->write($e->getFile().':'.$e->getLine()."\n".$e->getMessage()."\n".$e->getTraceAsString());
 	}
 
 }
