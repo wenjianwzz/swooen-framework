@@ -22,16 +22,37 @@ class RedisConnectionFactory implements ConnectionFactory {
 	 */
 	protected $connections = [];
 
+	/**
+	 * @return RedisCommandReader
+	 */
+	public function createReader($fd) {
+		$info = $this->server->getClientInfo($fd);
+		$ip = isset($info['remote_ip'])?$info['remote_ip']:'';
+		return new RedisCommandReader($ip);
+	}
+
+	/**
+	 * @return RedisWriter
+	 */
+	public function createWriter($fd) {
+		return new RedisWriter($this->server, $fd);
+	}
+
+	/**
+	 * @return RedisConnection
+	 */
+	public function createConnection($fd) {
+		return new RedisConnection();
+	}
+
 	public function __construct($host, $port, $mode=SWOOLE_BASE, $sockType=SWOOLE_SOCK_TCP) {
 		$this->server = new Server($host, $port, $mode, $sockType);
 		foreach (self::COMMANDS as $cmd) {
 			$this->server->setHandler($cmd, function($fd, $data) use ($cmd) {
 				if (!isset($this->connections[$fd])) {
-					$info = $this->server->getClientInfo($fd);
-					$ip = isset($info['remote_ip'])?$info['remote_ip']:'';
-					$connection = new RedisConnection();
-					$connection->instance(Reader::class, new RedisCommandReader($ip));
-					$connection->instance(Writer::class, new RedisWriter($this->server, $fd));
+					$connection = $this->createConnection($fd);
+					$connection->instance(Reader::class, $this->createReader($fd));
+					$connection->instance(Writer::class, $this->createWriter($fd));
 					$connection->instance(\Swooen\Exception\Handler::class, new RedisExceptionHandler());
 					$this->connections[$fd] = $connection;
 					go(function() use ($connection, $fd) {
