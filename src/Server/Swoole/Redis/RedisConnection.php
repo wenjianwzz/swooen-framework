@@ -8,25 +8,25 @@ use Swooen\Communication\BaseConnection;
  */
 class RedisConnection extends BaseConnection {
 
-	/**
-	 * 终止连接，并向对方发送终止原因
-	 */
+	protected $pairLeaved = false;
+
+	public function setPairLeaved() {
+		$this->pairLeaved = true;
+		$reader = $this->getReader();
+		assert($reader instanceof RedisCommandReader);
+		$reader->setClosed(true);
+	}
+
 	public function end(string $reason) {
 		return $this->getWriter()->write($reason);
 	}
 
-	/**
-	 * 当前连接是否终止
-	 * @return boolean
-	 */
-	public function isEnd() {}
+	public function isEnd() {
+		return $this->closed;
+	}
 
-	/**
-	 * 是否是数据流
-	 * @return boolean
-	 */
 	public function isStream() {
-		return false;
+		return true;
 	}
 
 }

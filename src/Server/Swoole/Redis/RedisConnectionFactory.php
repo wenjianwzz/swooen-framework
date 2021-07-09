@@ -4,8 +4,7 @@ namespace Swooen\Server\Swoole\Redis;
 use Swooen\Communication\ConnectionFactory;
 use Swooen\Communication\Reader;
 use Swooen\Communication\Writer;
-use Swooen\Server\Http\Reader\HttpReader;
-use Swooen\Server\Http\Writer\JsonWriter;
+use \Swoole\Redis\Server;
 
 /**
  * 封装各种类型协议，负责监听通讯，将请求统一成固定格式
@@ -18,11 +17,29 @@ class RedisConnectionFactory implements ConnectionFactory {
 
 	protected $callback;
 
-	public function __construct($host, $porrt, $mode=SWOOLE_BASE, $sockType=NULL) {
-		$this->server = new \Swoole\Redis\Server($host, $porrt, $mode, $sockType);
+	/**
+	 * @var RedisConnection[]
+	 */
+	protected $connections = [];
+
+	public function __construct($host, $port, $mode=SWOOLE_BASE, $sockType=SWOOLE_SOCK_TCP) {
+		$this->server = new Server($host, $port, $mode, $sockType);
 		foreach (self::COMMANDS as $cmd) {
-			$this->server->setHandler($cmd, function($fd, $data) {
-				var_dump($data);
+			$this->server->setHandler($cmd, function($fd, $data) use ($cmd) {
+				if (!isset($this->connections[$fd])) {
+					$info = $this->server->getClientInfo($fd);
+					$ip = isset($info['remote_ip'])?$info['remote_ip']:'';
+					$connection = new RedisConnection();
+					$connection->instance(Reader::class, new RedisCommandReader($ip));
+					$connection->instance(Writer::class, new RedisWriter());
+					$this->connections[$fd] = $connection;
+				} else {
+					$connection = $this->connections[$fd];
+				}
+				$reader = $connection->getReader();
+				assert($reader instanceof RedisCommandReader);
+				$reader->queueCommand($cmd, $data);
+				return $this->server->send($fd, Server::format(Server::STRING, 'debug['.$fd.']['. $cmd.']: '. json_encode($data)));
 			});
 		}
 	}
