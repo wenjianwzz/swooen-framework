@@ -90,10 +90,17 @@ class Application extends Container {
                         if ($returnPackage) {
                             $conn->getWriter()->send($returnPackage);
                         }
+                        unset($action);
                     }
+                    unset($route);
+                    unset($hookers);
                 } catch (\Throwable $t) {
                     $handler->report($t, $logger);
                     $handler->render($t, $writer);
+                } finally {
+                    if ($handlerContext) {
+                        $handlerContext->destroy();
+                    }
                 }
             }
         });

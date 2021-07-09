@@ -35,9 +35,9 @@ class RedisConnectionFactory implements ConnectionFactory {
 					$connection->instance(\Swooen\Exception\Handler::class, new RedisExceptionHandler());
 					$this->connections[$fd] = $connection;
 					go(function() use ($connection, $fd) {
-						var_dump('new conntection: '. $fd);
+						var_dump('=> new conntection: '. $fd);
 						($this->callback)($connection);
-						var_dump('finish conntection: '. $fd);
+						var_dump('=> finish conntection: '. $fd);
 					});
 				} else {
 					$connection = $this->connections[$fd];
@@ -47,6 +47,18 @@ class RedisConnectionFactory implements ConnectionFactory {
 				$reader->queueCommand($cmd, $data);
 			});
 		}
+		$this->server->on('close', function($server, $fd, $reactorId) {
+			if (isset($this->connections[$fd])) {
+				$connection = $this->connections[$fd];
+				$connection->setPairLeaved();
+				$reader = $connection->getReader();
+				assert($reader instanceof RedisCommandReader);
+				$reader->queueCommand('BYEBYE', []);
+				unset($this->connections[$fd]);
+				$connection->destroy();
+				unset($connection);
+			}
+		});
 	}
 		
 	public function onConnection(callable $callback) {

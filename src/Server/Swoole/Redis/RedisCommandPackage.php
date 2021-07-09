@@ -37,5 +37,5 @@ class RedisCommandPackage extends BasicPackage implements RouteablePackage, IPAw
 	public function getIP() {
 		return $this->meta('ip');
 	}
-	
+
 }

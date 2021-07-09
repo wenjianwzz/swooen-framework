@@ -11,8 +11,6 @@ use Swooen\Container\Container;
  */
 class HandlerContext extends Container {
 
-    protected function __construct() {}
-
     /**
      * @return static
      */
