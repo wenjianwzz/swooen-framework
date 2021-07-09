@@ -97,5 +97,6 @@ class Application extends Container {
                 }
             }
         });
+        $factory->start();
     }
 }

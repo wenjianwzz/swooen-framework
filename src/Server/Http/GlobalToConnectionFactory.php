@@ -13,14 +13,19 @@ use Swooen\Server\Http\Writer\JsonWriter;
  * @author WZZ
  */
 class GlobalToConnectionFactory implements ConnectionFactory {
+
+	protected $callback;
 	
-	public function onConnection(callable $callback)
-	{
+	public function onConnection(callable $callback) {
+		$this->callback = $callback;
+	}
+	
+	public function start() {
 		$connection = new Connection();
 		$reader = new HttpReader();
 		$connection->instance(Writer::class, new JsonWriter());
 		$connection->instance(Reader::class, $reader);
-		$callback($connection);
+		($this->callback)($connection);
 	}
 
 }
