@@ -9,14 +9,18 @@ use Swooen\Server\Http\HttpRequestPackage;
  */
 class HttpReader implements Reader {
 
-	protected $packageGot = 0;
+	protected $request;
+
+	public function __construct(\Symfony\Component\HttpFoundation\Request $request) {
+		$this->request = $request;
+	}
 
 	/**
 	 * 缓冲区是否存在更多对方发送的数据包
 	 * @return boolean
 	 */
 	public function hasNext() {
-		return $this->packageGot++ <= 0;
+		return empty($this->request);
 	}
 
 	public function parseBody($contentType, $content) {
@@ -31,9 +35,8 @@ class HttpReader implements Reader {
 	 * @return Package
 	 */
 	public function next() {
-		$request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 		$body = [];
-		$body = $this->parseBody($request->getContentType(), $request->getContent());
-		return new HttpRequestPackage($request, $body);
+		$body = $this->parseBody($this->request->getContentType(), $this->request->getContent());
+		return new HttpRequestPackage($this->request, $body);
 	}
 }

@@ -14,9 +14,9 @@ class StdoutWriter implements Writer {
             }, array_keys($metas), $metas);
         }
         if ($package->isString()) {
-            return $this->write($package->getString());
+            return $this->end($package->getString());
         } else {
-            return $this->write($this->pack($package));
+            return $this->end($this->pack($package));
         }
 	}
 
@@ -32,10 +32,12 @@ class StdoutWriter implements Writer {
     }
 
 	/**
-	 * 终止连接，并向对方发送终止原因
+	 * 结束写入
 	 */
-	public function end($code, string $reason) {
-		return $this->write('end:['. $code .']' . $reason);
+	public function end(string $content=null) {
+        if ($content) {
+            $this->write($content);
+        }
 	}
 
 	public function write(string $content) {

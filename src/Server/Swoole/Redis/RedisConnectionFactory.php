@@ -15,8 +15,6 @@ class RedisConnectionFactory extends SwooleConnectionFactory {
 
 	protected $server;
 
-	protected $callback;
-
 	/**
 	 * @var RedisConnection[]
 	 */
@@ -42,19 +40,38 @@ class RedisConnectionFactory extends SwooleConnectionFactory {
 	 * @return RedisConnection
 	 */
 	public function createConnection($fd) {
-		return new RedisConnection($this->server, $this, $fd);
+		$connection = new RedisConnection($this->server, $this, $fd);
+		$connection->instance(Reader::class, $this->createReader($fd));
+		$connection->instance(Writer::class, $this->createWriter($fd));
+		return $connection;
 	}
 
 	public function __construct($host, $port, $mode=SWOOLE_BASE, $sockType=SWOOLE_SOCK_TCP) {
 		$this->server = new Server($host, $port, $mode, $sockType);
-		$this->initOnRequest();
+		$this->initHandler();
 		$this->initOnClose();
 	}
 	
-	protected function initOnRequest() {
-		$this->server->on('request', function ($request, $response) {
-			$response->end("<h1>Hello Swoole. #".rand(1000, 9999)."</h1>");
-		});
+	protected function initHandler() {
+		foreach (self::COMMANDS as $cmd) {
+			$this->server->setHandler($cmd, function($fd, $data) use ($cmd) {
+				if (!isset($this->connections[$fd])) {
+					$connection = $this->createConnection($fd);
+					$connection->instance(\Swooen\Exception\Handler::class, new RedisExceptionHandler());
+					$this->connections[$fd] = $connection;
+					go(function() use ($connection, $fd) {
+						var_dump('=> new conntection: '. $fd);
+						($this->callback)($connection);
+						var_dump('=> finish conntection: '. $fd);
+					});
+				} else {
+					$connection = $this->connections[$fd];
+				}
+				$reader = $connection->getReader();
+				assert($reader instanceof RedisCommandReader);
+				$reader->queueCommand($cmd, $data);
+			});
+		}
 	}
 		
 	public function onConnection(callable $callback) {

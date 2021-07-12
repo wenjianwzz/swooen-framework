@@ -19,7 +19,7 @@ interface Writer {
 	/**
 	 * 向对方发送终止包
 	 */
-	public function end($code, string $reason);
+	public function end(string $content);
 
 	/**
 	 * 给对方发送数据

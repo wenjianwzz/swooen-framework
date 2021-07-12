@@ -8,11 +8,4 @@ use Swooen\Server\Swoole\SwooleConnection;
  */
 class HttpConnection extends SwooleConnection {
 
-	public function onClientClosed() {
-		$this->closed = true;
-		$reader = $this->getReader();
-		assert($reader instanceof RedisCommandReader);
-		$reader->setClosed(true);
-	}
-
 }

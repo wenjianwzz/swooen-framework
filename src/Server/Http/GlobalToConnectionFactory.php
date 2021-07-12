@@ -33,7 +33,7 @@ class GlobalToConnectionFactory implements ConnectionFactory {
 	 * @return HttpReader
 	 */
 	public function createReader() {
-		return new HttpReader();
+		return new HttpReader(\Symfony\Component\HttpFoundation\Request::createFromGlobals());
 	}
 
 	/**
