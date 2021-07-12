@@ -2,7 +2,6 @@
 
 use Swooen\Batis\PBatis;
 use Swooen\Batis\Pool\PDOConfig;
-use Swooen\Batis\Pool\SimplePool;
 use Swooen\Batis\Pool\SwoolePool;
 
 require_once __DIR__.'/../vendor/autoload.php';

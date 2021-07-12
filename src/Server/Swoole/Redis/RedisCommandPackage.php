@@ -31,7 +31,7 @@ class RedisCommandPackage extends BasicPackage implements RouteablePackage, IPAw
 	}
 
 	public function getRoutePath() {
-		return $this->getCommand();
+		return strtolower($this->getCommand());
 	}
 
 	public function getIP() {
