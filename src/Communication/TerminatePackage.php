@@ -6,7 +6,7 @@ use Illuminate\Support\Arr;
 /**
  * 空包
  */
-class NilPackage implements Package {
+class TerminatePackage implements Package {
 
 	public function input(string $key, $default=null) {
 		return $default;

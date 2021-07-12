@@ -5,6 +5,7 @@ namespace Swooen;
 
 use Psr\Log\LoggerInterface;
 use Swooen\Communication\Connection;
+use Swooen\Communication\TerminatePackage;
 use Swooen\Communication\Route\Handler\HandlerFactory;
 use Swooen\Communication\Route\Hook\HandlerHook;
 use Swooen\Communication\Route\Router;
@@ -66,6 +67,10 @@ class Application extends Container {
             while ($reader->hasNext()) {
                 try {
                     $package = $reader->next();
+                    if ($package instanceof TerminatePackage) {
+                        // 终止包，结束
+                        break;
+                    }
                     $route = $router->dispatch($package);
                     $action = $route->getAction();
                     $handlerContext = $handlerFactory->createContext($this, $conn, $route, $router, $package, $writer);

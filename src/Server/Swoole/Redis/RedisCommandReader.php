@@ -1,7 +1,7 @@
 <?php
 namespace Swooen\Server\Swoole\Redis;
 
-use Swooen\Communication\NilPackage;
+use Swooen\Communication\TerminatePackage;
 use Swooen\Communication\Reader;
 use Swoole\Coroutine\Channel;
 
@@ -29,7 +29,7 @@ class RedisCommandReader implements Reader {
 	 * 插入一个空包，防止一直阻塞
 	 */
 	public function queueNil() {
-		$this->channel->push(new NilPackage());
+		$this->channel->push(new TerminatePackage());
 	}
 
 	public function hasNext() {
