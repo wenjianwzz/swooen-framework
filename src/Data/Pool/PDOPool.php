@@ -3,9 +3,10 @@ namespace Swooen\Data\Pool;
 
 interface PDOPool {
 
-    public function has(): bool;
+    /**
+     * @return \PDO
+     */
+    public function get();
 
-    public function get(): \PDO;
-
-    public function returnback(\PDO $pdo);
+    public function returnback($pdo);
 }

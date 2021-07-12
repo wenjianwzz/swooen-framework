@@ -32,7 +32,14 @@ class PBatis {
 		throw new \RuntimeException('指定的SQL Key不存在');
     }
 
-    public function session() {
-        return new PBatisSession($this->pool->get(), $this);
+    public function transaction() {
+        return new PBatisTransaction($this->pool->get(), $this);
     }
+
+	/**
+	 * @return PDOPool
+	 */
+	public function getPool() {
+		return $this->pool;
+	}
 }

@@ -13,12 +13,16 @@ class SimplePool implements PDOPool {
         return true;
     }
 
-    public function get(): \PDO {
+    public function create(): \PDO {
         return new \PDO($this->config->getDSN(), $this->config->getUser(), $this->config->getPassword(), [
             \PDO::ATTR_PERSISTENT => true
         ]);
     }
 
-    public function returnback(\PDO $pdo) {
+    public function get() {
+        return $this->create();
+    }
+
+    public function returnback($pdo) {
     }
 }

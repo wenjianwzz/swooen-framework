@@ -1,13 +1,12 @@
 <?php
 namespace Swooen\Data;
 
-use Swooen\Data\Pool\PDOPool;
 
 /**
  * @author wzz
  *
  */
-class PBatisSession {
+class PBatisTransaction {
 
 	/**
 	 * @var \PDO
@@ -19,8 +18,12 @@ class PBatisSession {
 	 */
 	protected $batis;
 
-	public function __construct(\PDO $pdo, PBatis $pBatis) {
+	/**
+	 * @param \PDO $pdo
+	 */
+	public function __construct($pdo, PBatis $pBatis) {
 		$this->pdo = $pdo;
+		$this->batis = $pBatis;
 	}
 
 	public function commit() {
@@ -88,4 +91,7 @@ class PBatisSession {
         }
     }
 
+	public function __destruct() {
+		$this->batis->getPool()->returnback($this->pdo);
+	}
 }
