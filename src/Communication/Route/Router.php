@@ -40,7 +40,8 @@ class Router {
         return \FastRoute\simpleDispatcher(function(\FastRoute\RouteCollector $r) {
             $routes = $this->loader->getRoutes();
             foreach ($routes as $route) {
-                $r->addRoute(Router::METHOD, strtolower($route->getPath()), $route);
+                $path = $route->getPath();
+                $r->addRoute(Router::METHOD, $path, $route);
 			}
 		}, [
             'routeParser' => \FastRoute\RouteParser\Std::class,
@@ -60,7 +61,7 @@ class Router {
         if ($package instanceof RouteablePackage) {
             $routePath = $package->getRoutePath();
         }
-        $found = $dispatcher->dispatch(static::METHOD, strtolower($routePath) );
+        $found = $dispatcher->dispatch(static::METHOD, $routePath );
         switch ($found[0]) {
             case \FastRoute\Dispatcher::FOUND:
                 $route = clone $found[1];
