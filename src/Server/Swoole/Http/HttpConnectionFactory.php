@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Server\Http;
+namespace Swooen\Server\Swoole\Http;
 
 use Swooen\Server\Http\Reader\HttpReader;
 use Swooen\Server\Swoole\Http\HttpConnection;
@@ -58,8 +58,8 @@ class HttpConnectionFactory extends SwooleConnectionFactory {
 	 */
 	public function createConnection(\Swoole\Http\Request $sreq, \Swoole\Http\Response $response) {
 		$connection = new HttpConnection($this->server, $this, $sreq->fd);
-		$connection->instance(Reader::class, $this->createReader($sreq));
-		$connection->instance(Writer::class, $this->createWriter($response));
+		$connection->instance(\Swooen\Communication\Reader::class, $this->createReader($sreq));
+		$connection->instance(\Swooen\Communication\Writer::class, $this->createWriter($response));
 		return $connection;
 	}
 

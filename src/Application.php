@@ -98,7 +98,7 @@ class Application extends Container {
                     $handler->report($t, $logger);
                     $handler->render($t, $writer);
                 } finally {
-                    if ($handlerContext) {
+                    if (isset($handlerContext)) {
                         $handlerContext->destroy();
                     }
                 }

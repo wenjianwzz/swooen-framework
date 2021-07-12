@@ -20,7 +20,7 @@ class HttpReader implements Reader {
 	 * @return boolean
 	 */
 	public function hasNext() {
-		return empty($this->request);
+		return !empty($this->request);
 	}
 
 	public function parseBody($contentType, $content) {
@@ -36,7 +36,9 @@ class HttpReader implements Reader {
 	 */
 	public function next() {
 		$body = [];
-		$body = $this->parseBody($this->request->getContentType(), $this->request->getContent());
-		return new HttpRequestPackage($this->request, $body);
+		$request = $this->request;
+		$this->request = null;
+		$body = $this->parseBody($request->getContentType(), $request->getContent());
+		return new HttpRequestPackage($request, $body);
 	}
 }

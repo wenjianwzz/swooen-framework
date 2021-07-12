@@ -25,10 +25,5 @@ class HttpWriter extends StdoutWriter {
 		return true;
     }
 	
-	public function writeCookie(string $name, string $value, string $expire) {
-		$this->headerSent = true;
-        setcookie($name, $value, $expire, '', '', false, false);
-		return true;
-    }
 
 }
