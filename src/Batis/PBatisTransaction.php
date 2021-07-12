@@ -73,6 +73,10 @@ class PBatisTransaction {
 		return $prepared->rowCount();
 	}
 
+	public function insertGetId($statement, array $bindings) {
+		$this->insert($statement, $bindings);
+		return $this->pdo->lastInsertId();
+	}
 
     /**
      * Bind values to their parameters in the given statement.
