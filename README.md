@@ -7,8 +7,8 @@
 - FPM下可运行HTTP服务
 - 支持WebSocket
 - 未来可扩展gRPC、TCP等协议
-- 无论请求来自何种协议，都应当封装成统一的请求对象。
-- 对于持久连接，如WebSocket，请求帧会被封装成请求对象
+- 无论请求来自何种协议，都应当封装成统一的Package
+- 对于持久连接，如WebSocket，请求帧会被封装成Package
 - 容器分级别，请求上下文、连接、进程
 - 抽象HTTP和WebSocket
 
