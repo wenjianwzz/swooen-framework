@@ -1,9 +1,9 @@
 <?php
 namespace Swooen\Server\Swoole\Redis;
 
-use Swooen\Communication\ConnectionFactory;
 use Swooen\Communication\Reader;
 use Swooen\Communication\Writer;
+use Swooen\Server\Swoole\SwooleConnectionFactory;
 use \Swoole\Redis\Server;
 
 /**
@@ -11,7 +11,7 @@ use \Swoole\Redis\Server;
  * 
  * @author WZZ
  */
-class RedisConnectionFactory implements ConnectionFactory {
+class RedisConnectionFactory extends SwooleConnectionFactory {
 
 	protected $server;
 
@@ -42,43 +42,18 @@ class RedisConnectionFactory implements ConnectionFactory {
 	 * @return RedisConnection
 	 */
 	public function createConnection($fd) {
-		return new RedisConnection();
+		return new RedisConnection($this->server, $this, $fd);
 	}
 
 	public function __construct($host, $port, $mode=SWOOLE_BASE, $sockType=SWOOLE_SOCK_TCP) {
 		$this->server = new Server($host, $port, $mode, $sockType);
-		foreach (self::COMMANDS as $cmd) {
-			$this->server->setHandler($cmd, function($fd, $data) use ($cmd) {
-				if (!isset($this->connections[$fd])) {
-					$connection = $this->createConnection($fd);
-					$connection->instance(Reader::class, $this->createReader($fd));
-					$connection->instance(Writer::class, $this->createWriter($fd));
-					$connection->instance(\Swooen\Exception\Handler::class, new RedisExceptionHandler());
-					$this->connections[$fd] = $connection;
-					go(function() use ($connection, $fd) {
-						var_dump('=> new conntection: '. $fd);
-						($this->callback)($connection);
-						var_dump('=> finish conntection: '. $fd);
-					});
-				} else {
-					$connection = $this->connections[$fd];
-				}
-				$reader = $connection->getReader();
-				assert($reader instanceof RedisCommandReader);
-				$reader->queueCommand($cmd, $data);
-			});
-		}
-		$this->server->on('close', function($server, $fd, $reactorId) {
-			if (isset($this->connections[$fd])) {
-				$connection = $this->connections[$fd];
-				$connection->setPairLeaved();
-				$reader = $connection->getReader();
-				assert($reader instanceof RedisCommandReader);
-				$reader->queueCommand('BYEBYE', []);
-				unset($this->connections[$fd]);
-				$connection->destroy();
-				unset($connection);
-			}
+		$this->initOnRequest();
+		$this->initOnClose();
+	}
+	
+	protected function initOnRequest() {
+		$this->server->on('request', function ($request, $response) {
+			$response->end("<h1>Hello Swoole. #".rand(1000, 9999)."</h1>");
 		});
 	}
 		

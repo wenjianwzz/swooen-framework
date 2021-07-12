@@ -1,27 +1,27 @@
 <?php
 namespace Swooen\Server\Swoole\Redis;
 
-use Swooen\Communication\BaseConnection;
+use Swooen\Server\Swoole\SwooleConnection;
 
 /**
  * @author WZZ
  */
-class RedisConnection extends BaseConnection {
+class RedisConnection extends SwooleConnection {
 
-	protected $pairLeaved = false;
+	protected $closed = false;
 
-	public function setPairLeaved() {
-		$this->pairLeaved = true;
+	public function onClientClosed() {
+		parent::onClientClosed();
 		$reader = $this->getReader();
 		assert($reader instanceof RedisCommandReader);
-		$reader->setClosed(true);
+		$reader->queueNil();
 	}
 
 	public function end(string $reason) {
 		return $this->getWriter()->write($reason);
 	}
 
-	public function isEnd() {
+	public function isClosed() {
 		return $this->closed;
 	}
 

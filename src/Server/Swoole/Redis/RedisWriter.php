@@ -74,4 +74,7 @@ class RedisWriter implements Writer {
 		return $this;
 	}
 
+	public function end($code, string $reason) {
+        $this->writeType(Server::STATUS, $reason.'['. $code .']');
+    }
 }

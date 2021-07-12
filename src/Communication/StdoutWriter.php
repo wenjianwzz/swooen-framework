@@ -31,6 +31,13 @@ class StdoutWriter implements Writer {
         return true;
     }
 
+	/**
+	 * 终止连接，并向对方发送终止原因
+	 */
+	public function end($code, string $reason) {
+		return $this->write('end:['. $code .']' . $reason);
+	}
+
 	public function write(string $content) {
         echo $content;
 		return true;

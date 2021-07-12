@@ -103,6 +103,10 @@ class Application extends Container {
                     }
                 }
             }
+            if ($conn instanceof \Swooen\Container\Container) {
+                // 连接处理结束，摧毁释放资源
+                $conn->destroy();
+            }
         });
         $factory->start();
     }

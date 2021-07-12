@@ -19,15 +19,15 @@ interface Connection extends \Psr\Container\ContainerInterface {
 	public function getReader();
 
 	/**
-	 * 终止连接，并向对方发送终止原因
+	 * 终止连接
 	 */
-	public function end(string $reason);
+	public function terminate();
 
 	/**
 	 * 当前连接是否终止
 	 * @return boolean
 	 */
-	public function isEnd();
+	public function isClosed();
 
 	/**
 	 * 是否是数据流

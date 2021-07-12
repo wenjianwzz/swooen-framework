@@ -1,6 +1,7 @@
 <?php
 namespace Swooen\Server\Swoole\Redis;
 
+use Swooen\Communication\NilPackage;
 use Swooen\Communication\Reader;
 use Swoole\Coroutine\Channel;
 
@@ -21,7 +22,14 @@ class RedisCommandReader implements Reader {
 	}
 
 	public function queueCommand($cmd, $data) {
-		$this->channel->push([$cmd, $data]);
+		$this->channel->push(new RedisCommandPackage($this->ip, $cmd, $data));
+	}
+
+	/**
+	 * 插入一个空包，防止一直阻塞
+	 */
+	public function queueNil() {
+		$this->channel->push(new NilPackage());
 	}
 
 	public function hasNext() {
@@ -30,8 +38,7 @@ class RedisCommandReader implements Reader {
 	}
 
 	public function next() {
-		list($cmd, $data) = $this->channel->pop();
-		return new RedisCommandPackage($this->ip, $cmd, $data);
+		return $this->channel->pop();
 	}
 
 	/**

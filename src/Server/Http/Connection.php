@@ -26,18 +26,14 @@ class Connection extends Container implements ConnectionInterface {
 		return $this->make(\Swooen\Communication\Reader::class);
 	}
 
-	/**
-	 * 终止连接，并向对方发送终止原因
-	 */
-	public function end(string $reason) {
-		return $this->getWriter()->write($reason);
+	public function terminate() {
 	}
 
 	/**
 	 * 当前连接是否终止
 	 * @return boolean
 	 */
-	public function isEnd() {}
+	public function isClosed() {}
 
 	/**
 	 * 是否是数据流

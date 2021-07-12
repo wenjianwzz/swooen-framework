@@ -25,6 +25,9 @@ class Container implements \Psr\Container\ContainerInterface {
      */
     const OPTION_ALIAS = 0x0004;
 
+    /**
+     * 摧毁容器
+     */
     public function destroy() {
         unset($this->binds);
     }

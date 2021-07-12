@@ -17,6 +17,11 @@ interface Writer {
 	public function canWrite();
 
 	/**
+	 * 向对方发送终止包
+	 */
+	public function end($code, string $reason);
+
+	/**
 	 * 给对方发送数据
 	 * @return boolean
 	 */

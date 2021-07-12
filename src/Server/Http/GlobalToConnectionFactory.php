@@ -5,6 +5,7 @@ use Swooen\Communication\ConnectionFactory;
 use Swooen\Communication\Reader;
 use Swooen\Communication\Writer;
 use Swooen\Server\Http\Reader\HttpReader;
+use Swooen\Server\Http\Writer\HttpWriter;
 use Swooen\Server\Http\Writer\JsonWriter;
 
 /**
@@ -21,11 +22,31 @@ class GlobalToConnectionFactory implements ConnectionFactory {
 	}
 	
 	public function start() {
-		$connection = new Connection();
-		$reader = new HttpReader();
-		$connection->instance(Writer::class, new JsonWriter());
+		$connection = $this->createConnection();
+		$reader = $this->createReader();
+		$connection->instance(Writer::class, $this->createWriter());
 		$connection->instance(Reader::class, $reader);
 		($this->callback)($connection);
 	}
 
+	/**
+	 * @return HttpReader
+	 */
+	public function createReader() {
+		return new HttpReader();
+	}
+
+	/**
+	 * @return HttpWriter
+	 */
+	public function createWriter() {
+		return new JsonWriter();
+	}
+
+	/**
+	 * @return Connection
+	 */
+	public function createConnection() {
+		return new Connection();
+	}
 }
