@@ -58,7 +58,9 @@
 1. Server 创建Connection
 2. Connection 获取 客户端输入，得到Package
 3. 路由分发Package，调用控制器
+4. 控制器返回Package
+5. 回写Package
 
 ### 是控制器直接回发，还是由外层调度回发
-控制器回发
+外层调度回发
  
