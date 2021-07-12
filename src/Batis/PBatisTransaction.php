@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Data;
+namespace Swooen\Batis;
 
 
 /**

@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Data\Pool;
+namespace Swooen\Batis\Pool;
 
 class SwoolePool implements PDOPool {
 

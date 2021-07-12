@@ -1,7 +1,7 @@
 <?php
-namespace Swooen\Data;
+namespace Swooen\Batis;
 
-use Swooen\Data\Pool\PDOPool;
+use Swooen\Batis\Pool\PDOPool;
 
 /**
  * 仿照iBatis设计的数据库访问类
