@@ -1,11 +1,11 @@
 {
     "name": "wenjianwzz/swooen",
     "type": "library",
-    "description": "参照Swoole和Lumen实现的框架",
-    "keywords": ["swoole", "lumen", "php"],
+    "description": "受Lumen启发，基于Symfony、Swoole",
+    "keywords": ["swoole", "lumen", "php", "symfony"],
     "homepage": "https://www.wzzcn.net",
     "license": "Private",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "require": {
         "php": ">=7.2.5",
 		"nikic/fast-route": "^1.3",
@@ -14,13 +14,13 @@
 		"symfony/cache": "^5.0",
 		"symfony/http-kernel": "^5.0",
 		"symfony/http-foundation": "^5.0",
-		"dragonmantank/cron-expression": "^1.2",
 		"monolog/monolog": "^2.0",
 		"illuminate/support": "^7.1",
 		"illuminate/config": "^7.1",
         "symfony/mime": "^5.0"
     },
     "require-dev": {
+        "swoole/ide-helper": "~4.5.9"
     },
     "provide": {
     },
@@ -29,10 +29,10 @@
     "autoload": {
         "psr-4": { "Swooen\\": "src" },
         "files": [
-            "src/helpers.php"
+            "src/Util/helpers.php"
         ]
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "repositories": {
         "wenjianwzz-tools": {
             "type": "vcs",

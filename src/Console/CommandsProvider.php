@@ -1,11 +1,9 @@
 <?php
 namespace Swooen\Console;
 
-use Illuminate\Console\Command;
-use Swooen\Core\Container;
-use Symfony\Component\Console\Input\InputArgument;
+use Swooen\Container\Container;
 
-class CommandsProvider extends \Swooen\Core\Provider {
+class CommandsProvider extends \Swooen\Container\Provider {
 
     /**
      * The Artisan commands provided by your application.

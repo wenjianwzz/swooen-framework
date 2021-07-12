@@ -3,9 +3,15 @@
  */
 namespace Swooen;
 
-use Swooen\Core\Container;
-use Swooen\Exceptions\Handler;
-use Swooen\Http\ServePipeline;
+use Psr\Log\LoggerInterface;
+use Swooen\Communication\Connection;
+use Swooen\Communication\Route\Handler\HandlerFactory;
+use Swooen\Communication\Route\Hook\HandlerHook;
+use Swooen\Communication\Route\Router;
+use Swooen\Communication\StdoutWriter;
+use Swooen\Communication\Writer;
+use Swooen\Container\Container;
+use Swooen\Exception\Handler;
 
 class Application extends Container {
     
@@ -20,10 +26,11 @@ class Application extends Container {
 
     public function __construct($basePath) {
         $this->basePath = $basePath;
-        $this->singleton(\Illuminate\Config\Repository::class);
         $this->resourceDir = $this->basePath('resources');
         $this->instance(self::class, $this);
         $this->instance(parent::class, $this);
+        // 默认使用标准输出
+        $this->bind(Writer::class, StdoutWriter::class);
     }
 
     public function basePath($path = null) {
@@ -34,68 +41,73 @@ class Application extends Container {
         return $this->resourceDir.($path ? '/'.$path : $path);
     }
 
-    public function configure($name) {
-        $path = $this->getConfigurationPath($name);
-        if ($path) {
-            $this->call(function(\Illuminate\Config\Repository $config, $name, $path) {
-                $config->set($name, require $path);
-            }, ['path' => $path, 'name' => $name]);
-        }
-    }
-
-    public function getConfigurationPath($name = null) {
-        if (! $name) {
-            $appConfigDir = $this->basePath('config').'/';
-            if (file_exists($appConfigDir)) {
-                return $appConfigDir;
-            } elseif (file_exists($path = __DIR__.'/../config/')) {
-                return $path;
-            }
-        } else {
-            $appConfigPath = $this->basePath('config').'/'.$name.'.php';
-            if (file_exists($appConfigPath)) {
-                return $appConfigPath;
-            } elseif (file_exists($path = __DIR__.'/../config/'.$name.'.php')) {
-                return $path;
-            }
-        }
-    }
-
-	protected function createRouter(\Swooen\Http\Routes\RouteLoader $loader) {
-        $router = $this->make(\Swooen\Http\Routes\Router::class);
-		foreach ($loader->getRoutes() as $route) {
-			$router->addRoute($route);
-        }
-		return $router;
-	}
-
     /**
-     * 处理Http请求
+     * 启动服务，开始监听并处理数据
      */
-    public function handleHttp(\Swooen\Http\Request $req, Container $context=NULL) {
-        \Swooen\Http\Request::setTrustedProxies(['192.168.0.0/16', '172.16.0.0/12', '10.0.0.0/8'], \Swooen\Http\Request::HEADER_X_FORWARDED_ALL);
-        empty($context) and $context = $this;
+    public function run() {
+        $logger = $this->has(LoggerInterface::class)?$this->get(LoggerInterface::class):null;
+        $handler = $this->make(Handler::class);
+        $writer = $this->make(Writer::class);
         try {
-            $this->call(function(\Swooen\Http\Request $req, \Swooen\Http\Writer\Writer $writer, Container $context, \Swooen\Http\Routes\RouteLoader $loader, \Swooen\Http\RequestContextProvider $provider) {
-                $context->instance(\Swooen\Http\Routes\Router::class, $this->createRouter($loader))
-                ->instance(\Swooen\Http\Request::class, $req)
-                ->provider($provider)
-                ->call([new ServePipeline(), 'serve'], []);
-            }, ['context' => $context, 'req' => $req]);
-        } catch (\Throwable $e) {
-            $this->handleError($e);
+            $factory = $this->make(\Swooen\Communication\ConnectionFactory::class);
+            assert($factory instanceof \Swooen\Communication\ConnectionFactory);
+            $router = Router::makeByContainer($this);
+            $handlerFactory = $this->make(HandlerFactory::class);
+            assert($handlerFactory instanceof HandlerFactory);
+        } catch (\Throwable $t) {
+            $handler->report($t, $logger);
+            $handler->render($t, $writer);
         }
+        $factory->onConnection(function(Connection $conn) use ($logger, $router, $handlerFactory) {
+            // 连接建立完成，开始使用连接的错误处理
+            $handler = $conn->has(Handler::class)?$conn->get(Handler::class):$this->make(Handler::class);
+            $writer = $conn->getWriter();
+            $reader = $conn->getReader();
+            while ($reader->hasNext()) {
+                try {
+                    $package = $reader->next();
+                    $route = $router->dispatch($package);
+                    $action = $route->getAction();
+                    $handlerContext = $handlerFactory->createContext($this, $conn, $route, $router, $package, $writer);
+                    /**
+                     * @var HandlerHook[]
+                     */
+                    $hookers = array_map([$handlerContext, 'make'], $route->getHooks());
+                    foreach($hookers as $hooker) {
+                        $package = $hooker->before($handlerContext, $route, $package, $conn);
+                        if (empty($package)) {
+                            // 退出处理流程
+                            break;
+                        }
+                    }
+                    if ($package) {
+                        $action = $handlerFactory->parse($action);
+                        $returnPackage = $handlerContext->call($action, $route->getParams());
+                        for ($i = count($hookers)-1; $i >= 0; --$i) {
+                            $hooker = $hookers[$i];
+                            $returnPackage = $hooker->after($handlerContext, $route, $conn, $returnPackage);
+                        }
+                        if ($returnPackage) {
+                            $conn->getWriter()->send($returnPackage);
+                        }
+                        unset($action);
+                    }
+                    unset($route);
+                    unset($hookers);
+                } catch (\Throwable $t) {
+                    $handler->report($t, $logger);
+                    $handler->render($t, $writer);
+                } finally {
+                    if (isset($handlerContext)) {
+                        $handlerContext->destroy();
+                    }
+                }
+            }
+            if ($conn instanceof \Swooen\Container\Container) {
+                // 连接处理结束，摧毁释放资源
+                $conn->destroy();
+            }
+        });
+        $factory->start();
     }
-
-    public function handleError(\Throwable $e) {
-        try {
-            $this->call(function(Handler $handler, \Swooen\Http\Writer\Writer $writer, \Throwable $e) {
-                $handler->report($e, $this);
-                $handler->render($e, $writer, $this);
-            }, ['e' => $e]);
-        } catch (\Throwable $e2) {
-            // 什么也不干
-        }
-    }
-
 }

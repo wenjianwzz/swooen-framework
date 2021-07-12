@@ -1,0 +1,13 @@
+### 
+@apiHost = http://10.11.12.222
+
+### POST测试
+POST {{apiHost}}/ HTTP/1.1
+Content-Type: application/json
+Cookie: HSID=A5OT90TvMZqq4VmfE;
+
+{
+    "request": {
+        "name": 123
+    }
+}
