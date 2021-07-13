@@ -21,6 +21,7 @@ class SwoolePool implements PDOPool {
     }
 
     public function returnback($pdo) {
+        echo 'return '.spl_object_id($pdo).PHP_EOL;
         $this->pool->put($pdo);
     }
 }
