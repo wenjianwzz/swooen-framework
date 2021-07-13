@@ -87,7 +87,26 @@ class PBatisTransaction {
 		$binds = array_reduce($rows, function($ret, $row) {
 			return array_merge($ret, array_values($row));
 		}, []);
-		$this->insert($sql, $binds);
+		return $this->insert($sql, $binds);
+	}
+
+	public function updateRow($table, $info, $where) {
+		$infoKeys = [];
+		$infoValues = [];
+		foreach( $info as $key=>$val ) {
+			array_push($infoKeys, "`{$key}`=?");
+			array_push($infoValues, $val);
+		}
+		$whereKeys = [];
+		$whereValues = [];
+		foreach( $where as $key=>$val ) {
+			array_push($whereKeys, "`{$key}`=?");
+			array_push($whereValues, $val);
+		}
+		$fieldsClause = join(',', $infoKeys);
+		$whereClause = join(' and ', $whereKeys);
+		$sql = "update `{$table}` set $fieldsClause where {$whereClause}";
+		return $this->update($sql, [...$infoValues, ...$whereValues]);
 	}
 
 

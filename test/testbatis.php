@@ -15,5 +15,6 @@ $batis = new PBatis($pool);
 // }
 go(function() use ($batis) {
     $transaction = $batis->transaction();
-    var_dump($transaction->insertRows('event', [['event' => 'test1'], ['event' => 'test2']]));
+    // var_dump($transaction->insertRows('event', [['event' => 'test1'], ['event' => 'test2']]));
+    var_dump($transaction->updateRow('client_event_log', ['updateTime' => time()], ['eventId' => 12728]));
 });
