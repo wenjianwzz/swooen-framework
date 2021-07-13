@@ -9,7 +9,10 @@ use Swooen\Communication\ConnectionFactory;
  * @author WZZ
  */
 class SwooleConnectionFactory implements ConnectionFactory {
-
+	
+	/**
+	 * @var \Swoole\Server
+	 */
 	protected $server;
 
 	protected $callback;
@@ -18,6 +21,13 @@ class SwooleConnectionFactory implements ConnectionFactory {
 	 * @var SwooleConnection[]
 	 */
 	protected $connections = [];
+
+	/**
+	 * 设置Swoole Server参数
+	 */
+	public function setSetting($setting) {
+		$this->server->set($setting);
+	}
 
 	/**
 	 * 初始化onClose事件, 收到客户端终止连接的事件
@@ -52,6 +62,5 @@ class SwooleConnectionFactory implements ConnectionFactory {
 	public function start() {
 		$this->server->start();
 	}
-
 
 }
