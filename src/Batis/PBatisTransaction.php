@@ -78,6 +78,19 @@ class PBatisTransaction {
 		return $this->pdo->lastInsertId();
 	}
 
+	public function insertRows($table, $rows) {
+		$fields = array_keys(reset($rows));
+		$fieldsClause = join('`, `', $fields);
+		$clause = join(',', array_fill(0, count($fields), '?'));
+		$clauses = join('), (', array_map(function() use ($clause) {return $clause;}, $rows));
+		$sql = "insert into `{$table}` (`{$fieldsClause}`) values ({$clauses});";
+		$binds = array_reduce($rows, function($ret, $row) {
+			return array_merge($ret, array_values($row));
+		}, []);
+		$this->insert($sql, $binds);
+	}
+
+
     /**
      * Bind values to their parameters in the given statement.
      *
