@@ -118,8 +118,7 @@ class PBatisTransaction {
 		}
 		$whereClause = join(' and ', $whereKeys);
 		$sql = "select * from `{$table}` where {$whereClause}";
-		$rows = $this->select($sql, $whereValues);
-		return reset($rows);
+		return $this->select($sql, $whereValues);
 	}
 
     /**
