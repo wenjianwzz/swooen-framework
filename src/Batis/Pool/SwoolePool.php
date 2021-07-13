@@ -5,7 +5,7 @@ class SwoolePool implements PDOPool {
 
     protected $pool;
 
-    public function __construct(PDOConfig $config) {
+    public function __construct(PDOConfig $config, $size=4, $prefill=false) {
         $configObj = (new \Swoole\Database\PDOConfig())
                 ->withHost($config->getHost())
                 ->withPort($config->getPort())
@@ -13,7 +13,10 @@ class SwoolePool implements PDOPool {
                 ->withCharset($config->getCharset())
                 ->withUsername($config->getUser())
                 ->withPassword($config->getPassword());
-        $this->pool = new \Swoole\Database\PDOPool($configObj, 16);
+        $this->pool = new \Swoole\Database\PDOPool($configObj, $size);
+        if ($prefill) {
+            $this->pool->fill();
+        }
     }
 
     public function get() {
