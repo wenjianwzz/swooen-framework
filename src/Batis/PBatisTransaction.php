@@ -109,6 +109,18 @@ class PBatisTransaction {
 		return $this->update($sql, [...$infoValues, ...$whereValues]);
 	}
 
+	public function selectWhere($table, $where) {
+		$whereKeys = [];
+		$whereValues = [];
+		foreach( $where as $key=>$val ) {
+			array_push($whereKeys, "`{$key}`=?");
+			array_push($whereValues, $val);
+		}
+		$whereClause = join(' and ', $whereKeys);
+		$sql = "select * from `{$table}` where {$whereClause}";
+		$rows = $this->select($sql, $whereValues);
+		return reset($rows);
+	}
 
     /**
      * Bind values to their parameters in the given statement.
