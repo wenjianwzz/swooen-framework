@@ -1,6 +1,7 @@
 <?php
 namespace Swooen\Server\Swoole\Redis;
 
+use Swooen\Communication\NilPackage;
 use Swooen\Communication\Package;
 use Swooen\Communication\Writer;
 use Swoole\Redis\Server;
@@ -27,6 +28,9 @@ class RedisWriter implements Writer {
             array_map(function($name, $value) {
                 $this->writeMeta($name, $value);
             }, array_keys($metas), $metas);
+        }
+        if ($package instanceof NilPackage) {
+            return $this->writeType(Server::NIL, '');
         }
         if ($package->isString()) {
             return $this->write($package->getString());
