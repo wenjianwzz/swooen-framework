@@ -59,18 +59,23 @@ class PBatisTransaction {
 		return $prepared->fetchAll();
 	}
 
-	public function update($statement, array $bindings) {
+	public function affectingStatement($statement, $bindings = []) {
 		$prepared = $this->pdo->prepare($statement);
 		$this->bindValues($prepared, $bindings);
 		$prepared->execute();
 		return $prepared->rowCount();
 	}
 
-	public function insert($statement, array $bindings) {
-		$prepared = $this->pdo->prepare($statement);
-		$this->bindValues($prepared, $bindings);
-		$prepared->execute();
-		return $prepared->rowCount();
+	public function update($statement, array $bindings = []) {
+		return $this->affectingStatement($statement, $bindings);
+	}
+
+	public function insert($statement, array $bindings = []) {
+		return $this->affectingStatement($statement, $bindings);
+	}
+
+	public function delete($statement, array $bindings = []) {
+		return $this->affectingStatement($statement, $bindings);
 	}
 
 	public function insertGetId($statement, array $bindings) {
