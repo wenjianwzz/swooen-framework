@@ -21,9 +21,9 @@ class PBatisTransaction {
 	/**
 	 * @param \PDO $pdo
 	 */
-	public function __construct($pdo, PBatis $pBatis) {
-		$this->pdo = $pdo;
+	public function __construct(PBatis $pBatis) {
 		$this->batis = $pBatis;
+		$this->pdo = $pBatis->getPool()->get();
 	}
 
 	public function commit() {
