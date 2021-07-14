@@ -21,8 +21,9 @@ class PBatis {
 		$this->pool = $pool;
 	}
 
-	public function loadDict(array $sqlDict) {
+	public function loadDict(array $sqlDict) : self {
 		$this->sqls = array_merge($this->sqls, $sqlDict);
+		return $this;
 	}
 
     public function get($sqlKey) {
