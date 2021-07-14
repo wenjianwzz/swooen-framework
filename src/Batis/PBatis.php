@@ -34,7 +34,7 @@ class PBatis {
     }
 
     public function transaction() {
-        return new PBatisTransaction($this->pool->get(), $this);
+        return new PBatisTransaction($this);
     }
 
 	/**
