@@ -106,7 +106,8 @@ class PBatisTransaction {
 		$fieldsClause = join(',', $infoKeys);
 		$whereClause = join(' and ', $whereKeys);
 		$sql = "update `{$table}` set $fieldsClause where {$whereClause}";
-		return $this->update($sql, [...$infoValues, ...$whereValues]);
+		array_push($binds = [], ...$infoValues, ...$whereValues);
+		return $this->update($sql, $binds);
 	}
 
 	public function selectWhere($table, $where) {
