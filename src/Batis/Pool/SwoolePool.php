@@ -1,6 +1,6 @@
 <?php
 namespace Swooen\Batis\Pool;
-
+use PDO;
 class SwoolePool implements PDOPool {
 
     protected $pool;
@@ -12,7 +12,14 @@ class SwoolePool implements PDOPool {
                 ->withDbName($config->getDb())
                 ->withCharset($config->getCharset())
                 ->withUsername($config->getUser())
-                ->withPassword($config->getPassword());
+                ->withPassword($config->getPassword())
+                ->withOptions([
+                    PDO::ATTR_CASE => PDO::CASE_NATURAL,
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_ORACLE_NULLS => PDO::NULL_NATURAL,
+                    PDO::ATTR_STRINGIFY_FETCHES => false,
+                    PDO::ATTR_EMULATE_PREPARES => false
+                ]);
         $this->pool = new \Swoole\Database\PDOPool($configObj, $size);
         if ($prefill) {
             $this->pool->fill();
