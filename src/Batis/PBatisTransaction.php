@@ -95,6 +95,14 @@ class PBatisTransaction {
 		return $this->insert($sql, $binds);
 	}
 
+	public function insertRowGetId($table, $row) {
+		$fields = array_keys($row);
+		$fieldsClause = join('`, `', $fields);
+		$clause = join(',', array_fill(0, count($fields), '?'));
+		$sql = "insert into `{$table}` (`{$fieldsClause}`) values ({$clause});";
+		return $this->insertGetId($sql, array_values($row));
+	}
+
 	public function updateRow($table, $info, $where) {
 		$infoKeys = [];
 		$infoValues = [];
