@@ -30,7 +30,7 @@ class PBatis {
 		if (isset($this->sqls[$sqlKey])) {
             return $this->sqls[$sqlKey];
 		}
-		throw new \RuntimeException('指定的SQL Key不存在');
+		throw new \RuntimeException('指定的SQL Key['.$sqlKey.']不存在');
     }
 
     public function transaction() {
