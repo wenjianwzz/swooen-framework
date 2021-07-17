@@ -84,6 +84,9 @@ class PBatisTransaction {
 	}
 
 	public function insertRows($table, $rows) {
+		if (empty($rows)) {
+			return 0;
+		}
 		$fields = array_keys(reset($rows));
 		$fieldsClause = join('`, `', $fields);
 		$clause = join(',', array_fill(0, count($fields), '?'));
@@ -96,6 +99,9 @@ class PBatisTransaction {
 	}
 
 	public function insertRowGetId($table, $row) {
+		if (empty($row)) {
+			return false;
+		}
 		$fields = array_keys($row);
 		$fieldsClause = join('`, `', $fields);
 		$clause = join(',', array_fill(0, count($fields), '?'));
