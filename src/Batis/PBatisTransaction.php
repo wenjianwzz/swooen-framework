@@ -21,7 +21,7 @@ class PBatisTransaction {
 	/**
 	 * 事务计数
 	 */
-	protected $transactionCount = 0;
+	protected $transactionCounter = 0;
 
 	/**
 	 * @param \PDO $pdo
