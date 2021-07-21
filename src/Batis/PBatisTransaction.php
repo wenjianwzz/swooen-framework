@@ -19,6 +19,11 @@ class PBatisTransaction {
 	protected $batis;
 
 	/**
+	 * 事务计数
+	 */
+	protected $transactionCount = 0;
+
+	/**
 	 * @param \PDO $pdo
 	 */
 	public function __construct(PBatis $pBatis) {
@@ -26,17 +31,28 @@ class PBatisTransaction {
 		$this->pdo = $pBatis->getPool()->get();
 	}
 
-	public function commit() {
-		return $this->pdo->commit();
-	}
+    public function beginTransaction() {
+        if (!$this->transactionCounter++) {
+            return $this->pdo->beginTransaction();
+        }
+        $this->pdo->exec('SAVEPOINT trans'.$this->transactionCounter);
+        return $this->transactionCounter >= 0;
+    }
 
-	public function rollback() {
-		return $this->pdo->rollBack();
-	}
+    public function commit() {
+        if (!--$this->transactionCounter) {
+            return $this->pdo->commit();
+        }
+        return $this->transactionCounter >= 0;
+    }
 
-	public function beginTransaction() {
-		$this->pdo->beginTransaction();
-	}
+    public function rollback() {
+        if (--$this->transactionCounter) {
+            $this->pdo->exec('ROLLBACK TO trans'.$this->transactionCounter + 1);
+            return true;
+        }
+        return $this->pdo->rollBack();
+    }
 
 	public function invoke($sqlKey, array $bindings) {
 		$declare = $this->batis->get($sqlKey);
