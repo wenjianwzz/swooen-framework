@@ -29,7 +29,7 @@ class Handler {
 
 	public function render(\Throwable $e, Writer $writer) {
 		try {
-			$writer->write($e->getFile().':'.$e->getLine()."\n".$e->getMessage()."\n".$e->getTraceAsString());
+			$writer->end($e->getFile().':'.$e->getLine()."\n".$e->getMessage()."\n".$e->getTraceAsString());
 		} catch (\Throwable $t2) {
 			// 无法继续处理
 		}

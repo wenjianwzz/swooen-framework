@@ -17,7 +17,7 @@ interface Writer {
 	public function canWrite();
 
 	/**
-	 * 向对方发送终止包
+	 * 向对方发送内容，并终止连接
 	 */
 	public function end(string $content);
 

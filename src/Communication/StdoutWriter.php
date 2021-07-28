@@ -3,10 +3,6 @@ namespace Swooen\Communication;
 
 class StdoutWriter implements Writer {
 
-	/**
-	 * 给对方发送数据包
-	 * @return boolean
-	 */
 	public function send(Package $package) {
         if ($metas = $package->metas()) {
             array_map(function($name, $value) {
