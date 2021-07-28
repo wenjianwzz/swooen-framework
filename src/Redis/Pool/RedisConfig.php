@@ -15,13 +15,16 @@ class RedisConfig {
 
     protected $readTimeout;
 
-    public function __construct($host, $port, $dbIndex, $auth, $timeout=30, $readTimeout=-1) {
+    protected $retryInterval;
+
+    public function __construct($host, $port, $dbIndex, $auth, $timeout=30, $readTimeout=30, $retryInterval=1) {
         $this->host = $host;
         $this->port = $port;
         $this->dbIndex = $dbIndex;
         $this->auth = $auth;
         $this->timeout = $timeout;
         $this->readTimeout = $readTimeout;
+        $this->retryInterval = $retryInterval;
     }
 
     public function getHost() {
@@ -48,4 +51,22 @@ class RedisConfig {
         return $this->readTimeout;
     }
 
+
+    /**
+     * Get the value of retryInterval
+     */
+    public function getRetryInterval()
+    {
+        return $this->retryInterval;
+    }
+
+    /**
+     * Set the value of retryInterval
+     */
+    public function setRetryInterval($retryInterval): self
+    {
+        $this->retryInterval = $retryInterval;
+
+        return $this;
+    }
 }

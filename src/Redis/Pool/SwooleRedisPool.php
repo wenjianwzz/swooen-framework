@@ -12,7 +12,7 @@ class SwooleRedisPool implements RedisPool {
                 ->withDbIndex($config->getDbIndex())
                 ->withReadTimeout($config->getReadTimeout())
                 ->withAuth($config->getAuth())
-                ->withRetryInterval(1)
+                ->withRetryInterval($config->getRetryInterval())
                 ->withTimeout($config->getTimeout());
         $this->pool = new \Swoole\Database\RedisPool($configObj, $size);
         if ($prefill) {
