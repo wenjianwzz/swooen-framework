@@ -15,7 +15,7 @@ class RedisConfig {
 
     protected $readTimeout;
 
-    public function __construct($host, $port, $dbIndex, $auth, $timeout=-1, $readTimeout=600) {
+    public function __construct($host, $port, $dbIndex, $auth, $timeout=30, $readTimeout=-1) {
         $this->host = $host;
         $this->port = $port;
         $this->dbIndex = $dbIndex;
