@@ -141,7 +141,7 @@ class PBatisTransaction {
 		$fieldsClause = join(',', $infoKeys);
 		$whereClause = join(' and ', $whereKeys);
 		$sql = "update `{$table}` set $fieldsClause where {$whereClause}";
-		array_push($binds = [], ...$infoValues, ...$whereValues);
+		$binds = array_merge($infoValues, $whereValues);
 		return $this->update($sql, $binds);
 	}
 
