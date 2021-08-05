@@ -27,7 +27,7 @@ class HttpReader implements Reader {
 		if (stripos($contentType, 'json') !== false) {
 			return json_decode($content, true);
 		}
-		return [];	
+		return false;	
 	}
 
 	/**
