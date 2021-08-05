@@ -19,7 +19,7 @@ class BasicPackage implements Package {
 	}
 
 	public function meta(string $key, $default=null) {
-		return Arr::get($this->metas, $key, $default);
+		return Arr::get($this->metas, strtolower($key), $default);
 	}
 
 	public function inputs() {
