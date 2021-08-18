@@ -1,9 +1,10 @@
 <?php
 
+use Swooen\Communication\BasicPackage;
 use Swooen\Communication\Route\Route;
 
 return [
     new Route('{path:.+}', function(Route $route) {
-        var_dump($route);
+        return new BasicPackage([], []);
     })
 ];

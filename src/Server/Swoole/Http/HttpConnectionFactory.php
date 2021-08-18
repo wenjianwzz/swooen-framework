@@ -6,7 +6,6 @@ use Swooen\Server\Swoole\Http\HttpConnection;
 use Swooen\Server\Swoole\Http\Writer\JsonWriter;
 use Swooen\Server\Swoole\SwooleConnectionFactory;
 use \Swoole\Http\Server;
-use Swoole\IDEHelper\StubGenerators\Swoole;
 
 /**
  * 
