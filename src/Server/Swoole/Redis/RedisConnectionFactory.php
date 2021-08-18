@@ -13,6 +13,9 @@ use \Swoole\Redis\Server;
  */
 class RedisConnectionFactory extends SwooleConnectionFactory {
 
+	/**
+	 * @var Server
+	 */
 	protected $server;
 
 	/**
