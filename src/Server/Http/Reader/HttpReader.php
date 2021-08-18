@@ -15,6 +15,10 @@ class HttpReader implements Reader {
 		$this->request = $request;
 	}
 
+	public function getRequest() : \Symfony\Component\HttpFoundation\Request {
+		return $this->request;
+	}
+
 	/**
 	 * 缓冲区是否存在更多对方发送的数据包
 	 * @return boolean
