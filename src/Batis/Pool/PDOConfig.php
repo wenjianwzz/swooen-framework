@@ -28,7 +28,7 @@ class PDOConfig {
     }
 
     public function getDSN() {
-        return "{$this->pdotype}:host={$this->host};port={$this->port};dbname={$this->db}";
+        return "{$this->pdotype}:host={$this->host};port={$this->port};dbname={$this->db};charset={$this->charset}";
     }
 
     /**
