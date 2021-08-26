@@ -1,36 +1,47 @@
 <?php
 namespace Swooen\Batis\Pool;
-use PDO;
-class SwoolePool implements PDOPool {
+use Swoole\Coroutine\Channel;
 
+class SwoolePool extends SimplePool {
+
+    /**
+     * @var Channel
+     */
     protected $pool;
 
     public function __construct(PDOConfig $config, $size=4, $prefill=false) {
-        $configObj = (new \Swoole\Database\PDOConfig())
-                ->withHost($config->getHost())
-                ->withPort($config->getPort())
-                ->withDbName($config->getDb())
-                ->withCharset($config->getCharset())
-                ->withUsername($config->getUser())
-                ->withPassword($config->getPassword())
-                ->withOptions([
-                    PDO::ATTR_CASE => PDO::CASE_NATURAL,
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_ORACLE_NULLS => PDO::NULL_NATURAL,
-                    PDO::ATTR_STRINGIFY_FETCHES => false,
-                    PDO::ATTR_EMULATE_PREPARES => false
-                ]);
-        $this->pool = new \Swoole\Database\PDOPool($configObj, $size);
+        parent::__construct($config);
+        $this->pool = new Channel($size);
         if ($prefill) {
-            $this->pool->fill();
+            for($i=0; $i<$size; ++$i) {
+                $this->returnback($this->create());
+            }
         }
     }
 
+    public function checkPDO($pdo) {
+        if ($pdo instanceof \PDO) {
+            try {
+                $pdo->query('select 1');
+            } catch (\Throwable $t) {
+                echo 'PDO dead' . $t->getMessage() . PHP_EOL;
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
     public function get() {
-        return $this->pool->get();
+        // 先等待，如果没有，创建新的
+        $pdo = $this->pool->pop(0.2); 
+        if ($pdo && $this->checkPDO($pdo)) {
+            return $pdo;
+        }
+        return $this->create();
     }
 
     public function returnback($pdo) {
-        $this->pool->put($pdo);
+        $this->pool->push($pdo, 0.1);
     }
 }
