@@ -1,7 +1,7 @@
 <?php
 namespace Swooen\Container;
 
-class Container implements \Psr\Container\ContainerInterface {
+class Container implements ContainerInterface {
 
     protected $binds = [];
     
