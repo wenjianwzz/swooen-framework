@@ -35,35 +35,35 @@ class Container implements ContainerInterface {
     /**
      * 注册实例
      */
-    public function instance($abstract, $instance) : self {
+    public function instance($abstract, $instance) : ContainerInterface {
         return $this->register($abstract, $instance, static::OPTION_INSTANCE);
     }
 
     /**
      * 注册单例
      */
-    public function singleton($abstract, $implement=null) : self {
+    public function singleton($abstract, $implement=null) : ContainerInterface {
         return $this->register($abstract, $implement?$implement:$abstract, static::OPTION_SINGLETON);
     }
 
     /**
      * 绑定实现，可以是类名/创建函数
      */
-    public function bind($abstract, $implement) : self {
+    public function bind($abstract, $implement) : ContainerInterface {
         return $this->register($abstract, $implement, static::OPTION_NONE);
     }
 
     /**
      * 别名
      */
-    public function alias($abstract, $alias) : self {
+    public function alias($abstract, $alias) : ContainerInterface {
         return $this->register($alias, $abstract, static::OPTION_ALIAS);
     }
 
     /**
      * 注册Providers
      */
-    public function provider($provider) : self {
+    public function provider($provider) : ContainerInterface {
         if (is_string($provider)) {
             $provider = $this->make($provider);
         } else if (is_callable($provider)) {
@@ -77,7 +77,7 @@ class Container implements ContainerInterface {
         return $this;
     }
 
-    protected function register($abstract, $implement, $option) : self {
+    protected function register($abstract, $implement, $option) : ContainerInterface {
         $this->binds[$abstract] = [$implement, $option];
         return $this;
     }
@@ -94,7 +94,7 @@ class Container implements ContainerInterface {
         return isset($this->binds[$abstract]);
     }
 
-    public function unbind($abstract) : self {
+    public function unbind($abstract) : ContainerInterface {
         if ($this->bound($abstract)) {
             unset($this->binds[$abstract]);
         }
