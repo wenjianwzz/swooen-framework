@@ -31,6 +31,7 @@ class WsJsonConnectionFactory extends HttpConnectionFactory {
 			$connection = $this->createWsConnection($server, $request);
 			$this->connections[$request->fd] = $connection;
 			($this->callback)($connection);
+			// 增加连接包
 		});
 		$this->server->on('message', function (\Swoole\WebSocket\Server $server, \Swoole\WebSocket\Frame $frame) {
 			$conn = isset($this->connections[$frame->fd])?$this->connections[$frame->fd]:null;

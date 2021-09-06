@@ -1,9 +1,11 @@
 <?php
 namespace Swooen\Server\Swoole\WebSocket\Reader;
 
+use Swoole\WebSocket\Frame;
+
 /**
  * @author WZZ
  */
-class JsonOnWsReader extends WebSocketReader {
+class ConnectedVirtualFrame extends Frame {
 
 }

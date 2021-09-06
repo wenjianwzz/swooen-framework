@@ -1,12 +1,8 @@
 <?php
 namespace Swooen\Server\Swoole\WebSocket\Reader;
 
-use Swooen\Communication\RawPackage;
 use Swooen\Communication\Reader;
-use Swooen\Communication\TerminatePackage;
 use Swooen\Server\Swoole\WebSocket\WebSocketConnection;
-use Swooen\Server\Swoole\WebSocket\WsJsonConnectionFactory;
-use Swoole\Coroutine\Channel;
 
 /**
  * @author WZZ
@@ -45,7 +41,24 @@ class WebSocketReader implements Reader {
 	}
 
 	protected function packData($content) {
-		return new RawPackage($content, []);
+		$path = str_replace('//', '/', $this->request->getPathInfo());
+		$inputs = $this->request->request?$this->request->request->all():[];
+		$metas = array_map('reset', $this->request->headers->all());
+		return new WebSocketPackage($path, $inputs, $metas, $content, $this->request->getClientIp());
+	}
+
+	protected function packConnected() {
+		$path = str_replace('//', '/', $this->request->getPathInfo());
+		$inputs = $this->request->request?$this->request->request->all():[];
+		$metas = array_map('reset', $this->request->headers->all());
+		return new WebSocketConnectedPackage($path, $inputs, $metas, '', $this->request->getClientIp());
+	}
+
+	protected function packClose() {
+		$path = str_replace('//', '/', $this->request->getPathInfo());
+		$inputs = $this->request->request?$this->request->request->all():[];
+		$metas = array_map('reset', $this->request->headers->all());
+		return new WebSocketClosePackage($path, $inputs, $metas, '', $this->request->getClientIp());
 	}
 
 	/**
@@ -56,7 +69,10 @@ class WebSocketReader implements Reader {
 		do {
 			$frame = $this->connection->popFrame();
 			if ($frame instanceof \Swoole\WebSocket\CloseFrame) {
-				return new TerminatePackage();
+				return $this->packClose();
+            } else if ($frame instanceof ConnectedVirtualFrame) {
+				// 连接
+				return $this->packConnected();
             } else {
 				$this->buffer .= $frame->data;
 				if ($frame->finish) {
