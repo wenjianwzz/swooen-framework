@@ -42,21 +42,21 @@ class WebSocketReader implements Reader {
 
 	protected function packData($content) {
 		$path = str_replace('//', '/', $this->request->getPathInfo());
-		$inputs = $this->request->request?$this->request->request->all():[];
+		$inputs = $this->request->query?$this->request->query->all():[];
 		$metas = array_map('reset', $this->request->headers->all());
 		return new WebSocketPackage($path, $inputs, $metas, $content, $this->request->getClientIp());
 	}
 
 	protected function packConnected() {
 		$path = str_replace('//', '/', $this->request->getPathInfo());
-		$inputs = $this->request->request?$this->request->request->all():[];
+		$inputs = $this->request->query?$this->request->query->all():[];
 		$metas = array_map('reset', $this->request->headers->all());
 		return new WebSocketConnectedPackage($path, $inputs, $metas, '', $this->request->getClientIp());
 	}
 	
 	protected function packClose() {
 		$path = str_replace('//', '/', $this->request->getPathInfo());
-		$inputs = $this->request->request?$this->request->request->all():[];
+		$inputs = $this->request->query?$this->request->query->all():[];
 		$metas = array_map('reset', $this->request->headers->all());
 		return new WebSocketClosePackage($path, $inputs, $metas, '', $this->request->getClientIp());
 	}
