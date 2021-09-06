@@ -39,5 +39,8 @@ class WebSocketConnection extends SwooleConnection {
 	public function hasFrames() {
 		return !$this->frameChannel->isEmpty() || !$this->closed;
 	}
-    
+
+	public function __destruct() {
+		echo __METHOD__ . PHP_EOL;
+	}
 }

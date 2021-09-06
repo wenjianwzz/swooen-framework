@@ -53,7 +53,7 @@ class WebSocketReader implements Reader {
 		$metas = array_map('reset', $this->request->headers->all());
 		return new WebSocketConnectedPackage($path, $inputs, $metas, '', $this->request->getClientIp());
 	}
-
+	
 	protected function packClose() {
 		$path = str_replace('//', '/', $this->request->getPathInfo());
 		$inputs = $this->request->request?$this->request->request->all():[];
