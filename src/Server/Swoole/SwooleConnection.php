@@ -53,7 +53,7 @@ abstract class SwooleConnection extends BaseConnection {
 	}
 
 	public function dispatchPackage(Package $package) {
-		call_user_func($this->packageCallback, $package,);
+		call_user_func($this->packageCallback, $package, $this);
 	}
 
 	public function onPackage(callable $callable) {

@@ -1,7 +1,6 @@
 <?php
 namespace Swooen\Server\Swoole\Redis;
 
-use Swooen\Communication\Reader;
 use Swooen\Communication\Writer;
 use Swooen\Server\Swoole\SwooleConnectionFactory;
 use \Swoole\Redis\Server;
@@ -24,12 +23,37 @@ class RedisConnectionFactory extends SwooleConnectionFactory {
 	protected $connections = [];
 
 	/**
-	 * @return RedisCommandReader
+	 * @var RedisCommandParser
 	 */
-	public function createReader($fd) {
-		$info = $this->server->getClientInfo($fd);
-		$ip = isset($info['remote_ip'])?$info['remote_ip']:'';
-		return new RedisCommandReader($ip);
+	protected $parser;
+
+	public function __construct($host, $port) {
+		$this->server = new Server($host, $port, SWOOLE_BASE, SWOOLE_SOCK_TCP);
+		$this->initHandler();
+		$this->initOnClose();
+		$this->setParser($this->createParser());
+	}
+
+	/**
+	 * @return RedisCommandParser
+	 */
+	public function createParser() {
+		return new RedisCommandParser();
+	}
+
+	/**
+	 * @return RedisCommandParser
+	 */
+	public function getParser() {
+		return $this->parser;
+	}
+
+	/**
+	 * Set the value of parser
+	 */
+	public function setParser(RedisCommandParser $parser): self {
+		$this->parser = $parser;
+		return $this;
 	}
 
 	/**
@@ -44,15 +68,8 @@ class RedisConnectionFactory extends SwooleConnectionFactory {
 	 */
 	public function createConnection($fd) {
 		$connection = new RedisConnection($this->server, $this, $fd);
-		$connection->instance(Reader::class, $this->createReader($fd));
 		$connection->instance(Writer::class, $this->createWriter($fd));
 		return $connection;
-	}
-
-	public function __construct($host, $port, $mode=SWOOLE_BASE, $sockType=SWOOLE_SOCK_TCP) {
-		$this->server = new Server($host, $port, $mode, $sockType);
-		$this->initHandler();
-		$this->initOnClose();
 	}
 	
 	protected function initHandler() {
@@ -62,15 +79,13 @@ class RedisConnectionFactory extends SwooleConnectionFactory {
 					$connection = $this->createConnection($fd);
 					$connection->instance(\Swooen\Exception\Handler::class, new RedisExceptionHandler());
 					$this->connections[$fd] = $connection;
-					go(function() use ($connection) {
-						($this->callback)($connection);
-					});
+					($this->callback)($connection);
 				} else {
 					$connection = $this->connections[$fd];
 				}
-				$reader = $connection->getReader();
-				assert($reader instanceof RedisCommandReader);
-				$reader->queueCommand($cmd, $data);
+				$info = $this->server->getClientInfo($fd);
+				$ip = isset($info['remote_ip'])?$info['remote_ip']:'';
+				$connection->dispatchPackage($this->parser->packCommand($ip, $cmd, $data));
 			});
 		}
 	}
@@ -238,5 +253,4 @@ class RedisConnectionFactory extends SwooleConnectionFactory {
 		'SYNC',
 		'TIME'
 	];
-
 }
