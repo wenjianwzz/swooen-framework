@@ -2,7 +2,6 @@
 namespace Swooen\Server\Swoole\WebSocket;
 
 use Swooen\Server\Swoole\Http\HttpConnectionFactory;
-use Swooen\Server\Swoole\WebSocket\Package\ConnectedVirtualFrame;
 use Swooen\Server\Swoole\WebSocket\Package\WebSocketParser;
 use Swooen\Server\Swoole\WebSocket\Writer\JsonWriter;
 use \Swoole\WebSocket\Server;
@@ -61,7 +60,6 @@ class WsJsonConnectionFactory extends HttpConnectionFactory {
 			$request = $this->packRequest($sreq);
 			$connection = $this->createWsConnection($server, $sreq, $request);
 			$this->connections[$sreq->fd] = $connection;
-			$connection->queueFrame(new ConnectedVirtualFrame());
 			$connection->dispatchPackage($this->socketParser->packConnected($request));
 			($this->callback)($connection);
 		});

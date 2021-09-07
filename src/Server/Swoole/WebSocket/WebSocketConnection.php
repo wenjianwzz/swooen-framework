@@ -2,7 +2,6 @@
 namespace Swooen\Server\Swoole\WebSocket;
 
 use Swooen\Server\Swoole\SwooleConnection;
-use Swooen\Server\Swoole\WebSocket\Package\ConnectedVirtualFrame;
 use Swooen\Server\Swoole\WebSocket\Package\WebSocketParser;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -29,9 +28,6 @@ class WebSocketConnection extends SwooleConnection {
     public function queueFrame(\Swoole\WebSocket\Frame $frame) {
 		if ($frame instanceof \Swoole\WebSocket\CloseFrame) {
 			$this->dispatchPackage($this->webSocketParser->packClose($this->request));
-		} else if ($frame instanceof ConnectedVirtualFrame) {
-			// 连接
-			$this->dispatchPackage($this->webSocketParser->packConnected($this->request));
 		} else {
 			$this->buffer .= $frame->data;
 			if ($frame->finish) {
