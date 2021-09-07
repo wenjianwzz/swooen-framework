@@ -16,7 +16,14 @@ class GlobalToConnectionFactory implements ConnectionFactory {
 
 	protected $callback;
 
+	/**
+	 * @var HttpParser
+	 */
 	protected $parser;
+
+	public function __construct(HttpParser $httpParser=null) {
+		empty($httpParser) and $httpParser = new HttpParser();
+	}
 	
 	public function onConnection(callable $callback) {
 		$this->callback = $callback;
@@ -24,16 +31,8 @@ class GlobalToConnectionFactory implements ConnectionFactory {
 	
 	public function start() {
 		$connection = $this->createConnection();
-		$this->parser = $this->createParser();
 		$connection->instance(Writer::class, $this->createWriter());
 		($this->callback)($connection);
-	}
-
-	/**
-	 * @return HttpParser
-	 */
-	public function createParser() {
-		return new HttpParser();
 	}
 
 	/**
