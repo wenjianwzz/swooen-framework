@@ -26,7 +26,7 @@ abstract class BaseConnection extends Container implements Connection {
 	}
 
 	public function dispatchPackage(Package $package) {
-		call_user_func($this->packageCallback, $package);
+		call_user_func($this->packageCallback, $package, $this);
 	}
 
 	public function onPackage(callable $callable) {

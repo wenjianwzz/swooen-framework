@@ -63,27 +63,27 @@ class Application extends Container {
             // 连接建立完成，开始使用连接的错误处理
             $handler = $conn->has(Handler::class)?$conn->get(Handler::class):$this->make(Handler::class);
             $writer = $conn->getWriter();
-            $conn->onPackage(function(Package $package) use ($router, $conn, $writer, $handlerFactory, $handler, $logger) {
+            $conn->onPackage(function(Package $package, Connection $connection) use ($router, $writer, $handlerFactory, $handler, $logger) {
                 try {
                     $route = $router->dispatch($package);
                     $action = $route->getAction();
-                    $handlerContext = $handlerFactory->createContext($this, $conn, $route, $router, $package, $writer);
+                    $handlerContext = $handlerFactory->createContext($this, $connection, $route, $router, $package, $writer);
                     /**
                      * @var HandlerHook[]
                      */
                     $hookers = array_map([$handlerContext, 'make'], $route->getHooks());
                     foreach($hookers as $hooker) {
-                        $package = $hooker->before($handlerContext, $route, $package, $conn);
+                        $package = $hooker->before($handlerContext, $route, $package, $connection);
                     }
                     if ($package) {
                         $action = $handlerFactory->parse($action);
                         $returnPackage = $handlerContext->call($action, $route->getParams());
                         for ($i = count($hookers)-1; $i >= 0; --$i) {
                             $hooker = $hookers[$i];
-                            $returnPackage = $hooker->after($handlerContext, $route, $conn, $returnPackage);
+                            $returnPackage = $hooker->after($handlerContext, $route, $connection, $returnPackage);
                         }
                         if ($returnPackage) {
-                            $conn->getWriter()->send($returnPackage);
+                            $connection->getWriter()->send($returnPackage);
                         }
                     }
                 } catch (\Throwable $t) {

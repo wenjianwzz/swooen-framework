@@ -32,7 +32,7 @@ class GlobalToConnectionFactory implements ConnectionFactory {
 	
 	public function start() {
 		$connection = $this->createConnection();
-		$connection->instance(Writer::class, $this->createWriter());
+		$connection->setWriter($this->createWriter());
 		($this->callback)($connection);
 		$package = $this->parser->package(\Symfony\Component\HttpFoundation\Request::createFromGlobals());
 		$connection->dispatchPackage($package);
