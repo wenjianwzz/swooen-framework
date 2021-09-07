@@ -3,6 +3,7 @@ namespace Swooen\Server\Swoole;
 
 use Swooen\Communication\BaseConnection;
 use Swooen\Communication\Package;
+use Swoole\Coroutine;
 
 /**
  * @author WZZ
@@ -53,7 +54,7 @@ abstract class SwooleConnection extends BaseConnection {
 	}
 
 	public function dispatchPackage(Package $package) {
-		call_user_func($this->packageCallback, $package, $this);
+		Coroutine::create($this->packageCallback, $package, $this);
 	}
 
 	public function onPackage(callable $callable) {
