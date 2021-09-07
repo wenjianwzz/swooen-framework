@@ -60,7 +60,7 @@ class WsJsonConnectionFactory extends HttpConnectionFactory {
 		$this->server->on('open', function (\Swoole\WebSocket\Server $server, \Swoole\Http\Request $sreq) {
 			$request = $this->packRequest($sreq);
 			$connection = $this->createWsConnection($server, $sreq, $request);
-			$this->connections[$request->fd] = $connection;
+			$this->connections[$sreq->fd] = $connection;
 			$connection->queueFrame(new ConnectedVirtualFrame());
 			$connection->dispatchPackage($this->socketParser->packConnected($request));
 			($this->callback)($connection);
