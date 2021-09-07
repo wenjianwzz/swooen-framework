@@ -79,7 +79,9 @@ class RedisConnectionFactory extends SwooleConnectionFactory {
 					$connection = $this->createConnection($fd);
 					$connection->instance(\Swooen\Exception\Handler::class, new RedisExceptionHandler());
 					$this->connections[$fd] = $connection;
-					($this->callback)($connection);
+					go(function() use ($connection) {
+						($this->callback)($connection);
+					});
 				} else {
 					$connection = $this->connections[$fd];
 				}

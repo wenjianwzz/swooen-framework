@@ -3,7 +3,6 @@ namespace Swooen\Server\Http;
 
 use Swooen\Communication\BaseConnection;
 use Swooen\Communication\Package;
-use Swooen\Server\Http\Parser\HttpParser;
 
 /**
  * 传统请求响应下的处理
@@ -34,7 +33,7 @@ class Connection extends BaseConnection {
 		$this->package = $package;
 	}
 
-	public function onPackage(callable $callable) {
+	public function listenPackage(callable $callable) {
 		$callable($this->package, $this);
 	}
 

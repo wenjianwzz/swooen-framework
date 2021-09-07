@@ -32,6 +32,6 @@ interface Connection extends ContainerInterface {
 	 */
 	public function isStream();
 
-	public function onPackage(callable $callable);
+	public function listenPackage(callable $callable);
 
 }

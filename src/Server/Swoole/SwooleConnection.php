@@ -4,6 +4,7 @@ namespace Swooen\Server\Swoole;
 use Swooen\Communication\BaseConnection;
 use Swooen\Communication\Package;
 use Swoole\Coroutine;
+use Swoole\Coroutine\Channel;
 
 /**
  * @author WZZ
@@ -19,14 +20,15 @@ abstract class SwooleConnection extends BaseConnection {
 	protected $factory;
 
 	/**
-	 * @var callable
+	 * @var Channel
 	 */
-	protected $packageCallback;
+	protected $packageChannel;
 
 	public function __construct(\Swoole\Server $server, SwooleConnectionFactory $factory, $fd) {
 		$this->server = $server;
 		$this->fd = $fd;
 		$this->factory = $factory;
+		$this->packageChannel = new Channel(32);
 	}
 
 	/**
@@ -54,10 +56,12 @@ abstract class SwooleConnection extends BaseConnection {
 	}
 
 	public function dispatchPackage(Package $package) {
-		Coroutine::create($this->packageCallback, $package, $this);
+		$this->packageChannel->push($package, -1);
 	}
-
-	public function onPackage(callable $callable) {
-		$this->packageCallback = $callable;
+	
+	public function listenPackage(callable $callable) {
+		while ($package = $this->packageChannel->pop(-1)) {
+			Coroutine::create($callable, $package, $this);
+		}
 	}
 }

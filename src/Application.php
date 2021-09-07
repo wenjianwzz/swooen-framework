@@ -63,7 +63,7 @@ class Application extends Container {
             // 连接建立完成，开始使用连接的错误处理
             $handler = $conn->has(Handler::class)?$conn->get(Handler::class):$this->make(Handler::class);
             $writer = $conn->getWriter();
-            $conn->onPackage(function(Package $package, Connection $connection) use ($router, $writer, $handlerFactory, $handler, $logger) {
+            $conn->listenPackage(function(Package $package, Connection $connection) use ($router, $writer, $handlerFactory, $handler, $logger) {
                 try {
                     $route = $router->dispatch($package);
                     $action = $route->getAction();
