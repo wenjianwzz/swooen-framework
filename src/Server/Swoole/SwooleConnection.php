@@ -36,6 +36,7 @@ abstract class SwooleConnection extends BaseConnection {
 	 */
 	public function onClientClosed() {
 		$this->closed = true;
+		$this->packageChannel->push(null);
 	}
 
 	public function isClosed() {

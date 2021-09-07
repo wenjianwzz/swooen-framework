@@ -2,7 +2,6 @@
 namespace Swooen\Server\Swoole\Http;
 
 use Swooen\Server\Http\Parser\HttpParser;
-use Swooen\Server\Http\Reader\HttpReader;
 use Swooen\Server\Swoole\Http\HttpConnection;
 use Swooen\Server\Swoole\Http\Writer\JsonWriter;
 use Swooen\Server\Swoole\SwooleConnectionFactory;

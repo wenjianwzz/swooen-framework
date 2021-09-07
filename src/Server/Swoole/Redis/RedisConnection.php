@@ -8,10 +8,4 @@ use Swooen\Server\Swoole\SwooleConnection;
  */
 class RedisConnection extends SwooleConnection {
 
-	public function onClientClosed() {
-		parent::onClientClosed();
-		assert($reader instanceof RedisCommandReader);
-		$reader->queueNil();
-	}
-
 }

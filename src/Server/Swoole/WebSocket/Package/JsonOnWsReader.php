@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Server\Swoole\WebSocket\Reader;
+namespace Swooen\Server\Swoole\WebSocket\Package;
 
 /**
  * @author WZZ

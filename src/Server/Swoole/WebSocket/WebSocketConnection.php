@@ -2,43 +2,45 @@
 namespace Swooen\Server\Swoole\WebSocket;
 
 use Swooen\Server\Swoole\SwooleConnection;
-use Swoole\Coroutine\Channel;
-use Swoole\WebSocket\CloseFrame;
+use Swooen\Server\Swoole\WebSocket\Package\ConnectedVirtualFrame;
+use Swooen\Server\Swoole\WebSocket\Package\WebSocketParser;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author WZZ
  */
 class WebSocketConnection extends SwooleConnection {
 
-	/**
-	 * @var Channel
-	 */
-	protected $frameChannel;
+	protected $buffer = '';
 
-	public function __construct(\Swoole\Server $server, WsJsonConnectionFactory $factory, $fd) {
+	/**
+	 * @var Request
+	 */
+	protected $request;
+
+	protected $webSocketParser;
+
+	public function __construct(\Swoole\Server $server, WsJsonConnectionFactory $factory, $fd, Request $request, WebSocketParser $webSocketParser) {
         parent::__construct($server, $factory, $fd);
-		$this->frameChannel = new Channel(64);
+		$this->webSocketParser = $webSocketParser;
+		$this->request = $request;
 	}
 
     public function queueFrame(\Swoole\WebSocket\Frame $frame) {
-		$this->frameChannel->push($frame, -1);
+		if ($frame instanceof \Swoole\WebSocket\CloseFrame) {
+			$this->dispatchPackage($this->webSocketParser->packClose($this->request));
+		} else if ($frame instanceof ConnectedVirtualFrame) {
+			// 连接
+			$this->dispatchPackage($this->webSocketParser->packConnected($this->request));
+		} else {
+			$this->buffer .= $frame->data;
+			if ($frame->finish) {
+				$package = $this->webSocketParser->packData($this->request, $this->buffer);
+				$this->buffer = '';
+				$this->dispatchPackage($package);
+			}
+		}
     }
-
-	public function onClientClosed() {
-		parent::onClientClosed();
-		$this->queueFrame(new CloseFrame());
-	}
-
-	/**
-	 * @return \Swoole\WebSocket\Frame
-	 */
-    public function popFrame() {
-		return $this->frameChannel->pop(-1);
-    }
-
-	public function hasFrames() {
-		return !$this->frameChannel->isEmpty() || !$this->closed;
-	}
 
 	public function __destruct() {
 		echo __METHOD__ . PHP_EOL;
