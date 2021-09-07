@@ -45,8 +45,4 @@ abstract class SwooleConnection extends BaseConnection {
 	public function getFd() {
 		return $this->fd;
 	}
-
-	public function onPackage(callable $callable) {
-		$reader = $this
-	}
 }

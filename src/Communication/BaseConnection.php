@@ -9,6 +9,11 @@ use Swooen\Container\Container;
 abstract class BaseConnection extends Container implements Connection {
 
 	/**
+	 * @var callable
+	 */
+	protected $packageCallback;
+
+	/**
 	 * @return \Swooen\Communication\Writer
 	 */
 	public function getWriter() {
@@ -20,4 +25,11 @@ abstract class BaseConnection extends Container implements Connection {
 		return $this;
 	}
 
+	public function dispatchPackage(Package $package) {
+		call_user_func($this->packageCallback, $package);
+	}
+
+	public function onPackage(callable $callable) {
+		$this->packageCallback = $callable;
+	}
 }

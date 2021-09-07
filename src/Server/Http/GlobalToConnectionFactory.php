@@ -34,6 +34,8 @@ class GlobalToConnectionFactory implements ConnectionFactory {
 		$connection = $this->createConnection();
 		$connection->instance(Writer::class, $this->createWriter());
 		($this->callback)($connection);
+		$package = $this->parser->package(\Symfony\Component\HttpFoundation\Request::createFromGlobals());
+		$connection->dispatchPackage($package);
 	}
 
 	/**
@@ -47,6 +49,6 @@ class GlobalToConnectionFactory implements ConnectionFactory {
 	 * @return Connection
 	 */
 	public function createConnection() {
-		return (new Connection())->setParser($this->parser);
+		return new Connection();
 	}
 }

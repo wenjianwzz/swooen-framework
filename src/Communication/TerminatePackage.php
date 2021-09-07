@@ -1,8 +1,6 @@
 <?php
 namespace Swooen\Communication;
 
-use Illuminate\Support\Arr;
-
 /**
  * 空包
  */

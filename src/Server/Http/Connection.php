@@ -10,11 +10,6 @@ use Swooen\Server\Http\Parser\HttpParser;
  */
 class Connection extends BaseConnection {
 
-	/**
-	 * @var HttpParser
-	 */
-	protected $parser;
-
 	public function terminate() {
 	}
 
@@ -32,23 +27,4 @@ class Connection extends BaseConnection {
 		return false;
 	}
 
-	public function onPackage(callable $callable) {
-		$callable($this->parser->package(\Symfony\Component\HttpFoundation\Request::createFromGlobals()));
-	}
-
-	/**
-	 * Get the value of parser
-	 * @return HttpParser
-	 */
-	public function getParser() {
-		return $this->parser;
-	}
-
-	/**
-	 * Set the value of parser
-	 */
-	public function setParser(HttpParser $parser): self {
-		$this->parser = $parser;
-		return $this;
-	}
 }

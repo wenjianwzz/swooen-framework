@@ -6,7 +6,6 @@ namespace Swooen;
 use Psr\Log\LoggerInterface;
 use Swooen\Communication\Connection;
 use Swooen\Communication\Package;
-use Swooen\Communication\TerminatePackage;
 use Swooen\Communication\Route\Handler\HandlerFactory;
 use Swooen\Communication\Route\Hook\HandlerHook;
 use Swooen\Communication\Route\Router;
