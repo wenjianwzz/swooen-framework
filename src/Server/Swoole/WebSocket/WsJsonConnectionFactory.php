@@ -5,7 +5,6 @@ use Swooen\Server\Swoole\Http\HttpConnectionFactory;
 use Swooen\Server\Swoole\WebSocket\Package\ConnectedVirtualFrame;
 use Swooen\Server\Swoole\WebSocket\Package\WebSocketParser;
 use Swooen\Server\Swoole\WebSocket\Writer\JsonWriter;
-use Swoole\Coroutine;
 use \Swoole\WebSocket\Server;
 
 /**
@@ -64,7 +63,7 @@ class WsJsonConnectionFactory extends HttpConnectionFactory {
 			$this->connections[$sreq->fd] = $connection;
 			$connection->queueFrame(new ConnectedVirtualFrame());
 			$connection->dispatchPackage($this->socketParser->packConnected($request));
-			Coroutine::create($this->callback, $connection);
+			($this->callback)($connection);
 		});
 		$this->server->on('message', function (\Swoole\WebSocket\Server $server, \Swoole\WebSocket\Frame $frame) {
 			$conn = isset($this->connections[$frame->fd])?$this->connections[$frame->fd]:null;

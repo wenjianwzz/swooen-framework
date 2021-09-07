@@ -5,7 +5,6 @@ use Swooen\Server\Http\Parser\HttpParser;
 use Swooen\Server\Swoole\Http\HttpConnection;
 use Swooen\Server\Swoole\Http\Writer\JsonWriter;
 use Swooen\Server\Swoole\SwooleConnectionFactory;
-use Swoole\Coroutine;
 use \Swoole\Http\Server;
 
 /**
@@ -57,7 +56,7 @@ class HttpConnectionFactory extends SwooleConnectionFactory {
 			$connection = $this->createConnection($request, $response);
 			$package = $this->parser->package($this->packRequest($request));
 			$connection->dispatchPackage($package);
-			Coroutine::create($this->callback, $connection);
+			($this->callback)($connection);
 		});
 	}
 
