@@ -2,6 +2,7 @@
 namespace Swooen\Server\Swoole;
 
 use Swooen\Communication\BaseConnection;
+use Swooen\Communication\Package;
 
 /**
  * @author WZZ
@@ -15,6 +16,11 @@ abstract class SwooleConnection extends BaseConnection {
 	protected $fd;
 
 	protected $factory;
+
+	/**
+	 * @var callable
+	 */
+	protected $packageCallback;
 
 	public function __construct(\Swoole\Server $server, SwooleConnectionFactory $factory, $fd) {
 		$this->server = $server;
@@ -44,5 +50,13 @@ abstract class SwooleConnection extends BaseConnection {
 
 	public function getFd() {
 		return $this->fd;
+	}
+
+	public function dispatchPackage(Package $package) {
+		call_user_func($this->packageCallback, $package,);
+	}
+
+	public function onPackage(callable $callable) {
+		$this->packageCallback = $callable;
 	}
 }
