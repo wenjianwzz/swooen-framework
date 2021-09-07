@@ -23,6 +23,7 @@ class GlobalToConnectionFactory implements ConnectionFactory {
 
 	public function __construct(HttpParser $httpParser=null) {
 		empty($httpParser) and $httpParser = new HttpParser();
+		$this->parser = $httpParser;
 	}
 	
 	public function onConnection(callable $callback) {
