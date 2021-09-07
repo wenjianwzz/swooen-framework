@@ -2,6 +2,7 @@
 namespace Swooen\Server\Http;
 
 use Swooen\Communication\BaseConnection;
+use Swooen\Communication\Package;
 use Swooen\Server\Http\Parser\HttpParser;
 
 /**
@@ -9,6 +10,8 @@ use Swooen\Server\Http\Parser\HttpParser;
  * @author WZZ
  */
 class Connection extends BaseConnection {
+
+	protected $package;
 
 	public function terminate() {
 	}
@@ -25,6 +28,14 @@ class Connection extends BaseConnection {
 	 */
 	public function isStream() {
 		return false;
+	}
+
+	public function dispatchPackage(Package $package) {
+		$this->package = $package;
+	}
+
+	public function onPackage(callable $callable) {
+		$callable($this->package, $this);
 	}
 
 }
