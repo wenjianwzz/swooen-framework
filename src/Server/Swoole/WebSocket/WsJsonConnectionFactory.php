@@ -3,8 +3,6 @@ namespace Swooen\Server\Swoole\WebSocket;
 
 use Swooen\Server\Swoole\Http\HttpConnectionFactory;
 use Swooen\Server\Swoole\WebSocket\Package\ConnectedVirtualFrame;
-use Swooen\Server\Swoole\WebSocket\Package\JsonOnWsReader;
-use Swooen\Server\Swoole\WebSocket\Package\JsonReader;
 use Swooen\Server\Swoole\WebSocket\Package\WebSocketParser;
 use Swooen\Server\Swoole\WebSocket\Writer\JsonWriter;
 use \Swoole\WebSocket\Server;
@@ -64,8 +62,8 @@ class WsJsonConnectionFactory extends HttpConnectionFactory {
 			$connection = $this->createWsConnection($server, $sreq, $request);
 			$this->connections[$request->fd] = $connection;
 			$connection->queueFrame(new ConnectedVirtualFrame());
-			($this->callback)($connection);
 			$connection->dispatchPackage($this->socketParser->packConnected($request));
+			($this->callback)($connection);
 		});
 		$this->server->on('message', function (\Swoole\WebSocket\Server $server, \Swoole\WebSocket\Frame $frame) {
 			$conn = isset($this->connections[$frame->fd])?$this->connections[$frame->fd]:null;

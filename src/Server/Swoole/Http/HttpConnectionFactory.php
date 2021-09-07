@@ -54,9 +54,9 @@ class HttpConnectionFactory extends SwooleConnectionFactory {
 	protected function initOnRequest() {
 		$this->server->on('request', function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
 			$connection = $this->createConnection($request, $response);
-			($this->callback)($connection);
 			$package = $this->parser->package($this->packRequest($request));
 			$connection->dispatchPackage($package);
+			($this->callback)($connection);
 		});
 	}
 
