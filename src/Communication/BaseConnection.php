@@ -15,12 +15,9 @@ abstract class BaseConnection extends Container implements Connection {
 		return $this->make(\Swooen\Communication\Writer::class);
 	}
 
-	/**
-	 * @return \Swooen\Communication\Reader
-	 */
-	public function getReader() {
-		return $this->make(\Swooen\Communication\Reader::class);
+	public function setWriter(\Swooen\Communication\Writer $writer) : self {
+		$this->instance(\Swooen\Communication\Writer::class, $writer);
+		return $this;
 	}
-
 
 }

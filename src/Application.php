@@ -5,6 +5,7 @@ namespace Swooen;
 
 use Psr\Log\LoggerInterface;
 use Swooen\Communication\Connection;
+use Swooen\Communication\Package;
 use Swooen\Communication\TerminatePackage;
 use Swooen\Communication\Route\Handler\HandlerFactory;
 use Swooen\Communication\Route\Hook\HandlerHook;
@@ -63,14 +64,8 @@ class Application extends Container {
             // 连接建立完成，开始使用连接的错误处理
             $handler = $conn->has(Handler::class)?$conn->get(Handler::class):$this->make(Handler::class);
             $writer = $conn->getWriter();
-            $reader = $conn->getReader();
-            while ($reader->hasNext()) {
+            $conn->onPackage(function(Package $package) use ($router, $conn, $writer, $handlerFactory, $handler, $logger) {
                 try {
-                    $package = $reader->next();
-                    if ($package instanceof TerminatePackage) {
-                        // 终止包，结束
-                        break;
-                    }
                     $route = $router->dispatch($package);
                     $action = $route->getAction();
                     $handlerContext = $handlerFactory->createContext($this, $conn, $route, $router, $package, $writer);
@@ -100,7 +95,7 @@ class Application extends Container {
                         $handlerContext->destroy();
                     }
                 }
-            }
+            });
             if ($conn instanceof \Swooen\Container\Container) {
                 // 连接处理结束，摧毁释放资源
                 $conn->destroy();

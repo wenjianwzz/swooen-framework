@@ -16,11 +16,6 @@ interface Connection extends ContainerInterface {
 	public function getWriter();
 
 	/**
-	 * @return \Swooen\Communication\Reader
-	 */
-	public function getReader();
-
-	/**
 	 * 终止连接
 	 */
 	public function terminate();
@@ -36,5 +31,7 @@ interface Connection extends ContainerInterface {
 	 * @return boolean
 	 */
 	public function isStream();
+
+	public function onPackage(callable $callable);
 
 }

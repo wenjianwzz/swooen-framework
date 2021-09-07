@@ -6,7 +6,7 @@ use Swooen\Communication\BaseConnection;
 /**
  * @author WZZ
  */
-class SwooleConnection extends BaseConnection {
+abstract class SwooleConnection extends BaseConnection {
 
 	protected $closed = false;
 
@@ -46,4 +46,7 @@ class SwooleConnection extends BaseConnection {
 		return $this->fd;
 	}
 
+	public function onPackage(callable $callable) {
+		$reader = $this
+	}
 }

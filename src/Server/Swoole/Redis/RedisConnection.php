@@ -10,7 +10,6 @@ class RedisConnection extends SwooleConnection {
 
 	public function onClientClosed() {
 		parent::onClientClosed();
-		$reader = $this->getReader();
 		assert($reader instanceof RedisCommandReader);
 		$reader->queueNil();
 	}

@@ -2,9 +2,8 @@
 namespace Swooen\Server\Http;
 
 use Swooen\Communication\ConnectionFactory;
-use Swooen\Communication\Reader;
 use Swooen\Communication\Writer;
-use Swooen\Server\Http\Reader\HttpReader;
+use Swooen\Server\Http\Parser\HttpParser;
 use Swooen\Server\Http\Writer\HttpWriter;
 use Swooen\Server\Http\Writer\JsonWriter;
 
@@ -16,6 +15,8 @@ use Swooen\Server\Http\Writer\JsonWriter;
 class GlobalToConnectionFactory implements ConnectionFactory {
 
 	protected $callback;
+
+	protected $parser;
 	
 	public function onConnection(callable $callback) {
 		$this->callback = $callback;
@@ -23,17 +24,16 @@ class GlobalToConnectionFactory implements ConnectionFactory {
 	
 	public function start() {
 		$connection = $this->createConnection();
-		$reader = $this->createReader();
+		$this->parser = $this->createParser();
 		$connection->instance(Writer::class, $this->createWriter());
-		$connection->instance(Reader::class, $reader);
 		($this->callback)($connection);
 	}
 
 	/**
-	 * @return HttpReader
+	 * @return HttpParser
 	 */
-	public function createReader() {
-		return new HttpReader(\Symfony\Component\HttpFoundation\Request::createFromGlobals());
+	public function createParser() {
+		return new HttpParser();
 	}
 
 	/**
@@ -47,6 +47,6 @@ class GlobalToConnectionFactory implements ConnectionFactory {
 	 * @return Connection
 	 */
 	public function createConnection() {
-		return new Connection();
+		return (new Connection())->setParser($this->parser);
 	}
 }

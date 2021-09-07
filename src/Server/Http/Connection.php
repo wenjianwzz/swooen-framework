@@ -1,30 +1,19 @@
 <?php
 namespace Swooen\Server\Http;
 
-use Swooen\Communication\Connection as ConnectionInterface;
-use Swooen\Communication\Package;
-use Swooen\Container\Container;
+use Swooen\Communication\BaseConnection;
+use Swooen\Server\Http\Parser\HttpParser;
 
 /**
  * 传统请求响应下的处理
  * @author WZZ
  */
-class Connection extends Container implements ConnectionInterface {
-
-
-	/**
-	 * @return \Swooen\Communication\Writer
-	 */
-	public function getWriter() {
-		return $this->make(\Swooen\Communication\Writer::class);
-	}
+class Connection extends BaseConnection {
 
 	/**
-	 * @return \Swooen\Communication\Reader
+	 * @var HttpParser
 	 */
-	public function getReader() {
-		return $this->make(\Swooen\Communication\Reader::class);
-	}
+	protected $parser;
 
 	public function terminate() {
 	}
@@ -43,4 +32,23 @@ class Connection extends Container implements ConnectionInterface {
 		return false;
 	}
 
+	public function onPackage(callable $callable) {
+		$callable($this->parser->package(\Symfony\Component\HttpFoundation\Request::createFromGlobals()));
+	}
+
+	/**
+	 * Get the value of parser
+	 * @return HttpParser
+	 */
+	public function getParser() {
+		return $this->parser;
+	}
+
+	/**
+	 * Set the value of parser
+	 */
+	public function setParser(HttpParser $parser): self {
+		$this->parser = $parser;
+		return $this;
+	}
 }
