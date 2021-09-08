@@ -18,11 +18,14 @@ class SimpleRedisPool implements RedisPool {
         $host = $this->config->getHost();
         $port = $this->config->getPort();
         $auth = $this->config->getAuth();
+        $db = $this->config->getDbIndex();
         $redis->connect($host, $port, $this->config->getTimeout(), NULL, 0, $this->config->getReadTimeout());
         if ($auth) {
             $redis->auth($auth);
         }
-        $redis->select($this->config->getDbIndex());
+        if ($db) {
+            $redis->select($db);
+        }
         return $redis;
     }
 
