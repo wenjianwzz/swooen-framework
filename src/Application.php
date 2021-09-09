@@ -47,7 +47,7 @@ class Application extends Container {
      */
     public function run() {
         $logger = $this->has(LoggerInterface::class)?$this->get(LoggerInterface::class):null;
-        $handler = $this->make(Handler::class);
+        $errHandler = $this->make(Handler::class);
         $writer = $this->make(Writer::class);
         try {
             $factory = $this->make(\Swooen\Communication\ConnectionFactory::class);
@@ -56,14 +56,12 @@ class Application extends Container {
             $handlerFactory = $this->make(HandlerFactory::class);
             assert($handlerFactory instanceof HandlerFactory);
         } catch (\Throwable $t) {
-            $handler->report($t, $logger);
-            $handler->render($t, $writer);
+            $errHandler->report($t, $logger);
+            $errHandler->render($t, $writer);
         }
-        $factory->onConnection(function(Connection $conn) use ($logger, $router, $handlerFactory) {
-            // 连接建立完成，开始使用连接的错误处理
-            $handler = $conn->has(Handler::class)?$conn->get(Handler::class):$this->make(Handler::class);
+        $factory->onConnection(function(Connection $conn) use ($logger, $router, $handlerFactory, $errHandler) {
             $writer = $conn->getWriter();
-            $conn->listenPackage(function(Package $package, Connection $connection) use ($router, $writer, $handlerFactory, $handler, $logger) {
+            $conn->listenPackage(function(Package $package, Connection $connection) use ($router, $writer, $handlerFactory, $logger, $errHandler) {
                 try {
                     $route = $router->dispatch($package);
                     $action = $route->getAction();
@@ -87,8 +85,12 @@ class Application extends Container {
                         }
                     }
                 } catch (\Throwable $t) {
-                    $handler->report($t, $logger);
-                    $handler->render($t, $writer);
+                    try {
+                        // 连接建立完成，开始使用连接的错误处理
+                        $connErrHandler = $connection->has(Handler::class)?$connection->get(Handler::class):$errHandler;
+                        $connErrHandler->report($t, $logger);
+                        $connErrHandler->render($t, $writer);
+                    } catch (\Throwable $th) {}
                 } finally {
                     if (isset($handlerContext)) {
                         $handlerContext->destroy();
