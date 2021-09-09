@@ -31,9 +31,14 @@ class WebSocketConnection extends SwooleConnection {
 		} else {
 			$this->buffer .= $frame->data;
 			if ($frame->finish) {
-				$package = $this->webSocketParser->packData($this->request, $this->buffer);
+				$packages = $this->webSocketParser->packData($this->request, $this->buffer);
 				$this->buffer = '';
-				$this->dispatchPackage($package);
+				if (!is_array($packages)) {
+					$packages = [$packages];
+				}
+				foreach($packages as $package) {
+					$this->dispatchPackage($package);
+				}
 			}
 		}
     }
