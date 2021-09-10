@@ -69,6 +69,9 @@ class RedisConnectionFactory extends SwooleConnectionFactory {
 	public function createConnection($fd) {
 		$connection = new RedisConnection($this->server, $this, $fd);
 		$connection->instance(Writer::class, $this->createWriter($fd));
+		if ($this->errHandler) {
+			$connection->instance(Handler::class, $this->errHandler);
+		}
 		return $connection;
 	}
 	

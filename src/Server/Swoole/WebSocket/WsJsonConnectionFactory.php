@@ -1,6 +1,7 @@
 <?php
 namespace Swooen\Server\Swoole\WebSocket;
 
+use Swooen\Exception\Handler;
 use Swooen\Server\Swoole\Http\HttpConnectionFactory;
 use Swooen\Server\Swoole\WebSocket\Package\WebSocketParser;
 use Swooen\Server\Swoole\WebSocket\Writer\JsonWriter;
@@ -77,6 +78,9 @@ class WsJsonConnectionFactory extends HttpConnectionFactory {
 	public function createWsConnection(\Swoole\WebSocket\Server $server, \Swoole\Http\Request $sreq, \Symfony\Component\HttpFoundation\Request $request) {
 		$connection = new WebSocketConnection($this->server, $this, $sreq->fd, $request, $this->socketParser);
 		$connection->instance(\Swooen\Communication\Writer::class, $this->createWsWriter($server, $sreq->fd));
+		if ($this->errHandler) {
+			$connection->instance(Handler::class, $this->errHandler);
+		}
 		return $connection;
 	}
 

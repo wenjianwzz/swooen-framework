@@ -2,6 +2,7 @@
 namespace Swooen\Server\Swoole;
 
 use Swooen\Communication\ConnectionFactory;
+use Swooen\Exception\Handler;
 
 /**
  * 封装各种类型协议，负责监听通讯，将请求统一成固定格式
@@ -16,6 +17,11 @@ class SwooleConnectionFactory implements ConnectionFactory {
 	protected $server;
 
 	protected $callback;
+
+	/**
+	 * @var Handler
+	 */
+	protected $errHandler;
 
 	/**
 	 * @var SwooleConnection[]
@@ -63,4 +69,7 @@ class SwooleConnectionFactory implements ConnectionFactory {
 		$this->server->start();
 	}
 
+	public function setExceptionHandler(Handler $handler) {
+		$this->errHandler = $handler;
+	}
 }
