@@ -19,11 +19,6 @@ class SwooleConnectionFactory implements ConnectionFactory {
 	protected $callback;
 
 	/**
-	 * @var Handler
-	 */
-	protected $errHandler;
-
-	/**
 	 * @var SwooleConnection[]
 	 */
 	protected $connections = [];
@@ -69,7 +64,4 @@ class SwooleConnectionFactory implements ConnectionFactory {
 		$this->server->start();
 	}
 
-	public function setExceptionHandler(Handler $handler) {
-		$this->errHandler = $handler;
-	}
 }

@@ -60,9 +60,9 @@ class Application extends Container {
             $errHandler->render($t, $writer);
             throw $t;
         }
-        $factory->onConnection(function(Connection $conn) use ($logger, $router, $handlerFactory, $errHandler) {
+        $factory->onConnection(function(Connection $conn) use ($logger, $router, $handlerFactory) {
             $writer = $conn->getWriter();
-            $conn->listenPackage(function(Package $package, Connection $connection) use ($router, $writer, $handlerFactory, $logger, $errHandler) {
+            $conn->listenPackage(function(Package $package, Connection $connection) use ($router, $writer, $handlerFactory, $logger) {
                 try {
                     $route = $router->dispatch($package);
                     $action = $route->getAction();
@@ -87,9 +87,9 @@ class Application extends Container {
                     }
                 } catch (\Throwable $t) {
                     try {
-                        $connErrHandler = (isset($handlerContext) && $handlerContext->has(Handler::class))?$handlerContext->get(Handler::class):$errHandler;
-                        $connErrHandler->report($t, $logger);
-                        $connErrHandler->render($t, $writer);
+                        $errHandler = (isset($handlerContext) && $handlerContext->has(Handler::class))?$handlerContext->get(Handler::class):$this->make(Handler::class);
+                        $errHandler->report($t, $logger);
+                        $errHandler->render($t, $writer);
                     } catch (\Throwable $th) {
                         try {
                             $writer->end('Critical Failure');
