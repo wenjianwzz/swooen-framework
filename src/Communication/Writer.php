@@ -3,7 +3,6 @@ namespace Swooen\Communication;
 
 interface Writer {
 	
-
 	/**
 	 * 给对方发送数据包
 	 * @return boolean
