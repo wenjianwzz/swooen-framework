@@ -78,9 +78,6 @@ class WsJsonConnectionFactory extends HttpConnectionFactory {
 	public function createWsConnection(\Swoole\WebSocket\Server $server, \Swoole\Http\Request $sreq, \Symfony\Component\HttpFoundation\Request $request) {
 		$connection = new WebSocketConnection($this->server, $this, $sreq->fd, $request, $this->socketParser);
 		$connection->instance(\Swooen\Communication\Writer::class, $this->createWsWriter($server, $sreq->fd));
-		if ($this->errHandler) {
-			$connection->instance(Handler::class, $this->errHandler);
-		}
 		return $connection;
 	}
 

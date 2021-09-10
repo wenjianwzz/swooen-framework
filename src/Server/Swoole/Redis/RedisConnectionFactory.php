@@ -69,9 +69,6 @@ class RedisConnectionFactory extends SwooleConnectionFactory {
 	public function createConnection($fd) {
 		$connection = new RedisConnection($this->server, $this, $fd);
 		$connection->instance(Writer::class, $this->createWriter($fd));
-		if ($this->errHandler) {
-			$connection->instance(Handler::class, $this->errHandler);
-		}
 		return $connection;
 	}
 	
@@ -80,7 +77,6 @@ class RedisConnectionFactory extends SwooleConnectionFactory {
 			$this->server->setHandler($cmd, function($fd, $data) use ($cmd) {
 				if (!isset($this->connections[$fd])) {
 					$connection = $this->createConnection($fd);
-					$connection->instance(\Swooen\Exception\Handler::class, new RedisExceptionHandler());
 					$this->connections[$fd] = $connection;
 					go(function() use ($connection) {
 						($this->callback)($connection);
