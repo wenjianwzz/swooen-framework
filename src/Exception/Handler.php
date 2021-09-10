@@ -28,11 +28,7 @@ class Handler {
 	}
 
 	public function render(\Throwable $e, Writer $writer) {
-		try {
-			$writer->send(new ErrorPackage($e->getFile().':'.$e->getLine()."\n".$e->getMessage()."\n".$e->getTraceAsString()));
-		} catch (\Throwable $t2) {
-			// 无法继续处理
-		}
+		$writer->send(new ErrorPackage(get_class($e)."\n".basename($e->getFile()).':'.$e->getLine()."\n".$e->getMessage()."\n".$e->getTraceAsString()));
 	}
 
 }
