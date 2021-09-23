@@ -25,6 +25,10 @@ class SimpleRedisPool implements RedisPool {
         return $redis;
     }
 
+    public function proxy() {
+        return new RedisItemProxy($this);
+    }
+
     public function get() {
         return $this->create();
     }
