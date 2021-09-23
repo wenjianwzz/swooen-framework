@@ -9,10 +9,6 @@ class SimpleRedisPool implements RedisPool {
         $this->config = $config;
     }
 
-    public function has(): bool {
-        return true;
-    }
-
     public function create(): \Redis {
         $redis = new \Redis();
         $host = $this->config->getHost();

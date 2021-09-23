@@ -9,7 +9,7 @@ interface RedisPool {
     public function get();
 
     /**
-     * @var \Redis
+     * @param \Redis $redis
      */
     public function returnback($redis);
 }
