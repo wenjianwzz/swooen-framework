@@ -39,6 +39,8 @@ class SwooleRedisPool extends SimpleRedisPool {
     }
 
     public function returnback($redis) {
-        $this->conns->push($redis);
+        if (-1 != \Swoole\Coroutine::getCid()) {
+            $this->conns->push($redis);
+        }
     }
 }

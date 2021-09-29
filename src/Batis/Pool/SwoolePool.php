@@ -42,6 +42,8 @@ class SwoolePool extends SimplePool {
     }
 
     public function returnback($pdo) {
-        $this->pool->push($pdo, 0.1);
+        if (-1 != \Swoole\Coroutine::getCid()) {
+            $this->pool->push($pdo, 0.1);
+        }
     }
 }
