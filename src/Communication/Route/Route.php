@@ -1,6 +1,6 @@
 <?php
 namespace Swooen\Communication\Route;
-use Swooen\Communication\Route\Hook\HandlerHook;
+
 /**
  * 路由
  * 
@@ -117,5 +117,5 @@ class Route {
     public function getMetas() {
         return $this->metas;
     }
-    
+
 }
