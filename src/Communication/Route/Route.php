@@ -17,10 +17,13 @@ class Route {
 
     protected $hooks = [];
 
-    public function __construct($path, $action, $hooks=[]) {
+    protected $metas = [];
+
+    public function __construct($path, $action, $hooks=[], $metas=[]) {
         $this->path = $path;
         $this->action = $action;
         $this->hooks = $hooks;
+        $this->metas = $metas;
     }
 
     public function __clone() {
@@ -57,7 +60,6 @@ class Route {
         return $this->params;
     }
 
-
     /**
      * Get the value of action
      */
@@ -88,4 +90,32 @@ class Route {
         $this->hooks = $hooks;
         return $this;
     }
+
+    /**
+     * @return  self
+     */ 
+    public function setMetas($metas) {
+        $this->metas = $metas;
+        return $this;
+    }
+
+    /**
+     * 添加参数
+     */
+    public function setMeta($name, $value) : self {
+        $this->metas[$name] = $value;
+        return $this;
+    }
+
+    public function getMeta($name, $default=NULL) {
+        return isset($this->metas[$name])?$this->metas[$name]:$default;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMetas() {
+        return $this->metas;
+    }
+    
 }
