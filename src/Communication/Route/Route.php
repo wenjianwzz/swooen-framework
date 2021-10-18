@@ -19,11 +19,12 @@ class Route {
 
     protected $metas = [];
 
-    public function __construct($path, $action, $hooks=[], $metas=[]) {
+    public function __construct($path, $action, $hooks=[], $metas=[], $initParams=[]) {
         $this->path = $path;
         $this->action = $action;
         $this->hooks = $hooks;
         $this->metas = $metas;
+        $this->params = $initParams;
     }
 
     public function __clone() {
