@@ -22,6 +22,7 @@ class CorsHook extends HandlerHook {
         if ($origin and $this->checker->allow($origin) and $writer instanceof HttpWriter) {
             // 处理跨域头部
             $writer->header('Access-Control-Allow-Origin', $origin);
+            $writer->header('Vary', 'Origin');
             $writer->header('Access-Control-Allow-Credentials', 'true');
         }
         return $package;

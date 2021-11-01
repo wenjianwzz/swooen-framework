@@ -38,6 +38,7 @@ class CorsPreflightHandler {
             $writer->header('Access-Control-Allow-Headers', join(', ', $headers));
             $writer->header('Access-Control-Allow-Credentials', 'true');
             $writer->header('Access-Control-Max-Age', $this->maxAge);
+            $writer->header('Access-Control-Allow-Origin', $origin);
         }
         return new RawPackage('', []);
     }
