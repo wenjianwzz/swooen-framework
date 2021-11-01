@@ -9,18 +9,31 @@ use Swooen\Communication\StdoutWriter;
  */
 class HttpWriter extends StdoutWriter {
 
-	protected $headerSent = false;
+	protected $sent = false;
 
 	/**
 	 * 是否可以给对方发送数据包
 	 * @return boolean
 	 */
 	public function canWrite() {
-		return !$this->headerSent;
+		return !$this->sent;
 	}
 	
+	/**
+	 * 结束写入
+	 */
+	public function end(string $content=null) {
+        if ($content) {
+			$this->sent = true;
+            $this->write($content);
+        }
+	}
+
 	public function writeMeta(string $name, string $value) {
-		$this->headerSent = true;
+		return $this->header($name, $value);
+    }
+
+	public function header(string $name, string $value) {
         header("{$name}: {$value}");
 		return true;
     }

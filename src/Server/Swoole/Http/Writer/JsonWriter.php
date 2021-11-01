@@ -26,8 +26,7 @@ class JsonWriter extends LegacyJsonWriter {
         $this->response->end($content);
     }
     
-    public function writeMeta(string $name, string $value) {
-		$this->headerSent = true;
+    public function header(string $name, string $value) {
         $this->response->header($name, $value);
 		return true;
     }

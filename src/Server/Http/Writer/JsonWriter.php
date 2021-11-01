@@ -10,7 +10,7 @@ use Swooen\Communication\Package;
 class JsonWriter extends HttpWriter {
 
     public function pack(Package $package) {
-        $this->writeMeta('Content-Type', 'application/json');
+        $this->header('Content-Type', 'application/json');
         return json_encode($package->inputs());
     }
 
