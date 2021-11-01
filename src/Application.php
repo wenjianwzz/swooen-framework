@@ -73,6 +73,9 @@ class Application extends Container {
                     $hookers = array_map([$handlerContext, 'make'], $route->getHooks());
                     foreach($hookers as $hooker) {
                         $package = $hooker->before($handlerContext, $route, $package, $connection);
+                        if (empty($package)) {
+                            break;
+                        }
                     }
                     if ($package) {
                         $action = $handlerFactory->parse($action);
