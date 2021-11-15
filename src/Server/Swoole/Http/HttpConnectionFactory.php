@@ -25,6 +25,7 @@ class HttpConnectionFactory extends SwooleConnectionFactory {
 
 	public function __construct($host, $port, $mode=SWOOLE_BASE, $sockType=SWOOLE_SOCK_TCP) {
 		$this->server = new Server($host, $port, $mode, $sockType);
+		$this->initOnClose();
 		$this->initOnRequest();
 		$this->setParser($this->createParser());
 	}
@@ -54,6 +55,7 @@ class HttpConnectionFactory extends SwooleConnectionFactory {
 	protected function initOnRequest() {
 		$this->server->on('request', function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
 			$connection = $this->createConnection($request, $response);
+			$this->connections[$request->fd] = $connection;
 			$package = $this->parser->package($this->packRequest($request));
 			$connection->dispatchPackage($package);
 			($this->callback)($connection);
