@@ -43,10 +43,12 @@ class SwoolePool extends SimplePool {
     public function get() {
         // 先等待，如果没有，创建新的
         $this->_log('getting PDO');
-        $pdo = $this->pool->pop(0.01); 
-        if ($pdo && $this->checkPDO($pdo)) {
-            $this->_log('PDO from pool');
-            return $pdo;
+        if (!$this->pool->isEmpty()) {
+            $pdo = $this->pool->pop(0.01); 
+            if ($pdo && $this->checkPDO($pdo)) {
+                $this->_log('PDO from pool');
+                return $pdo;
+            }
         }
         return $this->create();
     }
@@ -55,8 +57,9 @@ class SwoolePool extends SimplePool {
         if (-1 != \Swoole\Coroutine::getCid()) {
             $this->_log('try return PDO to pool');
             if (!$this->pool->isFull()) {
-                $this->pool->push($pdo, 1);
-                $this->_log('return PDO to pool');
+                if ($this->pool->push($pdo, 0.01)) {
+                    $this->_log('return PDO to pool');
+                }
             }
         }
     }
