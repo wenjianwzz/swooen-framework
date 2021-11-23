@@ -29,14 +29,15 @@ class SimplePool implements PDOPool {
     }
 
     public function create(): \PDO {
-        $this->_log('create PDO');
-        return new \PDO($this->config->getDSN(), $this->config->getUser(), $this->config->getPassword(), [
+        $pdo = new \PDO($this->config->getDSN(), $this->config->getUser(), $this->config->getPassword(), [
             PDO::ATTR_CASE => PDO::CASE_NATURAL,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_ORACLE_NULLS => PDO::NULL_NATURAL,
             PDO::ATTR_STRINGIFY_FETCHES => false,
             PDO::ATTR_EMULATE_PREPARES => false
         ]);
+        $this->_log('create PDO[id='. spl_object_id($pdo) .']');
+        return $pdo;
     }
 
     public function get() {

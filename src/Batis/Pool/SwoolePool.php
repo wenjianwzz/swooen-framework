@@ -33,7 +33,7 @@ class SwoolePool extends SimplePool {
             try {
                 $pdo->query('select 1');
             } catch (\Throwable $t) {
-                $this->_log('PDO dead, drop');
+                $this->_log('PDO[id='. spl_object_id($pdo) .'] dead, drop');
                 return false;
             }
             return true;
@@ -46,7 +46,7 @@ class SwoolePool extends SimplePool {
         $this->_log('getting PDO');
         $pdo = $this->pool->pop(1); 
         if ($pdo && $this->checkPDO($pdo)) {
-            $this->_log('PDO from pool');
+            $this->_log('PDO[id='. spl_object_id($pdo) .'] from pool');
             return $pdo;
         }
         return $this->create();
@@ -54,10 +54,10 @@ class SwoolePool extends SimplePool {
 
     public function returnback($pdo) {
         if (-1 != \Swoole\Coroutine::getCid()) {
-            $this->_log('try return PDO to pool');
+            $this->_log('try return PDO[id='. spl_object_id($pdo) .'] to pool');
             if (!$this->pool->isFull()) {
                 if ($this->pool->push($pdo, 0.01)) {
-                    $this->_log('return PDO to pool');
+                    $this->_log('return PDO[id='. spl_object_id($pdo) .'] to pool');
                 }
             }
         }
