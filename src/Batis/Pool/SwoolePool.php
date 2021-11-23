@@ -11,13 +11,14 @@ class SwoolePool extends SimplePool {
      */
     protected $pool;
 
-    public function __construct(PDOConfig $config, ?LoggerInterface $logger=null, $size=2, $prefill=false) {
+    public function __construct(PDOConfig $config, ?LoggerInterface $logger=null, $size=8) {
         parent::__construct($config, $logger);
         $this->pool = new Channel($size);
-        if ($prefill) {
-            for($i=0; $i<$size; ++$i) {
-                $this->pool->push($this->create());
-            }
+    }
+    
+    public function prefill() {
+        for($i=0; $i<$this->pool->capacity; ++$i) {
+            $this->pool->push($this->create(), 0.01);
         }
     }
 
@@ -43,12 +44,10 @@ class SwoolePool extends SimplePool {
     public function get() {
         // 先等待，如果没有，创建新的
         $this->_log('getting PDO');
-        if (!$this->pool->isEmpty()) {
-            $pdo = $this->pool->pop(0.01); 
-            if ($pdo && $this->checkPDO($pdo)) {
-                $this->_log('PDO from pool');
-                return $pdo;
-            }
+        $pdo = $this->pool->pop(1); 
+        if ($pdo && $this->checkPDO($pdo)) {
+            $this->_log('PDO from pool');
+            return $pdo;
         }
         return $this->create();
     }
