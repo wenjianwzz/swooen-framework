@@ -46,7 +46,7 @@ class SwoolePool extends SimplePool {
         $this->_log('getting PDO');
         $pdo = $this->pool->pop(1); 
         if ($pdo && $this->checkPDO($pdo)) {
-            $this->_log('PDO[id='. spl_object_id($pdo) .'] from pool');
+            $this->_log('got PDO[id='. spl_object_id($pdo) .'] from pool');
             return $pdo;
         }
         return $this->create();
