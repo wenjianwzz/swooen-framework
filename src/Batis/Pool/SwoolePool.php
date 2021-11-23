@@ -11,9 +11,15 @@ class SwoolePool extends SimplePool {
      */
     protected $pool;
 
-    public function __construct(PDOConfig $config, ?LoggerInterface $logger=null, $size=8) {
+    /**
+     * 等待时间
+     */
+    protected $waitTime;
+
+    public function __construct(PDOConfig $config, ?LoggerInterface $logger=null, $size=8, $waitTime=5) {
         parent::__construct($config, $logger);
         $this->pool = new Channel($size);
+        $this->waitTime = $waitTime;
     }
     
     public function prefill() {
@@ -24,7 +30,7 @@ class SwoolePool extends SimplePool {
 
 	protected function _log($message, $context=[]) {
 		if ($this->logger) {
-			$this->logger->debug('[SwoolePool] '.$message, $context);
+			$this->logger->debug('[SwoolePool] '.$message, array_merge($context, ['cid' => \Swoole\Coroutine::getCid()]));
 		}
 	}
 
@@ -44,7 +50,7 @@ class SwoolePool extends SimplePool {
     public function get() {
         // 先等待，如果没有，创建新的
         $this->_log('getting PDO');
-        $pdo = $this->pool->pop(1); 
+        $pdo = $this->pool->pop($this->waitTime);
         if ($pdo && $this->checkPDO($pdo)) {
             $this->_log('got PDO[id='. spl_object_id($pdo) .'] from pool');
             return $pdo;
@@ -53,12 +59,14 @@ class SwoolePool extends SimplePool {
     }
 
     public function returnback($pdo) {
+        $pdoId = spl_object_id($pdo);
         if (-1 != \Swoole\Coroutine::getCid()) {
-            $this->_log('try return PDO[id='. spl_object_id($pdo) .'] to pool');
             if (!$this->pool->isFull()) {
                 if ($this->pool->push($pdo, 0.01)) {
-                    $this->_log('return PDO[id='. spl_object_id($pdo) .'] to pool');
+                    $this->_log('return PDO[id='. $pdoId .'] to pool');
                 }
+            } else {
+                $this->_log('drop PDO[id='. $pdoId .'], pool is full');
             }
         }
     }
