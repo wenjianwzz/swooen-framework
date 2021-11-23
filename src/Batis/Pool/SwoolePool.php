@@ -1,5 +1,7 @@
 <?php
 namespace Swooen\Batis\Pool;
+
+use Psr\Log\LoggerInterface;
 use Swoole\Coroutine\Channel;
 
 class SwoolePool extends SimplePool {
@@ -9,22 +11,28 @@ class SwoolePool extends SimplePool {
      */
     protected $pool;
 
-    public function __construct(PDOConfig $config, $size=4, $prefill=false) {
-        parent::__construct($config);
+    public function __construct(PDOConfig $config, ?LoggerInterface $logger=null, $size=2, $prefill=false) {
+        parent::__construct($config, $logger);
         $this->pool = new Channel($size);
         if ($prefill) {
             for($i=0; $i<$size; ++$i) {
-                $this->returnback($this->create());
+                $this->pool->push($this->create());
             }
         }
     }
+
+	protected function _log($message, $context=[]) {
+		if ($this->logger) {
+			$this->logger->debug('[SwoolePool] '.$message, $context);
+		}
+	}
 
     public function checkPDO($pdo) {
         if ($pdo instanceof \PDO) {
             try {
                 $pdo->query('select 1');
             } catch (\Throwable $t) {
-                echo 'PDO dead' . $t->getMessage() . PHP_EOL;
+                $this->_log('PDO dead, drop');
                 return false;
             }
             return true;
@@ -34,8 +42,10 @@ class SwoolePool extends SimplePool {
 
     public function get() {
         // 先等待，如果没有，创建新的
-        $pdo = $this->pool->pop(0.2); 
+        $this->_log('getting PDO');
+        $pdo = $this->pool->pop(0.01); 
         if ($pdo && $this->checkPDO($pdo)) {
+            $this->_log('PDO from pool');
             return $pdo;
         }
         return $this->create();
@@ -43,7 +53,11 @@ class SwoolePool extends SimplePool {
 
     public function returnback($pdo) {
         if (-1 != \Swoole\Coroutine::getCid()) {
-            $this->pool->push($pdo, 0.1);
+            $this->_log('try return PDO to pool');
+            if (!$this->pool->isFull()) {
+                $this->pool->push($pdo, 1);
+                $this->_log('return PDO to pool');
+            }
         }
     }
 }

@@ -2,20 +2,34 @@
 namespace Swooen\Batis\Pool;
 
 use PDO;
+use Psr\Log\LoggerInterface;
 
 class SimplePool implements PDOPool {
 
     protected $config;
 
-    public function __construct(PDOConfig $config) {
+	/**
+	 * @var LoggerInterface
+	 */
+	protected $logger;
+
+    public function __construct(PDOConfig $config, ?LoggerInterface $logger=null) {
         $this->config = $config;
+        $this->logger = $logger;
     }
+
+	protected function _log($message, $context=[]) {
+		if ($this->logger) {
+			$this->logger->debug('[SimplePool] '.$message, $context);
+		}
+	}
 
     public function has(): bool {
         return true;
     }
 
     public function create(): \PDO {
+        $this->_log('create PDO');
         return new \PDO($this->config->getDSN(), $this->config->getUser(), $this->config->getPassword(), [
             PDO::ATTR_CASE => PDO::CASE_NATURAL,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

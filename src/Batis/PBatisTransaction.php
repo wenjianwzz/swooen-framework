@@ -1,6 +1,7 @@
 <?php
 namespace Swooen\Batis;
 
+use Psr\Log\LoggerInterface;
 
 /**
  * @author wzz
@@ -24,14 +25,27 @@ class PBatisTransaction {
 	protected $transactionCounter = 0;
 
 	/**
+	 * @var LoggerInterface
+	 */
+	protected $logger;
+
+	/**
 	 * @param \PDO $pdo
 	 */
-	public function __construct(PBatis $pBatis) {
+	public function __construct(PBatis $pBatis, ?LoggerInterface $logger) {
 		$this->batis = $pBatis;
 		$this->pdo = $pBatis->getPool()->get();
+		$this->logger = $logger;
+	}
+
+	protected function _log($message, $context=[]) {
+		if ($this->logger) {
+			$this->logger->debug('[PBatisTransaction] '.$message, $context);
+		}
 	}
 
     public function beginTransaction() {
+		$this->_log('beginTransaction, transactionCounter='.$this->transactionCounter);
         if (!$this->transactionCounter++) {
             return $this->pdo->beginTransaction();
         }
@@ -40,6 +54,7 @@ class PBatisTransaction {
     }
 
     public function commit() {
+		$this->_log('commit, transactionCounter='.$this->transactionCounter);
         if (!--$this->transactionCounter) {
             return $this->pdo->commit();
         }
@@ -47,6 +62,7 @@ class PBatisTransaction {
     }
 
     public function rollback() {
+		$this->_log('rollback, transactionCounter='.$this->transactionCounter);
         if (--$this->transactionCounter) {
             $this->pdo->exec('ROLLBACK TO trans'.$this->transactionCounter + 1);
             return true;
@@ -68,6 +84,7 @@ class PBatisTransaction {
 	}
 
 	public function select($statement, array $bindings, $fetchMode=[\PDO::FETCH_ASSOC]) {
+		$this->_log('execute: '.$statement, $bindings);
 		$prepared = $this->pdo->prepare($statement);
 		$prepared->setFetchMode(...$fetchMode);
 		$this->bindValues($prepared, $bindings);
@@ -76,6 +93,7 @@ class PBatisTransaction {
 	}
 
 	public function affectingStatement($statement, $bindings = []) {
+		$this->_log('execute: '.$statement, $bindings);
 		$prepared = $this->pdo->prepare($statement);
 		$this->bindValues($prepared, $bindings);
 		$prepared->execute();
@@ -95,6 +113,7 @@ class PBatisTransaction {
 	}
 
 	public function insertGetId($statement, array $bindings) {
+		$this->_log('execute: '.$statement, $bindings);
 		$this->insert($statement, $bindings);
 		return $this->pdo->lastInsertId();
 	}
@@ -175,6 +194,7 @@ class PBatisTransaction {
     }
 
 	public function __destruct() {
+		$this->_log('__destruct');
 		$this->batis->getPool()->returnback($this->pdo);
 	}
 }
