@@ -13,6 +13,7 @@ use Swooen\Communication\StdoutWriter;
 use Swooen\Communication\Writer;
 use Swooen\Container\Container;
 use Swooen\Exception\Handler;
+use Swooen\Server\Booter;
 
 class Application extends Container {
     
@@ -45,7 +46,7 @@ class Application extends Container {
     /**
      * 启动服务，开始监听并处理数据
      */
-    public function run() {
+    public function run(Booter $booter) {
         $logger = $this->has(LoggerInterface::class)?$this->get(LoggerInterface::class):null;
         $writer = $this->make(Writer::class);
         try {
@@ -109,6 +110,5 @@ class Application extends Container {
                 $conn->destroy();
             }
         });
-        $factory->start();
     }
 }

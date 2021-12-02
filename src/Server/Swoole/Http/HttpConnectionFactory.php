@@ -5,28 +5,25 @@ use Swooen\Server\Http\Parser\HttpParser;
 use Swooen\Server\Swoole\Http\HttpConnection;
 use Swooen\Server\Swoole\Http\Writer\JsonWriter;
 use Swooen\Server\Swoole\SwooleConnectionFactory;
-use \Swoole\Http\Server;
 
 /**
  * 
  * @author WZZ
  */
 class HttpConnectionFactory extends SwooleConnectionFactory {
+
 	
 	/**
 	 * @var \Swoole\Http\Server
 	 */
 	protected $server;
-
+	
 	/**
 	 * @var HttpParser
 	 */
 	protected $parser;
 
-	public function __construct($host, $port, $mode=SWOOLE_BASE, $sockType=SWOOLE_SOCK_TCP) {
-		$this->server = new Server($host, $port, $mode, $sockType);
-		$this->initOnClose();
-		$this->initOnRequest();
+	public function __construct() {
 		$this->setParser($this->createParser());
 	}
 
@@ -52,14 +49,13 @@ class HttpConnectionFactory extends SwooleConnectionFactory {
 		return $this;
 	}
 	
-	protected function initOnRequest() {
-		$this->server->on('request', function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
-			$connection = $this->createConnection($request, $response);
-			$this->connections[$request->fd] = $connection;
-			$package = $this->parser->package($this->packRequest($request));
-			$connection->dispatchPackage($package);
-			($this->callback)($connection);
-		});
+	public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
+		$connection = $this->createConnection($request, $response);
+		// echo __METHOD__ . ' ' . $request->fd . PHP_EOL;
+		$this->connections[$request->fd] = $connection;
+		$package = $this->parser->package($this->packRequest($request));
+		$connection->dispatchPackage($package);
+		($this->callback)($connection);
 	}
 
 	/**
@@ -105,4 +101,5 @@ class HttpConnectionFactory extends SwooleConnectionFactory {
 		}
 		return $ret;
 	}
+
 }

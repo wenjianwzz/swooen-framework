@@ -4,7 +4,7 @@ namespace Swooen\Communication\Route\Handler;
 use Swooen\Container\Container;
 
 /**
- * 路由帮助
+ * 具体路由上下文
  * 
  * @author WZZ
  *        

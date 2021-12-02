@@ -1,6 +1,5 @@
 <?php
 
-use Swooen\Communication\BasicPackage;
 use Swooen\Communication\Route\Route;
 use Swooen\Communication\Writer;
 

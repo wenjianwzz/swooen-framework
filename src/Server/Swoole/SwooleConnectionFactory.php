@@ -10,7 +10,7 @@ use Swooen\Exception\Handler;
  * @author WZZ
  */
 class SwooleConnectionFactory implements ConnectionFactory {
-	
+
 	/**
 	 * @var \Swoole\Server
 	 */
@@ -24,24 +24,6 @@ class SwooleConnectionFactory implements ConnectionFactory {
 	protected $connections = [];
 
 	/**
-	 * 设置Swoole Server参数
-	 */
-	public function setSetting($setting) {
-		$this->server->set($setting);
-	}
-
-	/**
-	 * 初始化onClose事件, 收到客户端终止连接的事件
-	 */
-	protected function initOnClose() {
-		$this->server->on('close', function($server, $fd) {
-			if (isset($this->connections[$fd])) {
-				$this->onClose($fd);
-			}
-		});
-	}
-
-	/**
 	 * 终止Connection的时候，通知Factory将自身移除
 	 */
 	public function removeConnection(SwooleConnection $connection) {
@@ -49,19 +31,26 @@ class SwooleConnectionFactory implements ConnectionFactory {
 		unset($this->connections[$fd]);
 	}
 
-	public function onClose($fd) {
-		$connection = $this->connections[$fd];
-		unset($this->connections[$fd]);
-		$connection->onClientClosed();
-		unset($connection);
+	public function onClose(\Swoole\Server $server, $fd) {
+		// echo __METHOD__ . ' ' . $fd . PHP_EOL;
+		if (isset($this->connections[$fd])) {
+			$connection = $this->connections[$fd];
+			unset($this->connections[$fd]);
+			$connection->onClientClosed();
+			unset($connection);
+		}
 	}
 
 	public function onConnection(callable $callback) {
 		$this->callback = $callback;
 	}
-	
-	public function start() {
-		$this->server->start();
+
+	/**
+	 * Set the value of server
+	 */
+	public function setServer($server): self {
+		$this->server = $server;
+		return $this;
 	}
 
 }
