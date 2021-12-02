@@ -38,6 +38,9 @@ abstract class SwooleBooter extends Booter {
 	}
 
     public function boot(): void {
+		\Swoole\Coroutine::set([
+			'hook_flags'=> SWOOLE_HOOK_ALL,
+		]);
 		if (!$this->app->has(\Swooen\Communication\ConnectionFactory::class)) {
 			$this->withConnectionFactory($this->defaultConnectionFactory());
 		}
