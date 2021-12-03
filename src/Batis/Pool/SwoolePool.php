@@ -16,7 +16,7 @@ class SwoolePool extends SimplePool {
      */
     protected $waitTime;
 
-    public function __construct(PDOConfig $config, ?LoggerInterface $logger=null, $size=8, $waitTime=5) {
+    public function __construct(PDOConfig $config, ?LoggerInterface $logger=null, $size=8, $waitTime=0.1) {
         parent::__construct($config, $logger);
         $this->pool = new Channel($size);
         $this->waitTime = $waitTime;
@@ -30,7 +30,7 @@ class SwoolePool extends SimplePool {
 
 	protected function _log($message, $context=[]) {
 		if ($this->logger) {
-			$this->logger->debug('[SwoolePool] '.$message, array_merge($context, ['cid' => \Swoole\Coroutine::getCid()]));
+			$this->logger->debug('[SwoolePool(id='. spl_object_id($this) .')] '.$message, array_merge($context, ['cid' => \Swoole\Coroutine::getCid()]));
 		}
 	}
 
