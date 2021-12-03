@@ -60,8 +60,8 @@ abstract class SwooleBooter extends Booter {
 	 */
 	protected function initOnWorkerStart() {
 		$this->server->on('WorkerStart', function(\Swoole\Server $server, $workerId) {
-			$this->app->run($this);
 			$this->getConnectionFactory()->setServer($server);
+			$this->app->run($this);
 			echo 'worker['. $workerId .'] started' . PHP_EOL;
 		});
 	}
