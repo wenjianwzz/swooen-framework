@@ -65,8 +65,9 @@ abstract class SwooleBooter extends Booter {
 			echo 'worker['. $workerId .'] started' . PHP_EOL;
 		});
 	}
+	
 	/**
-	 * 初始化OnWorkerStart
+	 * 初始化Onclose
 	 */
 	protected function initOnclose() {
 		$this->server->on('close', function(\Swoole\Server $server, $fd) {

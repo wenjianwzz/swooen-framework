@@ -28,7 +28,9 @@ class SwooleConnectionFactory implements ConnectionFactory {
 	 */
 	public function removeConnection(SwooleConnection $connection) {
 		$fd = $connection->getFd();
-		unset($this->connections[$fd]);
+		if (isset($this->connections[$fd])) {
+			unset($this->connections[$fd]);
+		}
 	}
 
 	public function onClose(\Swoole\Server $server, $fd) {

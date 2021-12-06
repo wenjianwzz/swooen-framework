@@ -52,7 +52,6 @@ class HttpConnectionFactory extends SwooleConnectionFactory {
 	public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
 		$connection = $this->createConnection($request, $response);
 		// echo __METHOD__ . ' ' . $request->fd . PHP_EOL;
-		$this->connections[$request->fd] = $connection;
 		$package = $this->parser->package($this->packRequest($request));
 		$connection->dispatchPackage($package);
 		($this->callback)($connection);
@@ -83,7 +82,7 @@ class HttpConnectionFactory extends SwooleConnectionFactory {
 	 * @return HttpConnection
 	 */
 	public function createConnection(\Swoole\Http\Request $sreq, \Swoole\Http\Response $response) {
-		$connection = new HttpConnection($this->server, $this, $sreq->fd);
+		$connection = new HttpConnection($this->server, $this, $response, $sreq->fd);
 		$connection->instance(\Swooen\Communication\Writer::class, $this->createWriter($response));
 		return $connection;
 	}
