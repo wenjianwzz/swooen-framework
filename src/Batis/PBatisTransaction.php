@@ -194,7 +194,9 @@ class PBatisTransaction {
     }
 
 	public function __destruct() {
-		$this->_log('__destruct');
+		if ($this->transactionCounter > 0) {
+			$this->pdo->rollBack();
+		}
 		$this->batis->getPool()->returnback($this->pdo);
 	}
 }
