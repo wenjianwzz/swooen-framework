@@ -113,7 +113,6 @@ class PBatisTransaction {
 	}
 
 	public function insertGetId($statement, array $bindings) {
-		$this->_log('execute: '.$statement, $bindings);
 		$this->insert($statement, $bindings);
 		return $this->pdo->lastInsertId();
 	}
