@@ -19,7 +19,7 @@ class WebSocketConnection extends SwooleConnection {
 
 	protected $webSocketParser;
 
-	public function __construct(\Swoole\Server $server, WsJsonConnectionFactory $factory, $fd, Request $request, WebSocketParser $webSocketParser) {
+	public function __construct(\Swoole\Server $server, WebSocketConnectionFactory $factory, $fd, Request $request, WebSocketParser $webSocketParser) {
         parent::__construct($server, $factory, $fd);
 		$this->webSocketParser = $webSocketParser;
 		$this->request = $request;
@@ -45,7 +45,7 @@ class WebSocketConnection extends SwooleConnection {
 
 	public function onClientClosed() {
 		$this->closed = true;
-		$this->dispatchPackage($this->webSocketParser->packClose($this->request));
+		// $this->dispatchPackage($this->webSocketParser->packClose($this->request));
 		$this->packageChannel->push(null);
 	}
 

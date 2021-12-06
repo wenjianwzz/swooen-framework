@@ -9,7 +9,7 @@ class BasicPackage implements Package {
 
 	protected $metas;
 
-	public function __construct(array $inputs, array $metas) {
+	public function __construct(array $inputs, array $metas = []) {
 		$this->inputs = $inputs;
 		$this->metas = $metas;
 	}

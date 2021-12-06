@@ -39,13 +39,4 @@ class SwooleHttpBooter extends SwooleBooter {
 		});
 	}
 	
-	/**
-	 * 初始化Onclose
-	 */
-	protected function initOnclose() {
-		$this->server->on('close', function(\Swoole\Server $server, $fd) {
-			
-		});
-	}
-	
 }

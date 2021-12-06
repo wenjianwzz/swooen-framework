@@ -7,7 +7,7 @@ class RawPackage extends BasicPackage {
 
 	protected $content;
 
-	public function __construct($content, array $metas) {
+	public function __construct($content, array $metas = []) {
 		parent::__construct([], $metas);
 		$this->content = $content;
 	}
