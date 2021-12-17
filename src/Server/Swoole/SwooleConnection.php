@@ -62,7 +62,7 @@ abstract class SwooleConnection extends BaseConnection {
 	
 	public function listenPackage(callable $callable) {
 		while ($package = $this->packageChannel->pop(-1)) {
-			Coroutine::create($callable, $package, $this);
+			$callable($package, $this);
 		}
 	}
 }
