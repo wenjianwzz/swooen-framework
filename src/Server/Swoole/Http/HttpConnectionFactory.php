@@ -51,7 +51,6 @@ class HttpConnectionFactory extends SwooleConnectionFactory {
 	
 	public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
 		$connection = $this->createConnection($request, $response);
-		// echo __METHOD__ . ' ' . $request->fd . PHP_EOL;
 		$package = $this->parser->package($this->packRequest($request));
 		$connection->dispatchPackage($package);
 		($this->callback)($connection);

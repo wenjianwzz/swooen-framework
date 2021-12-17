@@ -109,7 +109,6 @@ class Application extends Container {
                 // 连接处理结束，摧毁释放资源
                 $conn->destroy();
             }
-            echo_memory_usage();
         });
     }
 }
