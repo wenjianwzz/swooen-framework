@@ -45,7 +45,7 @@ class WebSocketConnection extends SwooleConnection {
 
 	public function onClientClosed() {
 		$this->closed = true;
-		// $this->dispatchPackage($this->webSocketParser->packClose($this->request));
+		$this->dispatchPackage($this->webSocketParser->packClose($this->request));
 		$this->packageChannel->push(null);
 	}
 

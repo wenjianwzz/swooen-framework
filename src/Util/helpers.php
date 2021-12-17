@@ -42,3 +42,14 @@ if (! function_exists('env')) {
         return $value;
     }
 }
+
+function echo_memory_usage() {
+    $mem_usage = memory_get_usage();
+    if ($mem_usage < 1024) {
+        echo time() . ' ' . $mem_usage." B" . PHP_EOL;
+    } elseif ($mem_usage < 1048576) {
+        echo time() . ' ' . round($mem_usage/1024,3)." KiB" . PHP_EOL;
+    } else {
+        echo time() . ' ' . round($mem_usage/1048576, 3)." MiB" . PHP_EOL;
+    }
+}

@@ -34,7 +34,7 @@ class SwooleConnectionFactory implements ConnectionFactory {
 	}
 
 	public function onClose(\Swoole\Server $server, $fd) {
-		// echo __METHOD__ . ' ' . $fd . PHP_EOL;
+		echo __METHOD__ . ' ' . $fd . PHP_EOL;
 		if (isset($this->connections[$fd])) {
 			$connection = $this->connections[$fd];
 			unset($this->connections[$fd]);
