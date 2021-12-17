@@ -43,15 +43,15 @@ if (! function_exists('env')) {
     }
 }
 
-function echo_memory_usage() {
+function echo_memory_usage($prefix='') {
     $mem_usage = memory_get_usage();
     if ($mem_usage < 1024) {
-        echo time() . ' ' . $mem_usage." B" . PHP_EOL;
+        echo $prefix . ' ' . $mem_usage." B" . PHP_EOL;
     } elseif ($mem_usage < 1024*1024) {
-        echo time() . ' ' . round($mem_usage/1024,3)." KiB" . PHP_EOL;
+        echo $prefix . ' ' . round($mem_usage/1024,3)." KiB" . PHP_EOL;
     } elseif ($mem_usage < 1024*1024*1024) {
-        echo time() . ' ' . round($mem_usage/1024/1024,3)." MiB" . PHP_EOL;
+        echo $prefix . ' ' . round($mem_usage/1024/1024,3)." MiB" . PHP_EOL;
     } else {
-        echo time() . ' ' . round($mem_usage/1024/1024/1024, 3)."GiB" . PHP_EOL;
+        echo $prefix . ' ' . round($mem_usage/1024/1024/1024, 3)."GiB" . PHP_EOL;
     }
 }
