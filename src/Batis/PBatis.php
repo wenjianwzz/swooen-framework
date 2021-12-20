@@ -33,10 +33,6 @@ class PBatis {
 		throw new \RuntimeException('指定的SQL Key['.$sqlKey.']不存在');
     }
 
-    public function transaction() {
-        return new PBatisTransaction($this);
-    }
-
 	/**
 	 * @return PDOPool
 	 */
