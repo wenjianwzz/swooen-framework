@@ -1,6 +1,8 @@
 <?php
 namespace Swooen\Communication\Route;
 
+use Swooen\Communication\Route\Handler\HandlerFactory;
+
 /**
  * 路由
  * 
@@ -19,12 +21,26 @@ class Route {
 
     protected $metas = [];
 
+    protected $handlerFactory = HandlerFactory::class;
+
     public function __construct($path, $action, $hooks=[], $metas=[], $initParams=[]) {
         $this->path = $path;
         $this->action = $action;
         $this->hooks = $hooks;
         $this->metas = $metas;
         $this->params = $initParams;
+    }
+
+    /**
+     * 使用指定的处理器工厂
+     */
+    public function withFactory($factoryClass): self {
+        $this->handlerFactory = $factoryClass;
+        return $this;
+    }
+
+    public function getFactory(): string {
+        return $this->handlerFactory;
     }
 
     public function __clone() {

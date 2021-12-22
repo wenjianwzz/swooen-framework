@@ -6,8 +6,11 @@ namespace Swooen;
 use Psr\Log\LoggerInterface;
 use Swooen\Communication\Connection;
 use Swooen\Communication\Package;
+use Swooen\Communication\Route\Handler\HandlerContext;
 use Swooen\Communication\Route\Handler\HandlerFactory;
+use Swooen\Communication\Route\Hook\HandlerContextHook;
 use Swooen\Communication\Route\Hook\HandlerHook;
+use Swooen\Communication\Route\Route;
 use Swooen\Communication\Route\Router;
 use Swooen\Communication\StdoutWriter;
 use Swooen\Communication\Writer;
@@ -44,6 +47,29 @@ class Application extends Container {
     }
 
     /**
+     * @return HandlerContext
+     */
+    protected function createHandlerContext(Connection $connection, Route $route, Router $router, Package $package, Writer $writer) {
+        if ($this->has(HandlerContext::class)) {
+            $context = $this->make(HandlerContext::class);
+        } else {
+            $context = HandlerContext::create();
+        }
+        $context->instance(Application::class, $this);
+        $context->instance(\Swooen\Container\Container::class, $context);
+        $context->instance(Connection::class, $connection);
+        $context->instance(Route::class, $route);
+        $context->instance(Router::class, $router);
+        $context->instance(Package::class, $package);
+        $context->instance(Writer::class, $writer);
+        $context->instance(HandlerContext::class, $context);
+        if ($this->has(HandlerContextHook::class)) {
+            $this->make(HandlerContextHook::class)->onCreate($context);
+        }
+        return $context;
+    }
+
+    /**
      * 启动服务，开始监听并处理数据
      */
     public function run(Booter $booter) {
@@ -53,21 +79,20 @@ class Application extends Container {
             $factory = $this->make(\Swooen\Communication\ConnectionFactory::class);
             assert($factory instanceof \Swooen\Communication\ConnectionFactory);
             $router = Router::makeByContainer($this);
-            $handlerFactory = $this->make(HandlerFactory::class);
-            assert($handlerFactory instanceof HandlerFactory);
         } catch (\Throwable $t) {
             $errHandler = $this->make(Handler::class);
             $errHandler->report($t, $logger);
             $errHandler->render($t, $writer);
             throw $t;
         }
-        $factory->onConnection(function(Connection $conn) use ($logger, $router, $handlerFactory) {
+        $factory->onConnection(function(Connection $conn) use ($logger, $router) {
             $writer = $conn->getWriter();
-            $conn->listenPackage(function(Package $package, Connection $connection) use ($router, $writer, $handlerFactory, $logger) {
+            $conn->listenPackage(function(Package $package, Connection $connection) use ($router, $writer, $logger) {
                 try {
                     $route = $router->dispatch($package);
-                    $action = $route->getAction();
-                    $handlerContext = $handlerFactory->createContext($this, $connection, $route, $router, $package, $writer);
+                    $handlerContext = $this->createHandlerContext($connection, $route, $router, $package, $writer);
+                    $handlerFactory = $handlerContext->make($route->getFactory());
+                    assert($handlerFactory instanceof HandlerFactory);
                     /**
                      * @var HandlerHook[]
                      */
@@ -79,8 +104,8 @@ class Application extends Container {
                         }
                     }
                     if ($package) {
-                        $action = $handlerFactory->parse($action);
-                        $returnPackage = $handlerContext->call($action, $route->getParams());
+                        $actionHandler = $handlerFactory->parse($route, $package);
+                        $returnPackage = $handlerContext->call($actionHandler, $route->getParams());
                         for ($i = count($hookers)-1; $i >= 0; --$i) {
                             $hooker = $hookers[$i];
                             $returnPackage = $hooker->after($handlerContext, $route, $connection, $returnPackage);
