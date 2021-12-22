@@ -31,6 +31,10 @@ class Route {
         $this->params = $initParams;
     }
 
+    public static function create($path, $action, $hooks=[], $metas=[], $initParams=[]): self {
+        return new static($path, $action, $hooks, $metas, $initParams);
+    }
+
     /**
      * 使用指定的处理器工厂
      */
@@ -45,10 +49,6 @@ class Route {
 
     public function __clone() {
         $this->params = array_merge($this->params);
-    }
-
-    public static function create($path, $action): self {
-        return new static($path, $action);
     }
 
     /**
