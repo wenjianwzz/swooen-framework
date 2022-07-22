@@ -14,9 +14,9 @@
 		"symfony/http-kernel": "^5.0",
 		"symfony/http-foundation": "^5.0",
 		"monolog/monolog": "^2.0",
-		"illuminate/support": "^7.1",
-		"illuminate/config": "^7.1",
-        "symfony/mime": "^5.0"
+        "symfony/mime": "^5.0",
+        "ramsey/uuid": "^4.3",
+        "voku/portable-ascii": "^2.0"
     },
     "require-dev": {
         "swoole/ide-helper": "~4.5.9"

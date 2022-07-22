@@ -1,7 +1,7 @@
 <?php
 namespace Swooen\Communication\Route\Handler;
 
-use Illuminate\Support\Str;
+use Swooen\Util\Str;
 use Swooen\Communication\Package;
 use Swooen\Communication\Route\Route;
 
