@@ -11,9 +11,9 @@
 |
 */
 
-use Swooen\Server\Swoole\Http\SwooleHttpBooter;
+use Swooen\Runtime\Swoole\Http\SwooleHttpBooter;
 
-$app = require __DIR__.'/../bootstrap/app.php';
+$app = require __DIR__.'/../bootstrap/context.php';
 
 $boot = new SwooleHttpBooter($app, '0.0.0.0', 18080);
 $boot->withRouteLoader(require $app->basePath('routes/loader.php'));

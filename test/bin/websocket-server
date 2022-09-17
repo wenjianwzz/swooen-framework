@@ -11,7 +11,7 @@
 |
 */
 
-use Swooen\Server\Swoole\WebSocket\WebSocketBooter;
+use Swooen\Runtime\Swoole\WebSocket\WebSocketBooter;
 
 $app = require __DIR__.'/../bootstrap/app.php';
 

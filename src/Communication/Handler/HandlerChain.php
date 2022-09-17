@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Server;
+namespace Swooen\Runtime;
 
 use Swooen\Application;
 use Swooen\Communication\ConnectionFactory;

@@ -1,25 +1,25 @@
 <?php
 namespace Swooen\Runtime;
 
-use Swooen\Application;
 use Swooen\Communication\ConnectionFactory;
+use Swooen\Container\Container;
 
 /**
  * 服务启动器，负责初始环境
  */
 abstract class Booter {
 
-    protected $app;
+    protected $container;
 
-    public function __construct(Application $application) {
-        $this->app = $application;
+    public function __construct(Container $container) {
+        $this->container = $container;
     }
 
     /**
      * 设置连接工厂
      */
     public function withConnectionFactory(ConnectionFactory $connectionFactory): self {
-        $this->app->instance(\Swooen\Communication\ConnectionFactory::class, $connectionFactory);
+        $this->container->instance(\Swooen\Communication\ConnectionFactory::class, $connectionFactory);
 		return $this;
 	}
     
@@ -28,7 +28,7 @@ abstract class Booter {
      * @param $implement callable|class
      */
     public function withHandlerContextHook($implement): self {
-        $this->app->bind(\Swooen\Communication\Route\Hook\HandlerContextHook::class, $implement);
+        $this->container->bind(\Swooen\Communication\Route\Hook\HandlerContextHook::class, $implement);
 		return $this;
 	}
 
@@ -37,7 +37,7 @@ abstract class Booter {
      * @param $implement callable|class
      */
     public function withRouteLoader($implement): self {
-        $this->app->bind(\Swooen\Communication\Route\Loader\RouteLoader::class, $implement);
+        $this->container->bind(\Swooen\Communication\Route\Loader\RouteLoader::class, $implement);
 		return $this;
     }
 
