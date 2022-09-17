@@ -2,26 +2,21 @@
 namespace Swooen\Communication\Package\Features;
 
 /**
- * 可供路由的
+ * 给对端发送状态
  * 
  * @author WZZ
  */
-interface Routeable {
+interface StatusNotice {
 
     /**
 	 * 获取路由Path，用来供路由判断
 	 * @return string
 	 */
-	public function getRoutePath();
+	public function getStatus();
 	
 }
 
-/**
- * 可供路由的
- * 
- * @author WZZ
- */
-trait RouteableImpl {
+trait StatusAwareImpl {
 
     /**
      * @var string

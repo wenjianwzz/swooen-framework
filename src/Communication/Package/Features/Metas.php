@@ -1,24 +1,39 @@
 <?php
 namespace Swooen\Communication\Package\Features;
 
+use Swooen\Util\Arr;
+
 /**
- * 可感知IP
+ * 元数据
  * 
  * @author WZZ
  */
-trait Metas {
+interface MetasFunction {
+
+	public function meta(string $key, $default=null);
+
+	public function allMetas();
+	
+}
+
+/**
+ * 元数据
+ * 
+ * @author WZZ
+ */
+trait MetasImpl {
 
     /**
-     * @var string
+     * @var array
      */
-    protected $remoteAddress;
+    protected $metas;
 
-    /**
-	 * 获取路由Path，用来供路由判断
-	 * @return string
-	 */
-	public function getRemoteAddress(): string {
-        return $this->remoteAddress;
-    }
+	public function meta(string $key, $default=null) {
+		return Arr::get($this->metas, strtolower($key), $default);
+	}
+
+	public function allMetas() {
+		return $this->metas;
+	}
 	
 }

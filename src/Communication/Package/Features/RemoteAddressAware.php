@@ -1,12 +1,25 @@
 <?php
 namespace Swooen\Communication\Package\Features;
-
 /**
- * 可感知IP
+ * 可感知远程地址
  * 
  * @author WZZ
  */
-trait RemoteAddressAware {
+interface RemoteAddressAware {
+
+    /**
+	 * 获取路由Path，用来供路由判断
+	 * @return string
+	 */
+	public function getRemoteAddress(): string;
+	
+}
+/**
+ * 可感知远程地址
+ * 
+ * @author WZZ
+ */
+trait RemoteAddressAwareImpl {
 
     /**
      * @var string
