@@ -5,7 +5,7 @@ namespace Swooen\Runtime;
 
 use Psr\Log\LoggerInterface;
 use Swooen\Communication\Connection;
-use Swooen\Communication\Package;
+use Swooen\Communication\Package\Package;
 use Swooen\Communication\Route\Handler\HandlerContext;
 use Swooen\Communication\Route\Handler\HandlerFactory;
 use Swooen\Communication\Route\Hook\HandlerContextHook;

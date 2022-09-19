@@ -1,7 +1,7 @@
 <?php
 namespace Swooen\Runtime\Swoole\WebSocket\Writer;
 
-use Swooen\Communication\Package;
+use Swooen\Communication\Package\Package;
 use Swooen\Runtime\Http\Writer\JsonWriter as LegacyJsonWriter;
 
 /**

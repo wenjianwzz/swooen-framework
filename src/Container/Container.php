@@ -82,7 +82,7 @@ class Container implements ContainerInterface {
         return $this;
     }
 
-    public function has(string $id) {
+    public function has(string $id): bool {
         return $this->bound($id);
     }
 

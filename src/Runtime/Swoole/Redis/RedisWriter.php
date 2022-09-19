@@ -2,7 +2,7 @@
 namespace Swooen\Runtime\Swoole\Redis;
 
 use Swooen\Communication\NilPackage;
-use Swooen\Communication\Package;
+use Swooen\Communication\Package\Package;
 use Swooen\Communication\Writer;
 use Swoole\Redis\Server;
 

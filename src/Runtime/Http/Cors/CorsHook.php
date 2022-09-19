@@ -2,7 +2,7 @@
 namespace Swooen\Runtime\Http\Cors;
 
 use Swooen\Communication\Connection;
-use Swooen\Communication\Package;
+use Swooen\Communication\Package\Package;
 use Swooen\Communication\Route\Handler\HandlerContext;
 use Swooen\Communication\Route\Hook\HandlerHook;
 use Swooen\Communication\Route\Route;

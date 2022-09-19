@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Communication;
+namespace Swooen\Communication\Connection;
 
 use Swooen\Container\Container;
 

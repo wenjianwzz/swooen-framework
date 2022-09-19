@@ -1,15 +1,14 @@
 <?php
 namespace Swooen\Runtime\Swoole;
 
-use Swooen\Communication\BaseConnection;
-use Swooen\Communication\Package;
-use Swoole\Coroutine;
+use Swooen\Communication\Connection\BaseConnection as ConnectionBaseConnection;
+use Swooen\Communication\Package\Package;
 use Swoole\Coroutine\Channel;
 
 /**
  * @author WZZ
  */
-abstract class SwooleConnection extends BaseConnection {
+abstract class SwooleConnection extends ConnectionBaseConnection {
 
 	protected $closed = false;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Runtime;
+namespace Swooen\Communication\Handler;
 
 use Swooen\Application;
 use Swooen\Communication\ConnectionFactory;
@@ -7,7 +7,7 @@ use Swooen\Communication\ConnectionFactory;
 /**
  * 服务启动器，负责初始环境
  */
-abstract class Booter {
+abstract class HandlerChain {
 
     protected $app;
 

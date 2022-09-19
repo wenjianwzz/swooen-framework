@@ -3,6 +3,7 @@ namespace Swooen\Runtime\Swoole;
 
 use Swooen\Application;
 use Swooen\Runtime\Booter;
+use Swooen\Runtime\RuntimeContext;
 
 /**
  * @author WZZ
@@ -18,8 +19,8 @@ abstract class SwooleBooter extends Booter {
 
 	protected $port;
 
-	public function __construct(Application $application, $host, $port) {
-		parent::__construct($application);
+	public function __construct(RuntimeContext $context, $host, $port) {
+		parent::__construct($context);
 		$this->host = $host;
 		$this->port = $port;
 		$this->createServer();

@@ -2,7 +2,7 @@
 namespace Swooen\Runtime\Http\Cors;
 
 use Swooen\Communication\Connection;
-use Swooen\Communication\Package;
+use Swooen\Communication\Package\Package;
 use Swooen\Communication\RawPackage;
 use Swooen\Communication\Route\Route;
 use Swooen\Runtime\Http\Writer\HttpWriter;

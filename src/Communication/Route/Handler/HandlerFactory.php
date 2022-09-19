@@ -2,7 +2,7 @@
 namespace Swooen\Communication\Route\Handler;
 
 use Swooen\Util\Str;
-use Swooen\Communication\Package;
+use Swooen\Communication\Package\Package;
 use Swooen\Communication\Route\Route;
 
 /**

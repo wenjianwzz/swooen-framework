@@ -11,8 +11,8 @@
 |
 */
 
-$app = require __DIR__.'/../bootstrap/app.php';
-assert($app instanceof \Swooen\Application);
+$app = require __DIR__.'/../bootstrap/runtime.php';
+assert($app instanceof \Swooen\Runtime\RuntimeContext);
 $app->bind(\Swooen\Communication\ConnectionFactory::class, \Swooen\Runtime\Http\GlobalToConnectionFactory::class);
 $app->bind(\Swooen\Communication\Route\Loader\RouteLoader::class, function() {
     return new \Swooen\Communication\Route\Loader\PHPFileLoader(
