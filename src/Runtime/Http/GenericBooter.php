@@ -1,23 +1,15 @@
 <?php
 namespace Swooen\Runtime\Http;
 
-use Swooen\Application;
 use Swooen\Runtime\Booter;
 
 /**
  * @author WZZ
  */
-class FpmBooter extends Booter {
-
-	public function __construct(Application $application) {
-		parent::__construct($application);
-	}
+class GenericBooter extends Booter {
 
     public function boot(): void {
-		if (!$this->app->has(\Swooen\Communication\ConnectionFactory::class)) {
-			$this->withConnectionFactory($this->defaultConnectionFactory());
-		}
-		$this->app->run($this);
+		// 创建连接，创建输入输出
 		$this->getConnectionFactory()->capture();
 	}
 

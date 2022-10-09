@@ -4,16 +4,6 @@
 namespace Swooen\Runtime;
 
 use Psr\Log\LoggerInterface;
-use Swooen\Communication\Connection;
-use Swooen\Communication\Package\Package;
-use Swooen\Communication\Route\Handler\HandlerContext;
-use Swooen\Communication\Route\Handler\HandlerFactory;
-use Swooen\Communication\Route\Hook\HandlerContextHook;
-use Swooen\Communication\Route\Hook\HandlerHook;
-use Swooen\Communication\Route\Route;
-use Swooen\Communication\Route\Router;
-use Swooen\Communication\StdoutWriter;
-use Swooen\Communication\Writer;
 use Swooen\Container\Container;
 use Swooen\Exception\Handler;
 use Swooen\Runtime\Booter;

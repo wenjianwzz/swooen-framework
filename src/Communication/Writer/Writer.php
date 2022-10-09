@@ -1,5 +1,7 @@
 <?php
-namespace Swooen\Communication;
+namespace Swooen\Communication\Writer;
+
+use Swooen\Communication\Package\Package;
 
 interface Writer {
 	
@@ -13,23 +15,11 @@ interface Writer {
 	 * 是否可以给对方发送数据包
 	 * @return boolean
 	 */
-	public function canWrite();
+	public function writable();
 
 	/**
 	 * 向对方发送内容，并终止连接
 	 */
-	public function end(string $content);
-
-	/**
-	 * 给对方发送数据
-	 * @return boolean
-	 */
-	public function write(string $content);
-	
-	/**
-	 * 写入元数据
-	 * @return boolean
-	 */
-	public function writeMeta(string $name, string $value);
+	public function end(Package $package=null);
 	
 }

@@ -1,7 +1,5 @@
 <?php
-namespace Swooen\Communication\Writer;
-
-use Swooen\Communication\Package\Package;
+namespace Swooen\Communication;
 
 class StdoutWriter implements Writer {
 
@@ -32,7 +30,7 @@ class StdoutWriter implements Writer {
 	/**
 	 * 结束写入
 	 */
-	public function end(Package $package) {
+	public function end(string $content=null) {
         if ($content) {
             $this->write($content);
         }

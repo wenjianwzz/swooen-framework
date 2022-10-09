@@ -14,14 +14,6 @@ abstract class Booter {
     public function __construct(RuntimeContext $context) {
         $this->context = $context;
     }
-
-    /**
-     * 设置连接工厂
-     */
-    public function withConnectionFactory(ConnectionFactory $connectionFactory): self {
-        $this->context->instance(\Swooen\Communication\ConnectionFactory::class, $connectionFactory);
-		return $this;
-	}
     
     /**
      * 启动服务

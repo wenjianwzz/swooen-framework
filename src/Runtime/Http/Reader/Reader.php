@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Runtime\Http\Parser;
+namespace Swooen\Runtime\Http\Reader;
 
 use Swooen\Runtime\Http\HttpRequestPackage;
 use Swooen\Communication\Package\Package;
@@ -7,7 +7,7 @@ use Swooen\Communication\Package\Package;
 /**
  * @author WZZ
  */
-class HttpParser {
+class Reader {
 
 	public function parseBody($contentType, $content) {
 		if (stripos($contentType, 'json') !== false) {
