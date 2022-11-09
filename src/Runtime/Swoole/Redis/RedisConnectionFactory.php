@@ -1,7 +1,7 @@
 <?php
 namespace Swooen\Runtime\Swoole\Redis;
 
-use Swooen\Communication\Writer;
+use Swooen\Package\Writer;
 use Swooen\Runtime\Swoole\SwooleConnectionFactory;
 use \Swoole\Redis\Server;
 

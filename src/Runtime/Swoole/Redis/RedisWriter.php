@@ -1,9 +1,9 @@
 <?php
 namespace Swooen\Runtime\Swoole\Redis;
 
-use Swooen\Communication\NilPackage;
-use Swooen\Communication\Package\Package;
-use Swooen\Communication\Writer;
+use Swooen\Package\NilPackage;
+use Swooen\Package\Package\Package;
+use Swooen\Package\Writer;
 use Swoole\Redis\Server;
 
 class RedisWriter implements Writer {

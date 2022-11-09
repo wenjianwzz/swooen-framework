@@ -1,7 +1,7 @@
 <?php
 namespace Swooen\Runtime\Swoole;
 
-use Swooen\Communication\ConnectionFactory;
+use Swooen\Package\ConnectionFactory;
 use Swooen\Exception\Handler;
 
 /**

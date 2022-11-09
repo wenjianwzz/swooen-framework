@@ -1,7 +1,7 @@
 <?php
 namespace Swooen\Runtime\Swoole\Http;
 
-use Swooen\Communication\Package\Package;
+use Swooen\Package\Package\Package;
 use Swooen\Runtime\Swoole\SwooleConnection;
 use Swoole\Http\Response;
 

@@ -1,8 +1,8 @@
 <?php
 
-use Swooen\Communication\RawPackage;
-use Swooen\Communication\Route\Route;
-use Swooen\Communication\Writer;
+use Swooen\Package\RawPackage;
+use Swooen\Package\Route\Route;
+use Swooen\Package\Writer;
 
 return [
     new Route('{path:.+}', function(Route $route, Writer $writer, $path) {

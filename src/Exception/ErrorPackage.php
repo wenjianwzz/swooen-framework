@@ -2,7 +2,7 @@
 namespace Swooen\Exception;
 
 use Swooen\Util\Arr;
-use Swooen\Communication\BasicPackage;
+use Swooen\Package\BasicPackage;
 
 class ErrorPackage extends BasicPackage {
 

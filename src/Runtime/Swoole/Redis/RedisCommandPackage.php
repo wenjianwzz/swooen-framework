@@ -1,9 +1,9 @@
 <?php
 namespace Swooen\Runtime\Swoole\Redis;
 
-use Swooen\Communication\BasicPackage;
-use Swooen\Communication\IPAwarePackage;
-use Swooen\Communication\RouteablePackage;
+use Swooen\Package\BasicPackage;
+use Swooen\Package\IPAwarePackage;
+use Swooen\Package\RouteablePackage;
 
 /**
  * 封装来往通信报文

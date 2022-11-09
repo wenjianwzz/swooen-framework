@@ -14,7 +14,7 @@ class GenericBooter extends Booter {
 	}
 
 	protected function getConnectionFactory(): GlobalToConnectionFactory {
-		return $this->app->make(\Swooen\Communication\ConnectionFactory::class);
+		return $this->app->make(\Swooen\Package\ConnectionFactory::class);
 	}
 
 	public function defaultConnectionFactory(): GlobalToConnectionFactory {

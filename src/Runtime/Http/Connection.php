@@ -1,8 +1,8 @@
 <?php
 namespace Swooen\Runtime\Http;
 
-use Swooen\Communication\BaseConnection;
-use Swooen\Communication\Package\Package;
+use Swooen\Package\BaseConnection;
+use Swooen\Package\Package\Package;
 
 /**
  * 传统请求响应下的处理

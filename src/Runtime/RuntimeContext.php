@@ -57,8 +57,8 @@ class RuntimeContext extends Container {
         $logger = $this->has(LoggerInterface::class)?$this->get(LoggerInterface::class):null;
         $writer = $this->make(Writer::class);
         try {
-            $factory = $this->make(\Swooen\Communication\ConnectionFactory::class);
-            assert($factory instanceof \Swooen\Communication\ConnectionFactory);
+            $factory = $this->make(\Swooen\Package\ConnectionFactory::class);
+            assert($factory instanceof \Swooen\Package\ConnectionFactory);
             $router = Router::makeByContainer($this);
         } catch (\Throwable $t) {
             $errHandler = $this->make(Handler::class);

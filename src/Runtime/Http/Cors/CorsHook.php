@@ -1,11 +1,11 @@
 <?php
 namespace Swooen\Runtime\Http\Cors;
 
-use Swooen\Communication\Connection;
-use Swooen\Communication\Package\Package;
-use Swooen\Communication\Route\Handler\HandlerContext;
-use Swooen\Communication\Route\Hook\HandlerHook;
-use Swooen\Communication\Route\Route;
+use Swooen\Package\Connection;
+use Swooen\Package\Package\Package;
+use Swooen\Package\Route\Handler\HandlerContext;
+use Swooen\Package\Route\Hook\HandlerHook;
+use Swooen\Package\Route\Route;
 use Swooen\Runtime\Http\Writer\HttpWriter;
 
 class CorsHook extends HandlerHook {

@@ -82,7 +82,7 @@ class HttpConnectionFactory extends SwooleConnectionFactory {
 	 */
 	public function createConnection(\Swoole\Http\Request $sreq, \Swoole\Http\Response $response) {
 		$connection = new HttpConnection($this->server, $this, $response, $sreq->fd);
-		$connection->instance(\Swooen\Communication\Writer::class, $this->createWriter($response));
+		$connection->instance(\Swooen\Package\Writer::class, $this->createWriter($response));
 		return $connection;
 	}
 

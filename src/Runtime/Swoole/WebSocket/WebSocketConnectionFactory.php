@@ -64,7 +64,7 @@ class WebSocketConnectionFactory extends HttpConnectionFactory {
 	 */
 	public function createWsConnection(\Swoole\WebSocket\Server $server, \Swoole\Http\Request $sreq, \Symfony\Component\HttpFoundation\Request $request) {
 		$connection = new WebSocketConnection($server, $this, $sreq->fd, $request, $this->socketParser);
-		$connection->instance(\Swooen\Communication\Writer::class, $this->createWsWriter($server, $sreq->fd));
+		$connection->instance(\Swooen\Package\Writer::class, $this->createWsWriter($server, $sreq->fd));
 		return $connection;
 	}
 

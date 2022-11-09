@@ -1,8 +1,8 @@
 <?php
 namespace Swooen\Runtime\Http;
 
-use Swooen\Communication\ConnectionFactory;
-use Swooen\Communication\Writer;
+use Swooen\Package\ConnectionFactory;
+use Swooen\Package\Writer;
 use Swooen\Runtime\Http\Parser\HttpParser;
 use Swooen\Runtime\Http\Writer\HttpWriter;
 use Swooen\Runtime\Http\Writer\JsonWriter;

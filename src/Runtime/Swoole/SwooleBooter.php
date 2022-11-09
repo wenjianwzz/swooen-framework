@@ -42,7 +42,7 @@ abstract class SwooleBooter extends Booter {
 		\Swoole\Coroutine::set([
 			'hook_flags'=> SWOOLE_HOOK_ALL,
 		]);
-		if (!$this->app->has(\Swooen\Communication\ConnectionFactory::class)) {
+		if (!$this->app->has(\Swooen\Package\ConnectionFactory::class)) {
 			$this->withConnectionFactory($this->defaultConnectionFactory());
 		}
 		$this->initOnWorkerStart();
@@ -51,7 +51,7 @@ abstract class SwooleBooter extends Booter {
 	}
 
 	protected function getConnectionFactory(): SwooleConnectionFactory {
-		return $this->app->make(\Swooen\Communication\ConnectionFactory::class);
+		return $this->app->make(\Swooen\Package\ConnectionFactory::class);
 	}
 
 	abstract public function defaultConnectionFactory(): SwooleConnectionFactory;
