@@ -1,7 +1,7 @@
 <?php
 namespace Swooen\Runtime\Http\Writer;
 
-use Swooen\Package\StdoutWriter;
+use Swooen\IO\StdoutWriter;
 
 /**
  * 传统请求响应下的处理

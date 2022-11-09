@@ -1,7 +1,7 @@
 <?php
 namespace Swooen\Runtime;
 
-use Swooen\Package\ConnectionFactory;
+use Swooen\IO\ConnectionFactory;
 use Swooen\Container\Container;
 
 /**

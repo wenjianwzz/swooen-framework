@@ -2,7 +2,7 @@
 namespace Swooen\Runtime\Http\Reader;
 
 use Swooen\Runtime\Http\HttpRequestPackage;
-use Swooen\Package\Package\Package;
+use Swooen\IO\Package\Package;
 
 /**
  * @author WZZ

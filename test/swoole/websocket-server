@@ -25,9 +25,9 @@ $app = require __DIR__.'/../bootstrap/app.php';
 assert($app instanceof \Swooen\Application);
 
 $factory = new \Swooen\Runtime\Swoole\WebSocket\WsJsonConnectionFactory('0.0.0.0', 8080);
-$app->instance(\Swooen\Package\ConnectionFactory::class, $factory);
-$app->bind(\Swooen\Package\Route\Loader\RouteLoader::class, function() {
-    return new \Swooen\Package\Route\Loader\PHPFileLoader(
+$app->instance(\Swooen\IO\ConnectionFactory::class, $factory);
+$app->bind(\Swooen\IO\Route\Loader\RouteLoader::class, function() {
+    return new \Swooen\IO\Route\Loader\PHPFileLoader(
         __DIR__.'/../routes/v1.php'
     );
 });

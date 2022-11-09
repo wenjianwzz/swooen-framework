@@ -1,7 +1,7 @@
 <?php
 namespace Swooen\Runtime\Http\Writer;
 
-use Swooen\Package\Package\Package;
+use Swooen\IO\Package\Package;
 
 /**
  * 传统请求响应下的处理

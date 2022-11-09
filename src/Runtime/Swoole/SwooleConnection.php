@@ -1,8 +1,8 @@
 <?php
 namespace Swooen\Runtime\Swoole;
 
-use Swooen\Package\Connection\BaseConnection as ConnectionBaseConnection;
-use Swooen\Package\Package\Package;
+use Swooen\IO\Connection\BaseConnection as ConnectionBaseConnection;
+use Swooen\IO\Package\Package;
 use Swoole\Coroutine\Channel;
 
 /**

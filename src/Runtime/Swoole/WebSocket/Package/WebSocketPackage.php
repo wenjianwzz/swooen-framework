@@ -1,9 +1,9 @@
 <?php
 namespace Swooen\Runtime\Swoole\WebSocket\Package;
 
-use Swooen\Package\BasicPackage;
-use Swooen\Package\IPAwarePackage;
-use Swooen\Package\RouteablePackage;
+use Swooen\IO\BasicPackage;
+use Swooen\IO\IPAwarePackage;
+use Swooen\IO\RouteablePackage;
 
 /**
  * @author WZZ

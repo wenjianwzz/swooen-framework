@@ -2,7 +2,7 @@
 namespace Swooen\Exception;
 
 use Psr\Log\LoggerInterface;
-use Swooen\Package\Writer;
+use Swooen\IO\Writer;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler {

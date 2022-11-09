@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Package;
+namespace Swooen\IO;
 
 /**
  * 连接工厂
