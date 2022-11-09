@@ -8,7 +8,7 @@ use Swooen\Util\Arr;
  * 
  * @author WZZ
  */
-interface MetasFunction {
+interface Metas {
 
 	public function meta(string $key, $default=null);
 
@@ -21,7 +21,7 @@ interface MetasFunction {
  * 
  * @author WZZ
  */
-trait MetasImpl {
+trait MetasFeature {
 
     /**
      * @var array

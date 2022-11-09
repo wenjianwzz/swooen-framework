@@ -21,7 +21,7 @@ interface RawData {
  * 
  * @author WZZ
  */
-trait RawDataImpl {
+trait RawDataFeature {
 
     /**
      * @var string

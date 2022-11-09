@@ -1,39 +1,37 @@
 <?php
 namespace Swooen\Package\Package\Features;
-
 /**
- * 可供路由的
+ * 可感知远程地址
  * 
  * @author WZZ
  */
-interface Routeable {
+interface RemoteAddressAware {
 
     /**
 	 * 获取路由Path，用来供路由判断
 	 * @return string
 	 */
-	public function getRoutePath();
+	public function getRemoteAddress(): string;
 	
 }
-
 /**
- * 可供路由的
+ * 可感知远程地址
  * 
  * @author WZZ
  */
-trait RouteableImpl {
+trait RemoteAddressAwareFeature {
 
     /**
      * @var string
      */
-    protected $routePath;
+    protected $remoteAddress;
 
     /**
 	 * 获取路由Path，用来供路由判断
 	 * @return string
 	 */
-	public function getRoutePath(): string {
-        return $this->routePath;
+	public function getRemoteAddress(): string {
+        return $this->remoteAddress;
     }
 	
 }

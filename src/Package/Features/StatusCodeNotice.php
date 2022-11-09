@@ -18,7 +18,7 @@ interface StatusCodeNotice {
 
 }
 
-trait StatusNoticeImpl {
+trait StatusNoticeFeature {
 
     /**
      * @var int

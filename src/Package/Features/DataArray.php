@@ -21,7 +21,7 @@ interface DataArray {
  * 
  * @author WZZ
  */
-trait DataArrayImpl {
+trait DataArrayFeature {
 
     /**
      * @var array
