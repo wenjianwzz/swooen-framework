@@ -17,8 +17,8 @@ use Swooen\Server\PackageDispatcher;
 |
 */
 $app = new \Swooen\Application(realpath(__DIR__.'/../'));
-$app->instance(PackageDispatcher::class, $app->call(function(PackageDispatcher $dispatcher) {
-    $dispatcher->addHandler(new PackageLogger());
+$app->instance(PackageDispatcher::class, $app->call(function(PackageDispatcher $dispatcher, PackageLogger $packageLogger) {
+    $dispatcher->addHandler($packageLogger);
     return $dispatcher;
 }));
 return $app;
