@@ -32,11 +32,11 @@ class PackageDispatcher {
             array_push($this->handlers, $handler);
         }
     }
-
-    public function dispatch(Package $package, Writer $writer) {
-        $context = $this->app->make(PackageHandleContext::class);
+    
+    public function dispatch(PackageHandleContext $context, Package $package, Writer $writer) {
+        $context->instance(Package::class, $package);
+        $context->instance(Writer::class, $writer);
         $writer->send(new RawPackage('hello'));
-
     }
     
 }

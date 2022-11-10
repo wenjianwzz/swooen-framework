@@ -16,4 +16,4 @@ use Swooen\Server\Generic\GenericBooter;
 $app = require __DIR__.'/../bootstrap/app.php';
 assert($app instanceof \Swooen\Application);
 $booter = new GenericBooter($app);
-$booter->boot();
+$app->boot($booter);

@@ -87,6 +87,3 @@
 
 ### 是控制器直接回发，还是由外层调度回发
 外层调度回发
-
-## 版权申明
-- Swooen\Utils下一些代码拷贝自illuminate/support和illuminate/config，不完全引入是因为有冲突

@@ -12,5 +12,5 @@ require_once __DIR__.'/../../vendor/autoload.php';
 | application as an "IoC" container and router for this framework.
 |
 */
-$context = new \Swooen\Application(realpath(__DIR__.'/../'));
-return $context;
+$app = new \Swooen\Application(realpath(__DIR__.'/../'));
+return $app;

@@ -1,7 +1,7 @@
 <?php
 namespace Swooen\IO\Route\Handler;
 
-use Swooen\Util\Str;
+use Wenjianwzz\Tool\Util\Str;
 use Swooen\Package\Package;
 use Swooen\IO\Route\Route;
 

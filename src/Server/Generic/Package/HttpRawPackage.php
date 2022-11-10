@@ -4,7 +4,7 @@ namespace Swooen\Server\Generic\Package;
 use Swooen\Package\Features\RawData;
 use Swooen\Package\Features\RawDataFeature;
 use Swooen\Package\Package;
-use Swooen\Util\Arr;
+use Wenjianwzz\Tool\Util\Arr;
 
 /**
  * @author WZZ

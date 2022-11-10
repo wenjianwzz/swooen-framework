@@ -2,7 +2,7 @@
 namespace Swooen\Config;
 
 use ArrayAccess;
-use Swooen\Util\Arr;
+use Wenjianwzz\Tool\Util\Arr;
 
 class ConfigRepository implements ArrayAccess
 {

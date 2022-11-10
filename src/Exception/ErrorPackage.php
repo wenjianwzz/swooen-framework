@@ -1,7 +1,7 @@
 <?php
 namespace Swooen\Exception;
 
-use Swooen\Util\Arr;
+use Wenjianwzz\Tool\Util\Arr;
 use Swooen\IO\BasicPackage;
 
 class ErrorPackage extends BasicPackage {

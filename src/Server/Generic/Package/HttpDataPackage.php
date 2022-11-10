@@ -1,8 +1,6 @@
 <?php
 namespace Swooen\Server\Generic\Package;
 
-use Swooen\Package\Package;
-use Swooen\Util\Arr;
 
 /**
  * @author WZZ

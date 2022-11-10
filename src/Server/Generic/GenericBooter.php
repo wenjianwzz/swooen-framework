@@ -1,8 +1,8 @@
 <?php
 namespace Swooen\Server\Generic;
 
-use Swooen\Package\Package;
-use Swooen\Runtime\Http\HttpRequestPackage;
+use Swooen\Application;
+use Swooen\Package\PackageHandleContext;
 use Swooen\Server\Generic\Package\Reader;
 use Swooen\Server\PackageDispatcher;
 use Swooen\Server\ServerBooter;
@@ -14,21 +14,30 @@ use Swooen\Server\Writer\Writer;
  */
 class GenericBooter extends ServerBooter {
 
-    public function boot(): void {
-		$reader = $this->createReader();
-		$writer = $this->createWriter();
+    public function boot(Application $app): void {
+		$reader = $this->createReader($app);
+		$writer = $this->createWriter($app);
 		$request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 		$package = $reader->package($request);
-		$dispatcher = $this->application->make(PackageDispatcher::class);
+		$dispatcher = $this->createDispatcher($app);
+		$context = $this->createContext($app);
 		assert($dispatcher instanceof PackageDispatcher);
-		$dispatcher->dispatch($package, $writer);
+		$dispatcher->dispatch($context, $package, $writer);
 	}
 
-	public function createReader(): Reader {
+	public function createDispatcher(Application $app): PackageDispatcher {
+		return $app->make(PackageDispatcher::class);	
+	}
+
+	public function createContext(Application $app): PackageHandleContext {
+		return $app->make(PackageHandleContext::class);	
+	}
+
+	public function createReader(Application $app): Reader {
 		return new Reader();	
 	}
 
-	public function createWriter(): Writer {
+	public function createWriter(Application $app): Writer {
 		return new StdoutWriter();	
 	}
 

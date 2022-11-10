@@ -1,8 +1,6 @@
 <?php
 namespace Swooen\Server\Generic\Package;
 
-use Swooen\Package\Package;
-
 /**
  * @author WZZ
  */
