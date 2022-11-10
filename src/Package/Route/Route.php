@@ -1,7 +1,7 @@
 <?php
-namespace Swooen\IO\Route;
+namespace Swooen\Package\Route;
 
-use Swooen\IO\Route\Handler\HandlerFactory;
+use Swooen\Package\Route\Handler\HandlerFactory;
 
 /**
  * 路由

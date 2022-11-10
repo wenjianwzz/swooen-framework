@@ -26,10 +26,7 @@
     "suggest": {
     },
     "autoload": {
-        "psr-4": { "Swooen\\": "src" },
-        "files": [
-            "src/Util/helpers.php"
-        ]
+        "psr-4": { "Swooen\\": "src" }
     },
     "minimum-stability": "stable",
     "repositories": {

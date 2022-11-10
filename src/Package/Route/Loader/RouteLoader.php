@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\IO\Route\Loader;
+namespace Swooen\Package\Route\Loader;
 
 /**
  * 路由加载器
@@ -10,7 +10,7 @@ abstract class RouteLoader {
 
     /**
      * 加载路由
-     * @return \Swooen\IO\Route\Route[]
+     * @return \Swooen\Package\Route\Route[]
      */
     abstract public function getRoutes();
 }

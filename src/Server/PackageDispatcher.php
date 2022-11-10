@@ -5,7 +5,6 @@ use Swooen\Application;
 use Swooen\Package\Package;
 use Swooen\Package\PackageHandleContext;
 use Swooen\Package\PackageHandler;
-use Swooen\Package\RawPackage;
 use Swooen\Server\Writer\Writer;
 
 /**
@@ -36,7 +35,12 @@ class PackageDispatcher {
     public function dispatch(PackageHandleContext $context, Package $package, Writer $writer) {
         $context->instance(Package::class, $package);
         $context->instance(Writer::class, $writer);
-        $writer->send(new RawPackage('hello'));
+        foreach($this->handlers as $handler) {
+            $package = $handler->reset()->handle($context, $package, $writer);
+            if ($handler->terminated()) {
+                break;
+            }
+        }
     }
     
 }

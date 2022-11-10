@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\IO\Route\Exception;
+namespace Swooen\Package\Route\Exception;
 
 use RuntimeException;
 

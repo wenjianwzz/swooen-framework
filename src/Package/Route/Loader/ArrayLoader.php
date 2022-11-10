@@ -1,7 +1,7 @@
 <?php
-namespace Swooen\IO\Route\Loader;
+namespace Swooen\Package\Route\Loader;
 
-use Swooen\IO\Route\Route;
+use Swooen\Package\Route\Route;
 
 /**
  * 路由加载器

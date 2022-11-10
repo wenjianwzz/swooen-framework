@@ -1,10 +1,10 @@
 <?php
-namespace Swooen\IO\Route;
+namespace Swooen\Package\Route;
 
 use Swooen\Package\Package;
-use Swooen\IO\Route\Exception\NotFoundException;
-use Swooen\IO\Route\Loader\RouteLoader;
-use Swooen\IO\RouteablePackage;
+use Swooen\Package\Route\Exception\NotFoundException;
+use Swooen\Package\Route\Loader\RouteLoader;
+use Swooen\Package\RouteablePackage;
 use Wenjianwzz\Tool\Util\ReverseMake;
 
 /**
