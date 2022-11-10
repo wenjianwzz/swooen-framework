@@ -1,7 +1,13 @@
 <?php
 namespace Swooen\Server\Generic;
 
+use Swooen\Package\Package;
+use Swooen\Runtime\Http\HttpRequestPackage;
+use Swooen\Server\Generic\Package\Reader;
+use Swooen\Server\PackageDispatcher;
 use Swooen\Server\ServerBooter;
+use Swooen\Server\Writer\StdoutWriter;
+use Swooen\Server\Writer\Writer;
 
 /**
  * @author WZZ
@@ -9,16 +15,21 @@ use Swooen\Server\ServerBooter;
 class GenericBooter extends ServerBooter {
 
     public function boot(): void {
-		// 创建连接，创建输入输出
-		$this->getConnectionFactory()->capture();
+		$reader = $this->createReader();
+		$writer = $this->createWriter();
+		$request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+		$package = $reader->package($request);
+		$dispatcher = $this->application->make(PackageDispatcher::class);
+		assert($dispatcher instanceof PackageDispatcher);
+		$dispatcher->dispatch($package, $writer);
 	}
 
-	protected function getConnectionFactory(): GlobalToConnectionFactory {
-		return $this->app->make(\Swooen\IO\ConnectionFactory::class);
+	public function createReader(): Reader {
+		return new Reader();	
 	}
 
-	public function defaultConnectionFactory(): GlobalToConnectionFactory {
-		return new GlobalToConnectionFactory();
+	public function createWriter(): Writer {
+		return new StdoutWriter();	
 	}
 
 }

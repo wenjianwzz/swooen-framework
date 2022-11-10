@@ -2,18 +2,17 @@
 namespace Swooen\Server;
 
 use Swooen\Application;
+use Swooen\Package\PackageHandler;
 
 /**
  * 服务启动器，负责初始环境
  */
 abstract class ServerBooter {
 
-    protected $context;
+    protected $application;
 
-    protected $handlers;
-
-    public function __construct(Application $context) {
-        $this->context = $context;
+    public function __construct(Application $application) {
+        $this->application = $application;
     }
     
     /**
