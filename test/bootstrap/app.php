@@ -1,6 +1,10 @@
 <?php
 
+
 require_once __DIR__.'/../../vendor/autoload.php';
+
+use Swooen\Handle\CommonHanlers\PackageLogger;
+use Swooen\Server\PackageDispatcher;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,4 +17,8 @@ require_once __DIR__.'/../../vendor/autoload.php';
 |
 */
 $app = new \Swooen\Application(realpath(__DIR__.'/../'));
+$app->instance(PackageDispatcher::class, $app->call(function(PackageDispatcher $dispatcher) {
+    $dispatcher->addHandler(new PackageLogger());
+    return $dispatcher;
+}));
 return $app;

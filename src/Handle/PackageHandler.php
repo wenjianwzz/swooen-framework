@@ -18,7 +18,7 @@ abstract class PackageHandler {
         return $this->terminated;
     }
 
-    public function setTerminated($terminated): self {
+    public function setTerminated($terminated=true): self {
         $this->terminated = $terminated;
         return $this;
     }
