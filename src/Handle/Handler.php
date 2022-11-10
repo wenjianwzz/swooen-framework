@@ -1,6 +1,7 @@
 <?php
-namespace Swooen\Package;
+namespace Swooen\Handle;
 
+use Swooen\Package\Package;
 use Swooen\Server\Writer\Writer;
 
 /**
@@ -11,7 +12,7 @@ abstract class PackageHandler {
 
     protected $terminated = false;
 
-    public abstract function handle(PackageHandleContext $context, Package $package, Writer $writer): Package;
+    public abstract function handle(HandleContext $context, Package $package, Writer $writer): Package;
 
     public function terminated() {
         return $this->terminated;

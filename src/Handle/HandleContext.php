@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Package;
+namespace Swooen\Handle;
 
 use Swooen\Application;
 use Swooen\Container\Container;
@@ -8,7 +8,7 @@ use Swooen\Container\Container;
  * 包处理上下文
  * @author WZZ
  */
-class PackageHandleContext extends Container {
+class HandleContext extends Container {
 
     public function __construct(Application $app) {
         $this->instance(Application::class, $app);

@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Package\Route\Loader;
+namespace Swooen\Handle\Route\Loader;
 
 /**
  * 路由加载器

@@ -2,7 +2,7 @@
 namespace Swooen\Server\Generic;
 
 use Swooen\Application;
-use Swooen\Package\PackageHandleContext;
+use Swooen\Handle\HandleContext;
 use Swooen\Server\Generic\Package\Reader;
 use Swooen\Server\PackageDispatcher;
 use Swooen\Server\ServerBooter;
@@ -29,8 +29,8 @@ class GenericBooter extends ServerBooter {
 		return $app->make(PackageDispatcher::class);	
 	}
 
-	public function createContext(Application $app): PackageHandleContext {
-		return $app->make(PackageHandleContext::class);	
+	public function createContext(Application $app): HandleContext {
+		return $app->make(HandleContext::class);	
 	}
 
 	public function createReader(Application $app): Reader {
