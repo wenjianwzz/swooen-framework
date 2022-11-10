@@ -1,17 +1,18 @@
 <?php
-namespace Swooen\Runtime;
+namespace Swooen\Server;
 
-use Swooen\IO\ConnectionFactory;
-use Swooen\Container\Container;
+use Swooen\Application;
 
 /**
  * 服务启动器，负责初始环境
  */
-abstract class Booter {
+abstract class ServerBooter {
 
     protected $context;
 
-    public function __construct(RuntimeContext $context) {
+    protected $handlers;
+
+    public function __construct(Application $context) {
         $this->context = $context;
     }
     

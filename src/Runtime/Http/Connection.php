@@ -2,7 +2,7 @@
 namespace Swooen\Runtime\Http;
 
 use Swooen\IO\BaseConnection;
-use Swooen\IO\Package\Package;
+use Swooen\Package\Package;
 
 /**
  * 传统请求响应下的处理

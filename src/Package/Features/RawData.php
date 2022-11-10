@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\IO\Package\Features;
+namespace Swooen\Package\Features;
 
 /**
  * 可供路由的

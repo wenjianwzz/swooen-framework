@@ -1,14 +1,12 @@
 <?php
-/**
- */
-namespace Swooen\Runtime;
+namespace Swooen;
 
 use Psr\Log\LoggerInterface;
 use Swooen\Container\Container;
 use Swooen\Exception\Handler;
 use Swooen\Runtime\Booter;
 
-class RuntimeContext extends Container {
+class Application extends Container {
     
     /**
      * The base path of the application installation.

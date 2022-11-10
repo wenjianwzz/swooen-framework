@@ -11,9 +11,9 @@
 |
 */
 
-use Swooen\Runtime\Http\GenericBooter;
+use Swooen\Server\Generic\GenericBooter;
 
-$context = require __DIR__.'/../bootstrap/context.php';
-assert($context instanceof \Swooen\Runtime\RuntimeContext);
-$booter = new GenericBooter($context);
+$app = require __DIR__.'/../bootstrap/app.php';
+assert($app instanceof \Swooen\Application);
+$booter = new GenericBooter($app);
 $booter->boot();

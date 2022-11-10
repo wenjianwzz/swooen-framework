@@ -5,7 +5,7 @@ use Swooen\Application;
 use Swooen\IO\ConnectionFactory;
 
 /**
- * 服务启动器，负责初始环境
+ * 处理器
  */
 abstract class HandlerChain {
 

@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\IO\Package\Features;
+namespace Swooen\Package\Features;
 /**
  * 可感知远程地址
  * 

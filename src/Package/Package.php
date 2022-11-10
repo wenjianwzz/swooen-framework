@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\IO\Package;
+namespace Swooen\Package;
 
 /**
  * 封装通信报文

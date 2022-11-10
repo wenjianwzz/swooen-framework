@@ -1,7 +1,7 @@
 <?php
 namespace Swooen\IO\Route;
 
-use Swooen\IO\Package\Package;
+use Swooen\Package\Package;
 use Swooen\IO\Route\Exception\NotFoundException;
 use Swooen\IO\Route\Loader\RouteLoader;
 use Swooen\IO\RouteablePackage;

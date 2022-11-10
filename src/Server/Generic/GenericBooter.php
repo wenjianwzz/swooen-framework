@@ -1,12 +1,12 @@
 <?php
-namespace Swooen\Runtime\Http;
+namespace Swooen\Server\Generic;
 
-use Swooen\Runtime\Booter;
+use Swooen\Server\ServerBooter;
 
 /**
  * @author WZZ
  */
-class GenericBooter extends Booter {
+class GenericBooter extends ServerBooter {
 
     public function boot(): void {
 		// 创建连接，创建输入输出

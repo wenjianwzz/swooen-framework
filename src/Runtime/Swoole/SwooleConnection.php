@@ -2,7 +2,7 @@
 namespace Swooen\Runtime\Swoole;
 
 use Swooen\IO\Connection\BaseConnection as ConnectionBaseConnection;
-use Swooen\IO\Package\Package;
+use Swooen\Package\Package;
 use Swoole\Coroutine\Channel;
 
 /**

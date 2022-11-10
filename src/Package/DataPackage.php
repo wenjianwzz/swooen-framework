@@ -1,8 +1,8 @@
 <?php
-namespace Swooen\IO\Package;
+namespace Swooen\Package;
 
-use Swooen\IO\Package\Features\DataArray;
-use Swooen\IO\Package\Features\DataArrayFeature;
+use Swooen\Package\Features\DataArray;
+use Swooen\Package\Features\DataArrayFeature;
 
 class DataPackage implements Package, DataArray {
 	use DataArrayFeature;

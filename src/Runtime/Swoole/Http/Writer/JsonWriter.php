@@ -1,7 +1,7 @@
 <?php
 namespace Swooen\Runtime\Swoole\Http\Writer;
 
-use Swooen\IO\Package\Package;
+use Swooen\Package\Package;
 use Swooen\Runtime\Http\Writer\JsonWriter as LegacyJsonWriter;
 
 /**
