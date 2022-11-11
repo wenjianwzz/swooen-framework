@@ -2,7 +2,7 @@
 namespace Swooen\Handle;
 
 use Swooen\Package\Package;
-use Swooen\Server\Writer\Writer;
+use Swooen\Handle\Writer\Writer;
 
 /**
  * 包处理器

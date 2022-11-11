@@ -1,11 +1,14 @@
 <?php
 namespace Swooen\Handle\Route;
 
-use Swooen\Handle\Package;
+use Swooen\Handle\HandleContext;
+use Swooen\Package\Package;
+use Swooen\Handle\PackageHandler;
 use Swooen\Handle\Route\Exception\NotFoundException;
 use Swooen\Handle\Route\Loader\RouteLoader;
-use Swooen\Handle\RouteablePackage;
-use Wenjianwzz\Tool\Util\ReverseMake;
+use Swooen\Handle\Writer\Writer;
+use Swooen\Package\Features\Routeable;
+use Wenjianwzz\Tool\Util\Str;
 
 /**
  * 路由
@@ -13,16 +16,14 @@ use Wenjianwzz\Tool\Util\ReverseMake;
  * @author WZZ
  *        
  */
-class Router {
-
-    use ReverseMake;
+class Router extends PackageHandler {
 
     /**
      * 恒定的HTTP方法
      */
-    const METHOD = 'INTERNAL';
+    const METHOD = '-';
 
-    const ROUTE_PACKAGE_NOT_ROUTEABLE = 'NOT_ROUTEABLE';
+    const ROUTE_PACKAGE_NOT_ROUTEABLE = '<UnRoutable>';
 
     /**
      * @var RouteLoader
@@ -41,7 +42,7 @@ class Router {
             $routes = $this->loader->getRoutes();
             foreach ($routes as $route) {
                 $path = $route->getPath();
-                $r->addRoute(Router::METHOD, $path, $route);
+                $r->addRoute('-', $path, $route);
 			}
 		}, [
             'routeParser' => \FastRoute\RouteParser\Std::class,
@@ -50,7 +51,32 @@ class Router {
             'routeCollector' => \FastRoute\RouteCollector::class,
         ]);
 	}
-    
+
+    public function handle(HandleContext $context, Package $package, Writer $writer): Package {
+        $route = $this->dispatch($package);
+        $context->instance(Route::class, $route);
+        $context->instance(Package::class, $package);
+        $callable = $this->paserAction($route);
+        $context->call($callable, $route->getParams());
+        return $package;
+    }
+
+    protected function paserAction(Route $route) {
+        $action = $route->getAction();
+        if (is_callable($action)) {
+            return $action;
+        } else if (is_string($action)) {
+            if (!Str::contains($action, '@')) {
+                $action .= '@__invoke';
+            }
+            return function(HandleContext $context, Route $route) use ($action) {
+                list($controller, $method) = explode('@', $action);
+                $controller = $context->make($controller);
+                return $context->call([$controller, $method], $route->getParams());
+            };
+        }
+    }
+
     /**
      * 分发Package, 返回匹配路由。返回的路由中，已经将参数注入。
      * @return Route
@@ -58,7 +84,7 @@ class Router {
 	public function dispatch(Package $package) {
         $dispatcher = $this->createDispatcher();
         $routePath = static::ROUTE_PACKAGE_NOT_ROUTEABLE;
-        if ($package instanceof RouteablePackage) {
+        if ($package instanceof Routeable) {
             $routePath = $package->getRoutePath();
         }
         $found = $dispatcher->dispatch(static::METHOD, $routePath );

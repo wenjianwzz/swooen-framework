@@ -6,8 +6,8 @@ use Swooen\Handle\HandleContext;
 use Swooen\Server\Generic\Package\Reader;
 use Swooen\Server\PackageDispatcher;
 use Swooen\Server\ServerBooter;
-use Swooen\Server\Writer\StdoutWriter;
-use Swooen\Server\Writer\Writer;
+use Swooen\Handle\Writer\StdoutWriter;
+use Swooen\Handle\Writer\Writer;
 
 /**
  * @author WZZ

@@ -4,8 +4,8 @@ namespace Swooen\Runtime\Http;
 use Swooen\IO\ConnectionFactory;
 use Swooen\IO\Writer;
 use Swooen\Runtime\Http\Parser\HttpParser;
-use Swooen\Runtime\Http\Writer\HttpWriter;
-use Swooen\Runtime\Http\Writer\JsonWriter;
+use Swooen\Handle\Writer\HttpWriter;
+use Swooen\Handle\Writer\JsonWriter;
 
 /**
  * 封装各种类型协议，负责监听通讯，将请求统一成固定格式

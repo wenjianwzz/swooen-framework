@@ -1,11 +1,11 @@
 <?php
 
-use Swooen\IO\RawPackage;
-use Swooen\IO\Route\Route;
-use Swooen\IO\Writer;
+use Swooen\Handle\Route\Route;
+use Swooen\Handle\Writer\Writer;
+use Swooen\Package\RawPackage;
 
 return [
-    new Route('{path:.+}', function(Route $route, Writer $writer, $path) {
-        return new RawPackage($path);
+    Route::create('/test', function(Route $route, Writer $writer, $path) {
+        $writer->send(new RawPackage($path));
     })
 ];

@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Server\Writer;
+namespace Swooen\Handle\Writer;
 
 use Swooen\Package\Features\DataArray;
 use Swooen\Package\Features\Metas;

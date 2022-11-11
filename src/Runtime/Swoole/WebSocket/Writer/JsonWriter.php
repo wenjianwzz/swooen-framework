@@ -2,7 +2,7 @@
 namespace Swooen\Runtime\Swoole\WebSocket\Writer;
 
 use Swooen\Package\Package;
-use Swooen\Runtime\Http\Writer\JsonWriter as LegacyJsonWriter;
+use Swooen\Handle\Writer\JsonWriter as LegacyJsonWriter;
 
 /**
  * @author WZZ

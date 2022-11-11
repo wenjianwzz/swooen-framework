@@ -5,7 +5,7 @@ use Psr\Log\LoggerInterface;
 use Swooen\Handle\HandleContext;
 use Swooen\Handle\PackageHandler;
 use Swooen\Package\Package;
-use Swooen\Server\Writer\Writer;
+use Swooen\Handle\Writer\Writer;
 
 /**
  * 包处理器
@@ -15,12 +15,13 @@ class PackageLogger extends PackageHandler {
 
     protected $logger;
 
-    public function __construct(LoggerInterface $logger) {
-        $this->logger = $logger;
-    }
+    // public function __construct(LoggerInterface $logger) {
+    //     $this->logger = $logger;
+    // }
 
     public function handle(HandleContext $context, Package $package, Writer $writer): Package {
-        $this->logger->debug($package);
+        // $this->logger->debug($package);
+        var_dump($package);
         return $package;
     }
 

@@ -5,7 +5,7 @@ use Swooen\Application;
 use Swooen\Package\Package;
 use Swooen\Handle\HandleContext;
 use Swooen\Handle\PackageHandler;
-use Swooen\Server\Writer\Writer;
+use Swooen\Handle\Writer\Writer;
 
 /**
  * 包分发

@@ -5,7 +5,7 @@ use Swooen\IO\Connection;
 use Swooen\Package\Package;
 use Swooen\IO\RawPackage;
 use Swooen\IO\Route\Route;
-use Swooen\Runtime\Http\Writer\HttpWriter;
+use Swooen\Handle\Writer\HttpWriter;
 
 /**
  * 跨域预检

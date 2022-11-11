@@ -6,7 +6,7 @@ use Swooen\Package\Package;
 use Swooen\IO\Route\Handler\HandlerContext;
 use Swooen\IO\Route\Hook\HandlerHook;
 use Swooen\IO\Route\Route;
-use Swooen\Runtime\Http\Writer\HttpWriter;
+use Swooen\Handle\Writer\HttpWriter;
 
 class CorsHook extends HandlerHook {
 
