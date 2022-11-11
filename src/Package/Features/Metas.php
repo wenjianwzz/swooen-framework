@@ -28,7 +28,7 @@ trait MetasFeature {
     /**
      * @var array
      */
-    protected $metas;
+    protected $metas = [];
 
 	public function meta(string $key, $default=null) {
 		return Arr::get($this->metas, strtolower($key), $default);

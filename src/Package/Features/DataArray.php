@@ -28,7 +28,7 @@ trait DataArrayFeature {
     /**
      * @var array
      */
-    protected $dataArr;
+    protected $dataArr = [];
 
 	public function getData(string $key, $default=null) {
 		return Arr::get($this->dataArr, strtolower($key), $default);
