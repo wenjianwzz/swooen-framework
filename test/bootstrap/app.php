@@ -22,8 +22,8 @@ use Swooen\Server\PackageDispatcher;
 $app = new \Swooen\Application(realpath(__DIR__.'/../'));
 
 $app->bind(RouteLoader::class, require $app->basePath('routes/loader.php'));
-$app->instance(PackageDispatcher::class, $app->call(function(PackageDispatcher $dispatcher, Router $router) {
-    $dispatcher->addHandler($router);
+$app->instance(PackageDispatcher::class, $app->call(function(PackageDispatcher $dispatcher, Router $router, PackageLogger $packageLogger) {
+    $dispatcher->addHandler($packageLogger, $router);
     return $dispatcher;
 }));
 return $app;

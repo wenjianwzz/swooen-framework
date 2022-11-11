@@ -171,7 +171,7 @@ class Container implements ContainerInterface {
 	/**
 	 * 获取形参列表
 	 * @param callable $callback
-	 * @return array
+	 * @return \ReflectionParameter[]
 	 */
 	public static function getCallParameters(callable $callback) {
 	    $reflect = is_array($callback) ? new \ReflectionMethod($callback[0], $callback[1]) : new \ReflectionFunction($callback);
@@ -181,7 +181,7 @@ class Container implements ContainerInterface {
 	/**
 	 * 获取构造函数的形参列表
 	 * @param string $class
-	 * @return array
+	 * @return \ReflectionParameter[]
 	 */
 	public static function getConstructorParameters($class) {
 	    $reflect = (new \ReflectionClass($class))->getConstructor();
@@ -191,18 +191,29 @@ class Container implements ContainerInterface {
 	/**
 	 * 生成依赖
 	 * @param array $dependParams
-	 * @param array $parameters 参数字典，如果不是字典，会按照从前往后的顺序组装成字典
+	 * @param \ReflectionParameter[] $parameters 参数字典，如果不是字典，会按照从前往后的顺序组装成字典
      * @param callable $makeFunc 依赖查找函数
 	 * @return mixed[]
 	 */
 	public static function getDependencies(array $dependParams, array $parameters, callable $makeFunc) {
 	    $dependencies = [];
 	    foreach ($dependParams as $parameter) {
+            assert($parameter instanceof \ReflectionParameter);
 			if (array_key_exists($parameter->name, $parameters)) {
 				$dependencies[] = $parameters[$parameter->name];
 				unset($parameters[$parameter->name]);
-			} elseif ($parameter->getClass()) {
-				$dependencies[] = $makeFunc($parameter->getClass()->name);
+			} elseif (($type = $parameter->getType()) && !$type->isBuiltin()) {
+                try {
+                    $dependencies[] = $makeFunc($type->getName());
+                } catch (\Exception $e) {
+                    if ($parameter->isDefaultValueAvailable()) {
+                        $dependencies[] = $parameter->getDefaultValue();
+                    } else if ($parameter->allowsNull()) {
+                        $dependencies[] = null;
+                    } else {
+                        throw $e;
+                    }
+                }
 			} elseif ($parameter->isDefaultValueAvailable()) {
 				$dependencies[] = $parameter->getDefaultValue();
 			}

@@ -15,13 +15,14 @@ class PackageLogger extends PackageHandler {
 
     protected $logger;
 
-    // public function __construct(LoggerInterface $logger) {
-    //     $this->logger = $logger;
-    // }
+    public function __construct(?LoggerInterface $logger) {
+        $this->logger = $logger;
+    }
 
     public function handle(HandleContext $context, Package $package, Writer $writer): Package {
-        // $this->logger->debug($package);
-        var_dump($package);
+        if ($this->logger) {
+            $this->logger->debug($package);
+        }
         return $package;
     }
 
