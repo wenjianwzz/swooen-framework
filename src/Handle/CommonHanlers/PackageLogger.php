@@ -19,11 +19,11 @@ class PackageLogger extends PackageHandler {
         $this->logger = $logger;
     }
 
-    public function handle(HandleContext $context, Package $package, Writer $writer): Package {
+    public function handle(HandleContext $context, Package $package, Writer $writer, callable $next) {
         if ($this->logger) {
             $this->logger->debug($package);
         }
-        return $package;
+        $next($context, $package, $writer);
     }
 
 }

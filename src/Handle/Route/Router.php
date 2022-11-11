@@ -4,10 +4,10 @@ namespace Swooen\Handle\Route;
 use Swooen\Handle\HandleContext;
 use Swooen\Package\Package;
 use Swooen\Handle\PackageHandler;
-use Swooen\Handle\Route\Exception\NotFoundException;
 use Swooen\Handle\Route\Loader\RouteLoader;
 use Swooen\Handle\Writer\Writer;
 use Swooen\Package\Features\Routeable;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Wenjianwzz\Tool\Util\Str;
 
 /**
@@ -52,13 +52,13 @@ class Router extends PackageHandler {
         ]);
 	}
 
-    public function handle(HandleContext $context, Package $package, Writer $writer): Package {
+    public function handle(HandleContext $context, Package $package, Writer $writer, callable $next) {
         $route = $this->dispatch($package);
         $context->instance(Route::class, $route);
         $context->instance(Package::class, $package);
         $callable = $this->paserAction($route);
         $context->call($callable, $route->getParams());
-        return $package;
+        $next($context, $package, $writer);
     }
 
     protected function paserAction(Route $route) {
@@ -95,6 +95,6 @@ class Router extends PackageHandler {
                 $route->setParams($found[2]);
                 return $route;
         }
-        throw new NotFoundException('no route for '.$routePath);
+        throw new NotFoundHttpException('no route for '.$routePath);
 	}
 }

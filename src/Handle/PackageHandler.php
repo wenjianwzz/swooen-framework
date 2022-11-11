@@ -10,21 +10,6 @@ use Swooen\Handle\Writer\Writer;
  */
 abstract class PackageHandler {
 
-    protected $terminated = false;
+    public abstract function handle(HandleContext $context, Package $package, Writer $writer, callable $next);
 
-    public abstract function handle(HandleContext $context, Package $package, Writer $writer): Package;
-
-    public function terminated() {
-        return $this->terminated;
-    }
-
-    public function setTerminated($terminated=true): self {
-        $this->terminated = $terminated;
-        return $this;
-    }
-
-    public function reset(): self {
-        $this->terminated = false;
-        return $this;
-    }
 }

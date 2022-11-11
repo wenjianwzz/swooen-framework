@@ -4,6 +4,7 @@
 require_once __DIR__.'/../../vendor/autoload.php';
 
 use Swooen\Application;
+use Swooen\Handle\CommonHanlers\ExceptionHandler;
 use Swooen\Handle\CommonHanlers\PackageLogger;
 use Swooen\Handle\Route\Loader\RouteLoader;
 use Swooen\Handle\Route\Router;
@@ -22,8 +23,8 @@ use Swooen\Server\PackageDispatcher;
 $app = new \Swooen\Application(realpath(__DIR__.'/../'));
 
 $app->bind(RouteLoader::class, require $app->basePath('routes/loader.php'));
-$app->instance(PackageDispatcher::class, $app->call(function(PackageDispatcher $dispatcher, Router $router, PackageLogger $packageLogger) {
-    $dispatcher->addHandler($packageLogger, $router);
+$app->instance(PackageDispatcher::class, $app->call(function(PackageDispatcher $dispatcher, ExceptionHandler $exceptionHandler, Router $router, PackageLogger $packageLogger) {
+    $dispatcher->addHandler($exceptionHandler, $packageLogger, $router);
     return $dispatcher;
 }));
 return $app;

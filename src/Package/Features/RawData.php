@@ -13,6 +13,8 @@ interface RawData {
 	 * @return string
 	 */
 	public function getRawData();
+
+    public function setRawData(string $rawData): self;
 	
 }
 
@@ -35,4 +37,8 @@ trait RawDataFeature {
         return $this->rawData;
     }
 	
+    public function setRawData(string $rawData): self {
+        $this->rawData = $rawData;
+        return $this;
+    }
 }

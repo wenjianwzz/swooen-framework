@@ -14,6 +14,8 @@ interface HttpStatusAware {
 	 */
 	public function getHttpStatusCode();
 
+    public function setHttpStatusCode(int $statusCode): self;
+
 }
 
 trait HttpStatusAwareFeature {
@@ -25,6 +27,11 @@ trait HttpStatusAwareFeature {
 
 	public function getHttpStatusCode(): int {
         return $this->httpStatusCode;
+    }
+
+	public function setHttpStatusCode(int $statusCode): self {
+        $this->httpStatusCode = $statusCode;
+        return $this;
     }
 	
 }
