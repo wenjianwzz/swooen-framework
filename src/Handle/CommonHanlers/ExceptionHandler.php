@@ -59,7 +59,7 @@ class ExceptionHandler extends PackageHandler {
 	protected function render(\Throwable $e, Writer $writer) {
         $response = new HttpResponsePackage($e->getMessage());
         if ($e instanceof HttpException) {
-            $response->setHttpStatusCode($e->getCode());
+            $response->setHttpStatusCode($e->getStatusCode());
         }
         $writer->end($response);
 	}

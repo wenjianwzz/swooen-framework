@@ -23,7 +23,7 @@ trait HttpStatusAwareFeature {
     /**
      * @var int
      */
-    protected $httpStatusCode;
+    protected $httpStatusCode = 200;
 
 	public function getHttpStatusCode(): int {
         return $this->httpStatusCode;
