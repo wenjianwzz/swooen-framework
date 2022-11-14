@@ -8,6 +8,7 @@ use Swooen\Server\PackageDispatcher;
 use Swooen\Server\ServerBooter;
 use Swooen\Handle\Writer\StdoutWriter;
 use Swooen\Handle\Writer\Writer;
+use Swooen\Server\Generic\Package\HttpWriter;
 
 /**
  * @author WZZ
@@ -38,7 +39,7 @@ class GenericBooter extends ServerBooter {
 	}
 
 	public function createWriter(Application $app): Writer {
-		return new StdoutWriter();	
+		return new HttpWriter();	
 	}
 
 }
