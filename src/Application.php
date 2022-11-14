@@ -15,14 +15,21 @@ class Application extends Container {
      */
     protected $basePath;
 
+    protected $resourceDir;
+
     public function __construct($basePath) {
-        $this->basePath = $basePath;
+        $this->basePath = rtrim($basePath, '/\\ ');
+        $this->resourceDir = $this->basePath('resources');
         $this->instance(self::class, $this);
         $this->instance(parent::class, $this);
     }
 
     public function basePath($path = null) {
-        return $this->basePath.($path ? '/'.$path : $path);
+        return $this->basePath.($path ? '/'.ltrim($path, '/'): $path);
+    }
+
+    public function resourcePath($path = null) {
+        return $this->resourceDir.($path ? '/'.ltrim($path, '/'): $path);
     }
 
     /**
