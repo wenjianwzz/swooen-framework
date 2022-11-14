@@ -18,7 +18,7 @@ class HttpWriter extends StdoutWriter {
     }
 	
 	public function writeMeta(string $name, string $value) {
-        header($name, $value);
+        header("{$name}: {$value}");
 		return true;
     }
 
