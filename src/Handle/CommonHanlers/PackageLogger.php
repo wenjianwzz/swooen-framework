@@ -19,11 +19,18 @@ class PackageLogger extends PackageHandler {
         $this->logger = $logger;
     }
 
-    public function handle(HandleContext $context, Package $package, Writer $writer, callable $next) {
-        if ($this->logger) {
-            $this->logger->debug($package);
-        }
+    public function handle(HandleContext $context, Package $package, Writer $nestedWriter, callable $next) {
+        $this->logPackage('income package', $package);
+        $writer = new PackageLoggerWriter($nestedWriter, $this);
+        $context->instance(Writer::class, $writer);
         $next($context, $package, $writer);
+        $context->instance(Writer::class, $nestedWriter);
+    }
+
+    public function logPackage($msg, Package $package) {
+        if ($this->logger) {
+            $this->logger->debug($msg, [print_r($package, true)]);
+        }
     }
 
 }

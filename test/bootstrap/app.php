@@ -3,7 +3,10 @@
 
 require_once __DIR__.'/../../vendor/autoload.php';
 
+use Monolog\Handler\ErrorLogHandler;
+use Monolog\Logger;
 use Swooen\Application;
+use Swooen\Config\ConfigRepository;
 use Swooen\Handle\CommonHanlers\ExceptionHandler;
 use Swooen\Handle\CommonHanlers\PackageLogger;
 use Swooen\Handle\Route\Loader\RouteLoader;
@@ -23,6 +26,13 @@ use Swooen\Server\PackageDispatcher;
 $app = new \Swooen\Application(realpath(__DIR__.'/../'));
 
 $app->bind(RouteLoader::class, require $app->basePath('routes/loader.php'));
+
+$app->bind(\Psr\Log\LoggerInterface::class, function(Application $app, ConfigRepository $config) {
+    $logger = new Logger('sampleApp');
+    $logger->pushHandler(new ErrorLogHandler());
+    return $logger;
+});
+
 $app->instance(PackageDispatcher::class, $app->call(function(PackageDispatcher $dispatcher, ExceptionHandler $exceptionHandler, Router $router, PackageLogger $packageLogger) {
     $dispatcher->addHandler($exceptionHandler, $packageLogger, $router);
     return $dispatcher;
