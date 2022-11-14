@@ -1,11 +1,11 @@
 {
-    "name": "swooen/core",
+    "name": "wenjianwzz/swooen",
     "type": "library",
     "description": "受Lumen启发，基于Symfony、Swoole",
     "keywords": ["swoole", "lumen", "php", "symfony"],
     "homepage": "https://www.wzzcn.net",
     "license": "Private",
-    "version": "3.0.1",
+    "version": "3.0.2",
     "require": {
         "php": ">=7.2.5",
 		"nikic/fast-route": "^1.3",
