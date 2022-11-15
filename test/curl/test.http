@@ -1,5 +1,5 @@
 ### 
-@apiHost = http://10.11.12.222
+@apiHost = http://10.11.12.128:20080
 
 ### POST测试
 POST {{apiHost}}/ HTTP/1.1
