@@ -15,21 +15,17 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class ExceptionHandler extends PackageHandler {
 
-    protected $logger;
-
 	protected $dontReport = [
 		HttpException::class
 	];
-
-    public function __construct(?LoggerInterface $logger) {
-        $this->logger = $logger;
-    }
 
     public function handle(HandleContext $context, Package $package, Writer $writer, ?callable $next) {
         try {
             $next($context, $package, $writer);
         } catch (\Throwable $t) {
-            $this->report($t);
+            if ($context->has(LoggerInterface::class)) {
+                $this->report($t, $context->make(LoggerInterface::class));
+            }
             $this->render($t, $writer);
         }
     }
@@ -43,13 +39,10 @@ class ExceptionHandler extends PackageHandler {
         return true;
     }
 
-	protected function report(\Throwable $e) {
-        if (empty($this->logger)) {
-            return;
-        }
+	protected function report(\Throwable $e, LoggerInterface $logger) {
 		try {
 			if ($this->shouldReport($e)) {
-                $this->logger->error($e);
+                $logger->error($e);
             }
 		} catch (\Throwable $t2) {
 			// 无法继续处理
