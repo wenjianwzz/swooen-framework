@@ -7,10 +7,12 @@ use Monolog\Handler\ErrorLogHandler;
 use Monolog\Logger;
 use Swooen\Application;
 use Swooen\Config\ConfigRepository;
+use Swooen\Handle\CommonHanlers\ContextInitialize;
 use Swooen\Handle\CommonHanlers\ExceptionHandler;
 use Swooen\Handle\CommonHanlers\PackageLogger;
 use Swooen\Handle\Route\Loader\RouteLoader;
 use Swooen\Handle\Route\Router;
+use Swooen\Provider\ConfigProvider;
 use Swooen\Server\PackageDispatcher;
 
 /*
@@ -23,8 +25,9 @@ use Swooen\Server\PackageDispatcher;
 | application as an "IoC" container and router for this framework.
 |
 */
-$app = new \Swooen\Application(realpath(__DIR__.'/../'));
+$app = new \Swooen\Application('testapp', realpath(__DIR__.'/../'));
 
+$app->provider(ConfigProvider::class);
 $app->bind(RouteLoader::class, require $app->basePath('routes/loader.php'));
 
 $app->bind(\Psr\Log\LoggerInterface::class, function(Application $app, ConfigRepository $config) {
@@ -33,8 +36,10 @@ $app->bind(\Psr\Log\LoggerInterface::class, function(Application $app, ConfigRep
     return $logger;
 });
 
-$app->instance(PackageDispatcher::class, $app->call(function(PackageDispatcher $dispatcher, ExceptionHandler $exceptionHandler, Router $router, PackageLogger $packageLogger) {
-    $dispatcher->addHandler($exceptionHandler, $packageLogger, $router);
+$app->instance(PackageDispatcher::class, $app->call(function(PackageDispatcher $dispatcher, 
+            ExceptionHandler $exceptionHandler, Router $router, PackageLogger $packageLogger,
+            ContextInitialize $contextInitialize) {
+    $dispatcher->addHandler($contextInitialize, $packageLogger, $exceptionHandler, $router);
     return $dispatcher;
 }));
 return $app;

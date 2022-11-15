@@ -3,10 +3,12 @@ namespace Swooen;
 
 use Psr\Log\LoggerInterface;
 use Swooen\Container\Container;
-use Swooen\Exception\Handler;
 use Swooen\Server\ServerBooter;
 
 class Application extends Container {
+
+    
+	protected $appName = '';
     
     /**
      * The base path of the application installation.
@@ -17,9 +19,17 @@ class Application extends Container {
 
     protected $resourceDir;
 
-    public function __construct($basePath) {
+    protected $storagePath;
+
+    protected $configPath;
+
+    public function __construct($appName, $basePath) {
         $this->basePath = rtrim($basePath, '/\\ ');
         $this->resourceDir = $this->basePath('resources');
+		empty($appName) and $appName = basename($this->basePath());
+		$this->appName = $appName;
+		$this->useStoragePath($this->basePath('storage'));
+        $this->useConfigPath($this->basePath('config'));
         $this->instance(self::class, $this);
         $this->instance(parent::class, $this);
     }
@@ -28,21 +38,34 @@ class Application extends Container {
         return $this->basePath.($path ? '/'.ltrim($path, '/'): $path);
     }
 
-    public function resourcePath($path = null) {
+    public function resourcePath($path = null): string {
         return $this->resourceDir.($path ? '/'.ltrim($path, '/'): $path);
     }
+		
+	public function getAppName(): string {
+		return $this->appName;
+	}
 
-    /**
-     * 启动服务，开始监听并处理数据
-     */
-    public function boot(ServerBooter $booter) {
-        $logger = $this->has(LoggerInterface::class)?$this->get(LoggerInterface::class):null;
-        try {
-            $booter->boot($this);
-        } catch (\Throwable $t) {
-            $errHandler = $this->make(Handler::class);
-            $errHandler->report($t, $logger);
-            throw $t;
-        }
-    }
+	public function useStoragePath(string $path) {
+		$this->storagePath = rtrim($path, '/');
+	}
+
+	/**
+     * 获取文件存储路径
+	 */
+	public function storagePath($path = null): string {
+		return $this->storagePath . ($path ? '/'.ltrim($path, '/'): $path);
+	}
+
+	public function useConfigPath(string $path) {
+		$this->configPath = rtrim($path, '/');
+	}
+
+	/**
+     * 获取配置文件路径
+	 */
+	public function configPath($path): string {
+		return $this->configPath . ($path ? '/'.ltrim($path, '/'): $path);
+	}
+
 }

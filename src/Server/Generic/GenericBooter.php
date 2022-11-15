@@ -1,6 +1,7 @@
 <?php
 namespace Swooen\Server\Generic;
 
+use Psr\Log\LoggerInterface;
 use Swooen\Application;
 use Swooen\Handle\HandleContext;
 use Swooen\Server\Generic\Package\Reader;
@@ -8,6 +9,7 @@ use Swooen\Server\PackageDispatcher;
 use Swooen\Server\ServerBooter;
 use Swooen\Handle\Writer\StdoutWriter;
 use Swooen\Handle\Writer\Writer;
+use Swooen\Server\Generic\Package\HttpResponsePackage;
 use Swooen\Server\Generic\Package\HttpWriter;
 
 /**
@@ -23,7 +25,20 @@ class GenericBooter extends ServerBooter {
 		$dispatcher = $this->createDispatcher($app);
 		$context = $this->createContext($app);
 		assert($dispatcher instanceof PackageDispatcher);
-		$dispatcher->dispatch($context, $package, $writer);
+		try {
+			$dispatcher->dispatch($context, $package, $writer);
+		} catch (\Throwable $t) {
+			if ($app->has(LoggerInterface::class)) {
+				try {
+					$logger = $app->make(LoggerInterface::class);
+					assert($logger instanceof LoggerInterface);
+					$logger->emergency($t);
+				} catch (\Throwable $t) {}
+			}
+			$package = new HttpResponsePackage('Uncaught Exception');
+			$package->setHttpStatusCode(500);
+			$writer->send($package);
+		}
 	}
 
 	public function createDispatcher(Application $app): PackageDispatcher {
