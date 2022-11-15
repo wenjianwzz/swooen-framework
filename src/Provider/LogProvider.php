@@ -15,7 +15,7 @@ class LogProvider extends \Swooen\Container\Provider {
 	 * @return void
 	 */
 	public function register(\Swooen\Container\Container $container) {
-		$container->bind(\Psr\Log\LoggerInterface::class, function(Application $app, ConfigRepository $config) {
+		$container->singleton(\Psr\Log\LoggerInterface::class, function(Application $app, ConfigRepository $config) {
 			$logger = new Logger($app->getAppName());
 			$logHandlers = $config->get('logging.handlers', []);
 			foreach ($logHandlers as $logHandler) {
