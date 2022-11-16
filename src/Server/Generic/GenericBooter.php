@@ -24,7 +24,6 @@ class GenericBooter extends ServerBooter {
 		$package = $reader->package($request);
 		$dispatcher = $this->createDispatcher($app);
 		$context = $this->createContext($app);
-		assert($dispatcher instanceof PackageDispatcher);
 		try {
 			$dispatcher->dispatch($context, $package, $writer);
 		} catch (\Throwable $t) {

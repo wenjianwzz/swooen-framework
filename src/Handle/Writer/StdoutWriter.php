@@ -25,7 +25,7 @@ class StdoutWriter implements Writer {
      * 将package的inputs转换成字符串
      */
     public function pack(DataArray $package) {
-        return print_r($package->allData(), true);
+        return json_encode($package->allData(), JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
     }
 	
 	public function writable(): bool {
@@ -47,7 +47,7 @@ class StdoutWriter implements Writer {
     }
 	
 	public function writeMeta(string $name, string $value) {
-        echo $name, $value, PHP_EOL;
+        echo("{$name}: {$value}");
 		return true;
     }
 

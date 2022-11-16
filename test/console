@@ -1,0 +1,33 @@
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| Create The Application
+|--------------------------------------------------------------------------
+|
+| First we need to get an application instance. This creates an instance
+| of the application / container and bootstraps the application so it
+| is ready to receive HTTP / Console requests from the environment.
+|
+*/
+
+use Swooen\Console\ConsoleBooter;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+
+$app = require __DIR__.'/bootstrap/app.php';
+assert($app instanceof \Swooen\Application);
+
+class CommandsLoader extends \Swooen\Console\CommandsLoader {
+    /**
+     * [名称 描述 参数 选项]
+     * 参数: string $name, int $mode = null, string $description = '', $default = null
+     * 选项: string $name, $shortcut = null, int $mode = null, string $description = '', $default = null
+     * @var array
+     */
+    protected $commands = [
+        ['test', '测试', [['name', InputArgument::REQUIRED, '测试名字']], [['opt', 'p', InputOption::VALUE_NONE, '测试选项']]]
+    ];
+}
+$app->bind(\Swooen\Console\CommandsLoader::class, CommandsLoader::class);
+(new ConsoleBooter())->boot($app);

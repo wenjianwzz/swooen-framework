@@ -1,9 +1,7 @@
 <?php
 namespace Swooen;
 
-use Psr\Log\LoggerInterface;
 use Swooen\Container\Container;
-use Swooen\Server\ServerBooter;
 
 class Application extends Container {
 
