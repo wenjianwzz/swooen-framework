@@ -57,7 +57,7 @@ class Route {
      * @return  self
      */ 
     public function setParams($params) {
-        $this->params = $params;
+        $this->params = array_merge($this->params, $params);
         return $this;
     }
 
