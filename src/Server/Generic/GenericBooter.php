@@ -5,7 +5,7 @@ use Psr\Log\LoggerInterface;
 use Swooen\Application;
 use Swooen\Handle\HandleContext;
 use Swooen\Server\Generic\Package\Reader;
-use Swooen\Server\PackageDispatcher;
+use Swooen\Handle\PackageDispatcher;
 use Swooen\Server\ServerBooter;
 use Swooen\Handle\Writer\StdoutWriter;
 use Swooen\Handle\Writer\Writer;

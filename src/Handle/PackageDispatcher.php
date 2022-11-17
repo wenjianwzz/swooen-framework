@@ -1,5 +1,5 @@
 <?php
-namespace Swooen\Server;
+namespace Swooen\Handle;
 
 use Swooen\Application;
 use Swooen\Package\Package;

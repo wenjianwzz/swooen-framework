@@ -204,7 +204,12 @@ class Container implements ContainerInterface {
 				unset($parameters[$parameter->name]);
 			} elseif (($type = $parameter->getType()) && !$type->isBuiltin()) {
                 try {
-                    $dependencies[] = $makeFunc($type->getName());
+                    if (array_key_exists($type->getName(), $parameters)) {
+                        // 存在Type名称，覆盖容器内的
+                        $dependencies[] = $parameters[$type->getName()];
+                    } else {
+                        $dependencies[] = $makeFunc($type->getName());
+                    }
                 } catch (\Exception $e) {
                     if ($parameter->isDefaultValueAvailable()) {
                         $dependencies[] = $parameter->getDefaultValue();
@@ -216,7 +221,9 @@ class Container implements ContainerInterface {
                 }
 			} elseif ($parameter->isDefaultValueAvailable()) {
 				$dependencies[] = $parameter->getDefaultValue();
-			}
+			} else {
+                throw new \RuntimeException($parameter->name.' not passed and can not been created');
+            }
 		}
 		return $dependencies;
 	}

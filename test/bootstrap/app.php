@@ -9,9 +9,10 @@ use Swooen\Handle\CommonHanlers\ContextInitialize;
 use Swooen\Handle\CommonHanlers\ExceptionHandler;
 use Swooen\Handle\CommonHanlers\PackageLogger;
 use Swooen\Handle\Route\Loader\RouteLoader;
+use Swooen\Handle\Route\RouteExecutor;
 use Swooen\Handle\Route\Router;
 use Swooen\Provider\ConfigProvider;
-use Swooen\Server\PackageDispatcher;
+use Swooen\Handle\PackageDispatcher;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,8 +37,8 @@ $app->bind(\Psr\Log\LoggerInterface::class, function(Application $app, ConfigRep
 
 $app->instance(PackageDispatcher::class, $app->call(function(PackageDispatcher $dispatcher, 
             ExceptionHandler $exceptionHandler, Router $router, PackageLogger $packageLogger,
-            ContextInitialize $contextInitialize) {
-    $dispatcher->addHandler($contextInitialize, $packageLogger, $exceptionHandler, $router);
+            ContextInitialize $contextInitialize, RouteExecutor $routeExecutor) {
+    $dispatcher->addHandler($contextInitialize, $packageLogger, $exceptionHandler, $router, $routeExecutor);
     return $dispatcher;
 }));
 return $app;

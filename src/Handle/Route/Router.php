@@ -55,26 +55,7 @@ class Router extends PackageHandler {
     public function handle(HandleContext $context, Package $package, Writer $writer, callable $next) {
         $route = $this->dispatch($package);
         $context->instance(Route::class, $route);
-        $context->instance(Package::class, $package);
-        $callable = $this->paserAction($route);
-        $context->call($callable, $route->getParams());
         $next($context, $package, $writer);
-    }
-
-    protected function paserAction(Route $route) {
-        $action = $route->getAction();
-        if (is_callable($action)) {
-            return $action;
-        } else if (is_string($action)) {
-            if (!Str::contains($action, '@')) {
-                $action .= '@__invoke';
-            }
-            return function(HandleContext $context, Route $route) use ($action) {
-                list($controller, $method) = explode('@', $action);
-                $controller = $context->make($controller);
-                return $context->call([$controller, $method], $route->getParams());
-            };
-        }
     }
 
     /**

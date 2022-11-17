@@ -1,8 +1,6 @@
 <?php
 namespace Swooen\Handle\Route;
 
-use Swooen\Handle\Route\Handler\HandlerFactory;
-
 /**
  * 路由
  * 
@@ -13,26 +11,21 @@ class Route {
 
     protected $path;
 
-    protected $action;
+    protected $actions;
 
     protected $params = [];
 
-    protected $hooks = [];
-
     protected $metas = [];
 
-    protected $handlerFactory = HandlerFactory::class;
-
-    public function __construct($path, $action, $hooks=[], $metas=[], $initParams=[]) {
+    public function __construct($path, array $actions, array $metas=[], array $initParams=[]) {
         $this->path = $path;
-        $this->action = $action;
-        $this->hooks = $hooks;
+        $this->actions = $actions;
         $this->metas = $metas;
         $this->params = $initParams;
     }
 
-    public static function create($path, $action, $hooks=[], $metas=[], $initParams=[]): self {
-        return new static($path, $action, $hooks, $metas, $initParams);
+    public static function create($path, array $actions, array $metas=[], array $initParams=[]): self {
+        return new static($path, $actions, $metas, $initParams);
     }
 
     /**
@@ -78,10 +71,9 @@ class Route {
     }
 
     /**
-     * Get the value of action
      */
-    public function getAction() {
-        return $this->action;
+    public function getActions() {
+        return $this->actions;
     }
 
     /**
@@ -89,23 +81,6 @@ class Route {
      */
     public function getPath() {
         return $this->path;
-    }
-
-    /**
-     * Get the value of hooks
-     * @return string[]
-     */
-    public function getHooks() {
-        return $this->hooks;
-    }
-
-    /**
-     * Set the value of hooks
-     * @param string[] $hooks
-     */
-    public function setHooks($hooks): self {
-        $this->hooks = $hooks;
-        return $this;
     }
 
     /**
