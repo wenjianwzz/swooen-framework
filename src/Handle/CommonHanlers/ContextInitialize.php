@@ -1,7 +1,6 @@
 <?php
 namespace Swooen\Handle\CommonHanlers;
 
-use Psr\Log\LoggerInterface;
 use Swooen\Application;
 use Swooen\Config\ConfigRepository;
 use Swooen\Handle\HandleContext;
@@ -32,24 +31,28 @@ class ContextInitialize extends PackageHandler {
         $this->app = $app;
     }
 
+    protected function init(HandleContext $context, Package $package, Writer $writer) {
+        $config = $this->config;
+        $context->instance(ConfigRepository::class, $config);
+        $requestId = time().'-'. Str::random(5);
+        $context->instance('REQUES_ID', $requestId);
+        if ($config->has('logging')) {
+            $provider = $this->app->make(LogProvider::class);
+            $context->provider($provider);
+        }
+        if ($context->has(\Monolog\Logger::class)) {
+            $context->call(function(\Monolog\Logger $logger, $requestId) {
+                $logger->pushProcessor(function($record) use ($requestId) {
+                    $record['extra'] = array_merge($record['extra'], compact('requestId'));
+                    return $record;
+                });
+            }, compact('requestId'));
+        }
+    }
+
     public function handle(HandleContext $context, Package $package, Writer $writer, ?callable $next) {
         try {
-            $config = $this->config;
-            $context->instance(ConfigRepository::class, $config);
-            $requestId = time().'-'. Str::random(5);
-            $context->instance('REQUES_ID', $requestId);
-            if ($config->has('logging')) {
-                $provider = $this->app->make(LogProvider::class);
-                $context->provider($provider);
-            }
-            if ($context->has(\Monolog\Logger::class)) {
-                $context->call(function(\Monolog\Logger $logger, $requestId) {
-                    $logger->pushProcessor(function($record) use ($requestId) {
-                        $record['extra'] = array_merge($record['extra'], compact('requestId'));
-                        return $record;
-                    });
-                }, compact('requestId'));
-            }
+            $this->init($context, $package, $writer);
         } catch (\Throwable $t) {
         }
         $next($context, $package, $writer);
