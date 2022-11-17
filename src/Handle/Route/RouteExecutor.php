@@ -47,10 +47,10 @@ class RouteExecutor extends PackageHandler {
                 try {
                     $controller = $context->make($controller);
                 } catch (\Throwable $t) {
-                    throw new NotFoundHttpException('Unable to create Controller:'. $t->getMessage());
+                    throw new NotFoundHttpException('Unable to create Action: '. $t->getMessage());
                 }
                 if (!is_callable([$controller, $method])) {
-                    throw new NotFoundHttpException('Controller Not Callable'); 
+                    throw new NotFoundHttpException('Action Not Callable'); 
                 }
                 return $context->call([$controller, $method], $route->getParams());
             };
