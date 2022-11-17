@@ -36,8 +36,8 @@ class ContextInitialize extends PackageHandler {
         $context->instance(ConfigRepository::class, $config);
         $requestId = time().'-'. Str::random(5);
         $context->instance('REQUES_ID', $requestId);
-        if ($config->has('logging')) {
-            $provider = $this->app->make(LogProvider::class);
+        $providers = $config->get('app.handle.context.providers', []);
+        foreach ($providers as $provider) {
             $context->provider($provider);
         }
         if ($context->has(\Monolog\Logger::class)) {
