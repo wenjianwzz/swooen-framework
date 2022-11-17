@@ -1,6 +1,7 @@
 <?php
 namespace Swooen\Console;
 
+use Swooen\Container\Container;
 use Symfony\Component\Console\Application as ConsoleApplication;
 class CommandsLoader {
 
@@ -13,7 +14,7 @@ class CommandsLoader {
     protected $commands = [
     ];
 
-    public function boot(ConsoleApplication $console, CommandPacker $commandPacker, callable $callback) {
+    public function boot(Container $container, ConsoleApplication $console, CommandPacker $commandPacker, callable $callback) {
         foreach ($this->commands as list($name, $description, $args, $opts)) {
             $command = new PackagedCommand($name, $commandPacker, $callback);
             $command->setDescription($description);

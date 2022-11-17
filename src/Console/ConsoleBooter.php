@@ -18,7 +18,6 @@ use Symfony\Component\Console\Output\Output;
 class ConsoleBooter extends ServerBooter {
 
     public function boot(Application $app): void {
-		
 		$dispatcher = $this->createDispatcher($app);
 		$context = $this->createContext($app);
 		// 启动控制台
@@ -41,7 +40,7 @@ class ConsoleBooter extends ServerBooter {
 		return $app->call(function(ConsoleApplication $console, CommandPacker $commandPacker, 
 				Application $app, CommandsLoader $commandsProvider) use ($callback) {
 			$app->instance(ConsoleApplication::class, $console);
-			$commandsProvider->boot($console, $commandPacker, $callback);
+			$commandsProvider->boot($app, $console, $commandPacker, $callback);
 			return $console;
 		});
 	}
