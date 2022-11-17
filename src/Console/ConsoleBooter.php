@@ -27,20 +27,6 @@ class ConsoleBooter extends ServerBooter {
 			$dispatcher->dispatch($context, $package, $writer);
 		});
 		$console->run();
-		// try {
-		// 	$dispatcher->dispatch($context, $package, $writer);
-		// } catch (\Throwable $t) {
-		// 	if ($app->has(LoggerInterface::class)) {
-		// 		try {
-		// 			$logger = $app->make(LoggerInterface::class);
-		// 			assert($logger instanceof LoggerInterface);
-		// 			$logger->emergency($t);
-		// 		} catch (\Throwable $t) {}
-		// 	}
-		// 	$package = new HttpResponsePackage('Uncaught Exception');
-		// 	$package->setHttpStatusCode(500);
-		// 	$writer->send($package);
-		// }
 	}
 
 	public function createDispatcher(Application $app): PackageDispatcher {
