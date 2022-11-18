@@ -4,7 +4,6 @@ return [
         'context' => [
             'providers' => [
                 \Swooen\Provider\LogProvider::class,
-
             ]
         ]
     ],

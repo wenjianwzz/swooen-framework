@@ -18,43 +18,50 @@ use Wenjianwzz\Tool\Util\Str;
  */
 class RouteExecutor extends PackageHandler {
 
-    public function handle(HandleContext $context, Package $package, Writer $writer, callable $next) {
+    public function handle(HandleContext $context, Package $oriPackage, Writer $writer, callable $next) {
+        $package = $oriPackage;
         if ($context->has(Route::class)) {
             $route = $context->get(Route::class);
             assert($route instanceof Route);
-            $actions = array_map([$this, 'paserAction'], $route->getActions());
-            foreach ($actions as $action) {
-                $ret = $context->call($action, array_merge($route->getParams(), [
-                    Package::class => $package
-                ]));
+            $actions = $route->getActions();
+            foreach ($actions as $actionDef) {
+                $action = $this->paserAction($actionDef);
+                $ret = $context->call($action, $route->getParams());
                 if ($ret && $ret instanceof Package) {
                     $package = $ret;
+                    // 容器中替换成结果，在Action的执行周期内，Package统一
+                    $context->instance(Package::class, $package);
                 }
             }
         }
+        // 回归
+        $context->instance(Package::class, $oriPackage);
         $next($context, $package, $writer);
     }
 
     protected function paserAction($action) {
-        if (is_callable($action)) {
-            return $action;
-        } else if (is_string($action)) {
-            if (!Str::contains($action, '@')) {
-                $action .= '@__invoke';
-            }
-            return function(HandleContext $context, Route $route) use ($action) {
-                list($controller, $method) = explode('@', $action);
+        return function(HandleContext $context, Route $route, Package $package) use ($action) {
+            $call = null;
+            if (is_callable($action)) {
+                $call = $action;
+            } else if (is_string($action)) {
+                if (!Str::contains($action, '@')) {
+                    $action .= '@__invoke';
+                }
+                list($actionClass, $method) = explode('@', $action);
                 try {
-                    $controller = $context->make($controller);
+                    $actionObj = $context->make($actionClass);
                 } catch (\Throwable $t) {
                     throw new NotFoundHttpException('Unable to create Action: '. $t->getMessage());
                 }
-                if (!is_callable([$controller, $method])) {
+                $call = [$actionObj, $method];
+                if (!is_callable([$actionObj, $method])) {
                     throw new NotFoundHttpException('Action Not Callable'); 
                 }
-                return $context->call([$controller, $method], $route->getParams());
-            };
-        }
+            }
+            return $context->call($call, $route->getParams());
+        };
+        
     }
 
 }

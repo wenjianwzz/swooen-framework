@@ -53,6 +53,8 @@ class ExceptionHandler extends PackageHandler {
         $response = new HttpResponsePackage($e->getMessage());
         if ($e instanceof HttpException) {
             $response->setHttpStatusCode($e->getStatusCode());
+        } else {
+            $response->setHttpStatusCode(500);
         }
         $writer->end($response);
 	}
