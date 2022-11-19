@@ -7,7 +7,6 @@ use Swooen\Handle\HandleContext;
 use Swooen\Handle\PackageHandler;
 use Swooen\Package\Package;
 use Swooen\Handle\Writer\Writer;
-use Swooen\Provider\LogProvider;
 use Wenjianwzz\Tool\Util\Str;
 
 /**
@@ -33,7 +32,9 @@ class ContextInitialize extends PackageHandler {
 
     protected function init(HandleContext $context, Package $package, Writer $writer) {
         $config = $this->config;
-        $context->instance(ConfigRepository::class, $config);
+        if (!$context->has(ConfigRepository::class)) {
+            $context->instance(ConfigRepository::class, $config);
+        }
         $requestId = time().'-'. Str::random(5);
         $context->instance('REQUES_ID', $requestId);
         $providers = $config->get('app.handle.context.providers', []);
