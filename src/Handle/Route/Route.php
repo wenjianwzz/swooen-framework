@@ -28,18 +28,6 @@ class Route {
         return new static($path, $actions, $metas, $initParams);
     }
 
-    /**
-     * 使用指定的处理器工厂
-     */
-    public function withFactory($factoryClass): self {
-        $this->handlerFactory = $factoryClass;
-        return $this;
-    }
-
-    public function getFactory(): string {
-        return $this->handlerFactory;
-    }
-
     public function __clone() {
         $this->params = array_merge($this->params);
     }
