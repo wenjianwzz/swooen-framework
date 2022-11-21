@@ -62,7 +62,7 @@ class Application extends Container {
 	/**
      * 获取配置文件路径
 	 */
-	public function configPath($path): string {
+	public function configPath($path = null): string {
 		return $this->configPath . ($path ? '/'.ltrim($path, '/'): $path);
 	}
 

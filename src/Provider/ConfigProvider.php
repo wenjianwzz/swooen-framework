@@ -3,7 +3,6 @@ namespace Swooen\Provider;
 
 use Swooen\Application;
 use Swooen\Config\ConfigRepository;
-use Swooen\Config\PHPFileConfigLoader;
 use Swooen\Container\Container;
 
 class ConfigProvider extends \Swooen\Container\Provider {
@@ -13,13 +12,25 @@ class ConfigProvider extends \Swooen\Container\Provider {
 	}
 
 	public function boot(ConfigRepository $config, Application $app) {
-		$loader = new PHPFileConfigLoader('app', $app->configPath('app.php'));
-		$loader->load($config);
-		$configFiles = $config->get('app.configs', []);
-		foreach($configFiles as list($name, $configFile)) {
-			$loader->addConfigFile($name, $app->configPath($configFile));
+		$configPath = $app->configPath();
+		$files = scandir($configPath);
+		$configs = [];
+		$locals = [];
+		foreach($files as $file) {
+			if (preg_match('/(?<name>\w+)(?<local>\.\w+)?\.php/', $file, $match)) {
+				if (isset($match['local'])) {
+					$locals[$match['name']] = require $app->configPath($file);
+				} else {
+					$configs[$match['name']] = require $app->configPath($file);
+				}
+			}
 		}
-		$loader->load($config);
+		foreach ($configs as $name => $item) {
+			$config->set($name, $item);
+		}
+		foreach ($locals as $name => $item) {
+			$config->set($name, $item);
+		}
 	}
 
 	
