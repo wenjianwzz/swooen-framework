@@ -1,8 +1,11 @@
 <?php
 namespace Swooen\Console;
 
+use Swooen\Application;
 use Swooen\Container\Container;
+use Swooen\Handle\HandleContext;
 use Symfony\Component\Console\Application as ConsoleApplication;
+
 class CommandsLoader {
 
     /**
@@ -14,9 +17,9 @@ class CommandsLoader {
     protected $commands = [
     ];
 
-    public function boot(Container $container, ConsoleApplication $console, CommandPacker $commandPacker, callable $callback) {
+    public function boot(Application $app, ConsoleApplication $console, callable $callback) {
         foreach ($this->commands as list($name, $description, $args, $opts)) {
-            $command = new PackagedCommand($name, $commandPacker, $callback);
+            $command = new PackagedCommand($name, $app->get(CommandPacker::class), $callback);
             $command->setDescription($description);
             foreach($args as $argDef) {
                 $command->addArgument(...$argDef);

@@ -37,10 +37,9 @@ class ConsoleBooter extends ServerBooter {
 	}
 
 	public function setupConsole(Application $app, callable $callback): ConsoleApplication {
-		return $app->call(function(ConsoleApplication $console, CommandPacker $commandPacker, 
-				Application $app, CommandsLoader $commandsProvider) use ($callback) {
-			$app->instance(ConsoleApplication::class, $console);
-			$commandsProvider->boot($app, $console, $commandPacker, $callback);
+		return $app->call(function(ConsoleApplication $console, Application $app, 
+					CommandsLoader $commandsProvider) use ($callback) {
+			$commandsProvider->boot($app, $console, $callback);
 			return $console;
 		});
 	}
