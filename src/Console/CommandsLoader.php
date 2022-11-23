@@ -19,7 +19,7 @@ class CommandsLoader {
 
     public function boot(Application $app, ConsoleApplication $console, callable $callback) {
         foreach ($this->commands as list($name, $description, $args, $opts)) {
-            $command = new PackagedCommand($name, $app->get(CommandPacker::class), $callback);
+            $command = new PackagedCommand($name, $callback);
             $command->setDescription($description);
             foreach($args as $argDef) {
                 $command->addArgument(...$argDef);
