@@ -18,16 +18,46 @@ use Symfony\Component\Console\Input\InputOption;
 $app = require __DIR__.'/bootstrap/app.php';
 assert($app instanceof \Swooen\Application);
 
+
+class TestCommand extends \Swooen\Console\Command {
+    
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'test:cmd';
+    
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = '测试代码';
+    
+    /**
+     * Execute the console command.
+     *
+     * @return void
+     */
+    public function handle() {
+        var_dump(sprintf('%.4f', 100000210123/100000));
+    }
+    
+}
+
 class CommandsLoader extends \Swooen\Console\CommandsLoader {
     /**
-     * [名称 描述 参数 选项]
+     * [路由 描述 参数 选项]
      * 参数: string $name, int $mode = null, string $description = '', $default = null
      * 选项: string $name, $shortcut = null, int $mode = null, string $description = '', $default = null
      * @var array
      */
     protected $commands = [
-        ['test', '测试', [['name', InputArgument::REQUIRED, '测试名字']], [['opt', 'p', InputOption::VALUE_NONE, '测试选项']]]
+        TestCommand::class,
+        ['test', '测试', [['name', InputArgument::REQUIRED, '测试名字']], [['opt', 'p', InputOption::VALUE_NONE, '测试选项']], []]
     ];
 }
+
 $app->bind(\Swooen\Console\CommandsLoader::class, CommandsLoader::class);
 (new ConsoleBooter())->boot($app);

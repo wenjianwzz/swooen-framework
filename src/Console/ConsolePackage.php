@@ -17,10 +17,10 @@ use Swooen\Package\Package;
 class ConsolePackage implements Package, DataArray, Metas, Routeable {
 	use DataArrayFeature, MetasFeature, RouteableFeature;
 
-	public function __construct($name, $options, $arguments) {
+	public function __construct($routePath, $options, $arguments) {
 		$this->dataArr = $arguments;
 		$this->metas = $options;
-		$this->routePath = $name;
+		$this->routePath = $routePath;
 	}
 	
 }

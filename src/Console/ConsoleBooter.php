@@ -3,6 +3,7 @@ namespace Swooen\Console;
 
 use Psr\Log\LoggerInterface;
 use Swooen\Application;
+use Swooen\Console\Command\VersionCommand;
 use Swooen\Handle\HandleContext;
 use Swooen\Handle\Writer\StdoutWriter;
 use Swooen\Handle\PackageDispatcher;
@@ -19,12 +20,9 @@ class ConsoleBooter extends ServerBooter {
 
     public function boot(Application $app): void {
 		$dispatcher = $this->createDispatcher($app);
-		$context = $this->createContext($app);
+		$handler = new CommandHandler($app, $this, $dispatcher);
 		// 启动控制台
-		$console = $this->setupConsole($app, function(Package $package, Output $output) use ($app, $context, $dispatcher) {
-			$writer = $this->createWriter($app, $output);
-			$dispatcher->dispatch($context, $package, $writer);
-		});
+		$console = $this->setupConsole($app, $handler);
 		$console->run();
 	}
 
@@ -36,10 +34,11 @@ class ConsoleBooter extends ServerBooter {
 		return $app->make(HandleContext::class);	
 	}
 
-	public function setupConsole(Application $app, callable $callback): ConsoleApplication {
+	public function setupConsole(Application $app, CommandHandler $handler): ConsoleApplication {
 		return $app->call(function(ConsoleApplication $console, Application $app, 
-					CommandsLoader $commandsProvider) use ($callback) {
-			$commandsProvider->boot($app, $console, $callback);
+					CommandsLoader $commandsProvider) use ($handler) {
+			$commandsProvider->boot($app, $console, $handler);
+			$console->add(new VersionCommand());
 			return $console;
 		});
 	}

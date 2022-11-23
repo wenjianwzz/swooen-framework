@@ -2,14 +2,15 @@
 namespace Swooen\Console;
 
 use Swooen\Application;
-use Swooen\Container\Container;
-use Swooen\Handle\HandleContext;
+use Swooen\Console\Command\CommandWrap;
+use Swooen\Console\Command\Feature\HandlableCommand;
+use Swooen\Console\Command\PackagedCommand;
 use Symfony\Component\Console\Application as ConsoleApplication;
 
 class CommandsLoader {
 
     /**
-     * 名称 描述 参数 选项
+     * [路由 描述 参数 选项 路由参数]
      * 参数: string $name, int $mode = null, string $description = '', $default = null
      * 选项: string $name, $shortcut = null, int $mode = null, string $description = '', $default = null
      * @var array
@@ -17,18 +18,22 @@ class CommandsLoader {
     protected $commands = [
     ];
 
-    public function boot(Application $app, ConsoleApplication $console, callable $callback) {
-        foreach ($this->commands as list($name, $description, $args, $opts)) {
-            $command = new PackagedCommand($name, $callback);
-            $command->setDescription($description);
-            foreach($args as $argDef) {
-                $command->addArgument(...$argDef);
+    public function boot(Application $app, ConsoleApplication $console, CommandHandler $commandHandler) {
+        foreach ($this->commands as $def) {
+            $command = null;
+            if (is_string($def)) {
+                $command = $app->make($def);
+            } else {
+                list($routePath, $description, $args, $opts, $routeParam) = $def;
+                $command = new PackagedCommand($routePath, $description, $args, $opts, $routeParam);
             }
-            foreach($opts as $optDef) {
-                $command->addOption(...$optDef);
+            if (!$command instanceof HandlableCommand) {
+                $command = new CommandWrap($command);
             }
+            assert($command instanceof HandlableCommand);
+            assert($command instanceof Command);
+            $command->setHandler($commandHandler);
             $console->add($command);
         }
-        $console->add(new VersionCommand());
     }
 }
