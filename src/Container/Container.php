@@ -163,7 +163,11 @@ class Container implements ContainerInterface {
         if (!class_exists($class)) {
             throw new \Exception("class[{$class}] not exists");
         }
-	    $paramters = self::getClassDependencies($class, $args, $makeFunc);
+        try {
+            $paramters = self::getClassDependencies($class, $args, $makeFunc);
+        } catch (\RuntimeException $e) {
+            throw new \RuntimeException('error: '.$e->getMessage().' while create '. $class);
+        }
 	    $reflect = new \ReflectionClass($class);
 	    return $reflect->newInstanceArgs($paramters);
 	}
