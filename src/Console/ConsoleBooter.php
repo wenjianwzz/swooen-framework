@@ -1,15 +1,12 @@
 <?php
 namespace Swooen\Console;
 
-use Psr\Log\LoggerInterface;
 use Swooen\Application;
 use Swooen\Console\Command\VersionCommand;
 use Swooen\Handle\HandleContext;
-use Swooen\Handle\Writer\StdoutWriter;
 use Swooen\Handle\PackageDispatcher;
 use Swooen\Server\ServerBooter;
 use Swooen\Handle\Writer\Writer;
-use Swooen\Package\Package;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Output\Output;
 

@@ -52,10 +52,7 @@ class ContextInitialize extends PackageHandler {
     }
 
     public function handle(HandleContext $context, Package $package, Writer $writer, ?callable $next) {
-        try {
-            $this->init($context, $package, $writer);
-        } catch (\Throwable $t) {
-        }
+        $this->init($context, $package, $writer);
         $next($context, $package, $writer);
     }
 
