@@ -47,7 +47,7 @@ class StdoutWriter implements Writer {
     }
 	
 	public function writeMeta(string $name, string $value) {
-        echo("{$name}: {$value}");
+        echo "{$name}: {$value}". PHP_EOL;
 		return true;
     }
 

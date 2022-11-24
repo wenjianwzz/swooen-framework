@@ -35,6 +35,7 @@ class PackageDispatcher {
     public function dispatch(HandleContext $context, Package $package, Writer $writer) {
         $context->instance(Package::class, $package);
         $context->instance(Writer::class, $writer);
+        $context->instance(self::class, $this);
         $pos = count($this->handlers) - 1;
         $next = function() {};
         while ($pos >= 0) {
