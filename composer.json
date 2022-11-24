@@ -5,7 +5,7 @@
     "keywords": ["swoole", "lumen", "php", "symfony"],
     "homepage": "https://www.wzzcn.net",
     "license": "Private",
-    "version": "3.0.19",
+    "version": "3.0.20",
     "require": {
         "php": ">=7.2.5",
 		"nikic/fast-route": "^1.3",
