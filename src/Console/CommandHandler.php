@@ -29,6 +29,8 @@ class CommandHandler {
     public function execute(InputInterface $input, OutputInterface $output, HandlableCommand $command) {
 		$writer = $this->booter->createWriter($this->app, $output);
 		$context = $this->booter->createContext($this->app);
+		$context->instance(InputInterface::class, $input);
+		$context->instance(OutputInterface::class, $output);
 		if ($command instanceof SelfRouted) {
 			$route = $command->getRoute();
 			$context->instance(Route::class, $route);
