@@ -31,11 +31,11 @@ trait DataArrayFeature {
     protected $dataArr = [];
 
 	public function getData(string $key, $default=null) {
-		return Arr::get($this->dataArr, strtolower($key), $default);
+		return Arr::get($this->dataArr, $key, $default);
 	}
 
 	public function addData(string $key, $value): self {
-		Arr::set($this->dataArr, strtolower($key), $value);
+		Arr::set($this->dataArr, $key, $value);
 		return $this;
 	}
 

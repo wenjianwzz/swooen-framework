@@ -4,14 +4,12 @@ namespace Swooen\Handle\Route;
 use Swooen\Handle\HandleContext;
 use Swooen\Package\Package;
 use Swooen\Handle\PackageHandler;
-use Swooen\Handle\Route\Loader\RouteLoader;
 use Swooen\Handle\Writer\Writer;
-use Swooen\Package\Features\Routeable;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Wenjianwzz\Tool\Util\Str;
 
 /**
- * 路由
+ * 路由执行器
  * 
  * @author WZZ
  *        
