@@ -2,6 +2,7 @@
 namespace Swooen\Console;
 
 use Swooen\Application;
+use Swooen\Console\Command\CommandWrap;
 use Swooen\Console\Command\Feature\HandlableCommand;
 use Swooen\Handle\PackageDispatcher;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,9 +33,13 @@ class CommandDispatchAgent {
 		$context->instance(InputInterface::class, $input);
 		$context->instance(OutputInterface::class, $output);
 		$context->instance(Command::class, $command);
-
+		
+		$callable = [$command, 'handle'];
+		if ($command instanceof CommandWrap) {
+			$callable = [$command->getCommand(), 'handle'];
+		}
 		$arguments = $input->getArguments();
-        $package = new ConsolePackage([$command, 'handle'], Arr::pull($arguments, 'command'), $input->getOptions(), $arguments);
+        $package = new ConsolePackage($callable, Arr::pull($arguments, 'command'), $input->getOptions(), $arguments);
 
 		$this->dispatcher->dispatch($context, $package, $writer);
     }
