@@ -35,7 +35,7 @@ class PackageLogger extends PackageHandler {
     }
 
     public function logPackage($msg, Package $package, LoggerInterface $logger) {
-        $context = ['_class_' => get_class($package)];
+        $context = ['_package_' => get_class($package)];
         if ($package instanceof DataArray) {
             $context['dataArray'] = $package->allData();
         }

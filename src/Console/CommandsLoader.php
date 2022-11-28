@@ -17,7 +17,7 @@ class CommandsLoader {
     protected $commands = [
     ];
 
-    public function boot(Application $app, ConsoleApplication $console, CommandHandler $commandHandler) {
+    public function boot(Application $app, ConsoleApplication $console, CommandDispatchAgent $agent) {
         foreach ($this->commands as $def) {
             $command = $def;
             if (is_string($def)) {
@@ -28,7 +28,7 @@ class CommandsLoader {
             }
             assert($command instanceof HandlableCommand);
             assert($command instanceof Command);
-            $command->setHandler($commandHandler);
+            $command->setDispatchAgent($agent);
             $console->add($command);
         }
     }

@@ -1,35 +1,23 @@
 <?php
 namespace Swooen\Console;
 
-use Swooen\Application;
-use Swooen\Console\Command\Feature\HandlableCommand;
-use Swooen\Handle\PackageDispatcher;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Swooen\Handle\HandleContext;
+use Swooen\Handle\PackageHandler;
+use Swooen\Handle\Writer\Writer;
+use Swooen\Package\Package;
 
 /**
  * 命令执行器
  * @author WZZ
  */
-class CommandHandler {
+class CommandHandler extends PackageHandler {
 
-	protected $booter;
-
-	protected $dispatcher;
-
-	protected $app;
-	
-	public function __construct(Application $app, ConsoleBooter $booter, PackageDispatcher $dispatcher) {
-		$this->booter = $booter;
-		$this->dispatcher = $dispatcher;
-		$this->app = $app;
-	} 
-
-    public function execute(InputInterface $input, OutputInterface $output, HandlableCommand $command) {
-		$writer = $this->booter->createWriter($this->app, $output);
-		$context = $this->booter->createContext($this->app);
-		$context->instance(InputInterface::class, $input);
-		$context->instance(OutputInterface::class, $output);
-		$this->dispatcher->dispatch($context, $command->getPackage($input), $writer);
-    }
+	public function handle(HandleContext $context, Package $package, Writer $writer, callable $next) {
+		if (!$package instanceof ConsolePackage) {
+			throw new \RuntimeException('命令行上下文配置错误');
+		}
+		$callable = $package->getCallable();
+		$context->call($callable);
+		$next($context, $package, $writer);
+	}
 }

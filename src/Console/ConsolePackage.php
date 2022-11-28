@@ -10,17 +10,29 @@ use Swooen\Package\Features\RouteableFeature;
 use Swooen\Package\Package;
 
 /**
- * 封装来往通信报文
- * 
  * @author WZZ
  */
 class ConsolePackage implements Package, DataArray, Metas, Routeable {
 	use DataArrayFeature, MetasFeature, RouteableFeature;
 
-	public function __construct($routePath, $options, $arguments) {
+	/**
+	 * @var callable
+	 */
+	protected $callable;
+
+	public function __construct(callable $callable, $routePath, $options, $arguments) {
 		$this->dataArr = $arguments;
 		$this->metas = $options;
 		$this->routePath = $routePath;
+		$this->callable = $callable;
+	}
+
+	public function getCallable() {
+		return $this->callable;
 	}
 	
+	public function setCallable(callable $callable): self {
+		$this->callable = $callable;
+		return $this;
+	}
 }

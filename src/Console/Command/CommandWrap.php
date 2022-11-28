@@ -12,7 +12,6 @@ use Symfony\Component\Console\Command\Command as SymfonyCommand;
  * @author WZZ
  */
 class CommandWrap extends SymfonyCommand implements HandlableCommand {
-
 	use HandlableCommandFeature;
 	/**
 	 * @var Command

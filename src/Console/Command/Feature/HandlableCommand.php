@@ -1,58 +1,46 @@
 <?php
 namespace Swooen\Console\Command\Feature;
 
-use Swooen\Console\Command;
-use Swooen\Console\CommandHandler;
-use Swooen\Console\ConsolePackage;
-use Swooen\Package\Package;
+use Swooen\Console\CommandDispatchAgent;
 use Symfony\Component\Console\Command\Command as CommandCommand;
-use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Wenjianwzz\Tool\Util\Arr;
 
 /**
  * @author WZZ
  */
 interface HandlableCommand {
 
-	public function getHandler(): ?CommandHandler;
+	public function getDispatchAgent(): ?CommandDispatchAgent;
 
-	public function setHandler(CommandHandler $handler);
+	public function setDispatchAgent(CommandDispatchAgent $handler);
 
-	public function getPackage(Input $input): Package;
 }
 
 trait HandlableCommandFeature {
 
 	/**
-	 * @var CommandHandler
+	 * @var CommandDispatchAgent
 	 */
-	protected $handler;
+	protected $agent;
 
     protected function execute(InputInterface $input, OutputInterface $output) {
-		$this->handler->execute($input, $output, $this);
+		$this->agent->execute($input, $output, $this);
 		return CommandCommand::SUCCESS;
     }
 
 	/**
 	 * Get the value of handler
 	 */
-	public function getHandler(): ?CommandHandler {
-		return $this->handler;
+	public function getDispatchAgent(): ?CommandDispatchAgent {
+		return $this->agent;
 	}
 
 	/**
 	 * Set the value of handler
 	 */
-	public function setHandler(CommandHandler $handler): self {
-		$this->handler = $handler;
+	public function setDispatchAgent(CommandDispatchAgent $agent): self {
+		$this->agent = $agent;
 		return $this;
-	}
-
-	public function getPackage(Input $input): Package {
-		$arguments = $input->getArguments();
-        $package = new ConsolePackage(Arr::pull($arguments, 'command'), $input->getOptions(), $arguments);
-        return $package;
 	}
 }
