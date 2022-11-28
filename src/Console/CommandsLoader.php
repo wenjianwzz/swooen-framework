@@ -4,7 +4,6 @@ namespace Swooen\Console;
 use Swooen\Application;
 use Swooen\Console\Command\CommandWrap;
 use Swooen\Console\Command\Feature\HandlableCommand;
-use Swooen\Console\Command\PackagedCommand;
 use Symfony\Component\Console\Application as ConsoleApplication;
 
 class CommandsLoader {
@@ -20,12 +19,9 @@ class CommandsLoader {
 
     public function boot(Application $app, ConsoleApplication $console, CommandHandler $commandHandler) {
         foreach ($this->commands as $def) {
-            $command = null;
+            $command = $def;
             if (is_string($def)) {
                 $command = $app->make($def);
-            } else {
-                list($routePath, $description, $args, $opts, $routeParam) = $def;
-                $command = new PackagedCommand($routePath, $description, $args, $opts, $routeParam);
             }
             if (!$command instanceof HandlableCommand) {
                 $command = new CommandWrap($command);
