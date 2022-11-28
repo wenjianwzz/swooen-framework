@@ -35,19 +35,19 @@ class ContextInitialize extends PackageHandler {
         if (!$context->has(ConfigRepository::class)) {
             $context->instance(ConfigRepository::class, $config);
         }
-        $requestId = time().'-'. Str::random(5);
-        $context->instance('REQUES_ID', $requestId);
+        $contextId = time().'-'. Str::random(5);
+        $context->instance('CONTEXT_ID', $contextId);
         $providers = $config->get('app.handle.context.providers', []);
         foreach ($providers as $provider) {
             $context->provider($provider);
         }
         if ($context->has(\Monolog\Logger::class)) {
-            $context->call(function(\Monolog\Logger $logger, $requestId) {
-                $logger->pushProcessor(function($record) use ($requestId) {
-                    $record['extra'] = array_merge($record['extra'], compact('requestId'));
+            $context->call(function(\Monolog\Logger $logger, $contextId) {
+                $logger->pushProcessor(function($record) use ($contextId) {
+                    $record['extra'] = array_merge($record['extra'], compact('contextId'));
                     return $record;
                 });
-            }, compact('requestId'));
+            }, compact('contextId'));
         }
     }
 
