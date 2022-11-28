@@ -31,6 +31,7 @@ class CommandDispatchAgent {
 		$context = $this->booter->createContext($this->app);
 		$context->instance(InputInterface::class, $input);
 		$context->instance(OutputInterface::class, $output);
+		$context->instance(Command::class, $command);
 
 		$arguments = $input->getArguments();
         $package = new ConsolePackage([$command, 'handle'], Arr::pull($arguments, 'command'), $input->getOptions(), $arguments);
