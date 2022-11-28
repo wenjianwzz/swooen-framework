@@ -5,9 +5,9 @@ use Swooen\Application;
 use Swooen\Console\Command\CommandWrap;
 use Swooen\Console\Command\Feature\HandlableCommand;
 use Swooen\Handle\PackageDispatcher;
+use Swooen\Package\CallablePackage;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Wenjianwzz\Tool\Util\Arr;
 
 /**
  * 命令执行器
@@ -39,7 +39,7 @@ class CommandDispatchAgent {
 			$callable = [$command->getCommand(), 'handle'];
 		}
 		$arguments = $input->getArguments();
-        $package = new ConsolePackage($callable, Arr::pull($arguments, 'command'), $input->getOptions(), $arguments);
+        $package = new CallablePackage($callable, $input->getOptions(), $arguments);
 
 		$this->dispatcher->dispatch($context, $package, $writer);
     }
