@@ -17,7 +17,7 @@ class ConsoleBooter extends ServerBooter {
 
     public function boot(Application $app): void {
 		$dispatcher = $this->createDispatcher($app);
-		$agent = new CommandDispatchAgent($app, $this, $dispatcher);
+		$agent = $this->createDispatchAgent($app, $dispatcher);
 		// 启动控制台
 		$console = $this->setupConsole($app, $agent);
 		$console->run();
@@ -25,6 +25,10 @@ class ConsoleBooter extends ServerBooter {
 
 	public function createDispatcher(Application $app): PackageDispatcher {
 		return $app->make(PackageDispatcher::class);	
+	}
+
+	public function createDispatchAgent(Application $app, PackageDispatcher $dispatcher): CommandDispatchAgent {
+		return new CommandDispatchAgent($app, $this, $dispatcher);
 	}
 
 	public function createContext(Application $app): HandleContext {
