@@ -19,7 +19,7 @@
         "ramsey/uuid": "3.9.3"
     },
     "require-dev": {
-        "swoole/ide-helper": "~4.5.9"
+        "swoole/ide-helper": "~4.8"
     },
     "provide": {
     },
