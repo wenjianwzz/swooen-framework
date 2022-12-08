@@ -5,6 +5,8 @@ use Swooen\Package\Features\DataArray;
 use Swooen\Package\Features\DataArrayFeature;
 use Swooen\Package\Features\Metas;
 use Swooen\Package\Features\MetasFeature;
+use Swooen\Package\Features\RawData;
+use Swooen\Package\Features\RawDataFeature;
 use Swooen\Package\Features\RemoteAddressAware;
 use Swooen\Package\Features\RemoteAddressAwareFeature;
 use Swooen\Package\Features\Routeable;
@@ -16,8 +18,8 @@ use Swooen\Package\Package;
  * 
  * @author WZZ
  */
-class HttpRequestPackage implements Package, RemoteAddressAware, DataArray, Metas, Routeable {
-	use RemoteAddressAwareFeature, DataArrayFeature, MetasFeature, RouteableFeature;
+class HttpRequestPackage implements Package, RemoteAddressAware, RawData, DataArray, Metas, Routeable {
+	use RemoteAddressAwareFeature, DataArrayFeature, MetasFeature, RouteableFeature, RawDataFeature;
 
 	/**
 	 * @var \Symfony\Component\HttpFoundation\Request
@@ -26,6 +28,7 @@ class HttpRequestPackage implements Package, RemoteAddressAware, DataArray, Meta
 
 	public function __construct(\Symfony\Component\HttpFoundation\Request $request) {
 		$this->request = $request;
+		$this->rawData = $request->getContent();
 		$this->dataArr = array_merge($request->request?$request->request->all():[], $request->query?$request->query->all():[]);
 		$this->metas = array_map('reset', $request->headers->all()) + ['http-method' => $this->request->getMethod()];
 		$this->remoteAddress = $this->request->getClientIp();
