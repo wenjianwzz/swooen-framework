@@ -15,8 +15,9 @@ class Reader {
 		$content = $request->getContent();
 		if (stripos($contentType, 'json') !== false) {
 			$data = json_decode($content, true);
-			return new HttpDataPackage($request, $data??[]);
+			$package = new HttpDataPackage($request, $data??[]);
+			return $package;
 		}
-		return new HttpRawPackage($request, $content);
+		return new HttpRequestPackage($request);
 	}
 }
