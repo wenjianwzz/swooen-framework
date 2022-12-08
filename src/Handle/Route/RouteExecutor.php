@@ -6,6 +6,7 @@ use Swooen\Package\Package;
 use Swooen\Handle\PackageHandler;
 use Swooen\Handle\Writer\Writer;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Wenjianwzz\Tool\Util\Str;
 
 /**
@@ -31,6 +32,8 @@ class RouteExecutor extends PackageHandler {
                     $context->instance(Package::class, $package);
                 }
             }
+        } else {
+            throw new ServiceUnavailableHttpException();
         }
         // 回归
         $context->instance(Package::class, $oriPackage);
