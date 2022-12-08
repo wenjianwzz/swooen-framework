@@ -90,7 +90,6 @@ class HttpBooter extends ServerBooter {
 	 */
 	protected function initOnclose() {
 		$this->server->on('close', function(\Swoole\Server $server, $fd) {
-			echo $fd.' closed'. PHP_EOL;
 		});
 	}
 
