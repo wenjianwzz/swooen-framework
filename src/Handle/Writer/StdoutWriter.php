@@ -19,6 +19,7 @@ class StdoutWriter implements Writer {
         } else if ($package instanceof DataArray) {
             return $this->write($this->pack($package));
         }
+        return true;
 	}
 
     /**
