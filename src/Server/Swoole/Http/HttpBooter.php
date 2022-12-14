@@ -9,7 +9,6 @@ use Swooen\Handle\PackageDispatcher;
 use Swooen\Server\ServerBooter;
 use Swooen\Handle\Writer\Writer;
 use Swooen\Server\Generic\Package\HttpResponsePackage;
-use Swooen\Server\Generic\Package\HttpWriter;
 use Swoole\Http\Server;
 
 /**
