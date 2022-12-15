@@ -1,8 +1,6 @@
 <?php
 namespace Swooen\Server\Swoole;
 
-use Swooen\IO\ConnectionFactory;
-
 /**
  * 
  * @author WZZ
@@ -15,16 +13,16 @@ class SwooleConnectionRepository {
 	protected $connections = [];
 
 	/**
-	 * 终止Connection的时候，通知Factory将自身移除
+	 * 终止Connection的时候，通知将自身移除
 	 */
-	public function removeConnection(SwooleConnection $connection) {
+	public function remove(SwooleConnection $connection) {
 		$fd = $connection->getFd();
 		if (isset($this->connections[$fd])) {
 			unset($this->connections[$fd]);
 		}
 	}
 
-	public function onClose(\Swoole\Server $server, $fd) {
+	public function onClose($fd) {
 		if (isset($this->connections[$fd])) {
 			$connection = $this->connections[$fd];
 			unset($this->connections[$fd]);
@@ -33,16 +31,16 @@ class SwooleConnectionRepository {
 		}
 	}
 
-	public function onConnection(callable $callback) {
-		$this->callback = $callback;
+	public function get($fd): ?SwooleConnection {
+		return isset($this->connections[$fd])?$this->connections[$fd]:null;
 	}
 
-	/**
-	 * Set the value of server
-	 */
-	public function setServer($server): self {
-		$this->server = $server;
+	public function has($fd): bool {
+		return isset($this->connections[$fd]);
+	}
+
+	public function add(SwooleConnection $conn): self {
+		$this->connections[$conn->getFd()] = $conn;
 		return $this;
 	}
-
 }

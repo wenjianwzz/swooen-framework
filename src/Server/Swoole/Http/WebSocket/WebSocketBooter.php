@@ -1,21 +1,35 @@
 <?php
 namespace Swooen\Server\Swoole\Http\WebSocket;
 
-use Psr\Log\LoggerInterface;
 use Swooen\Application;
-use Swooen\Handle\HandleContext;
-use Swooen\Server\Generic\Package\Reader;
-use Swooen\Handle\PackageDispatcher;
-use Swooen\Server\ServerBooter;
-use Swooen\Handle\Writer\Writer;
-use Swooen\Server\Generic\Package\HttpResponsePackage;
+use Swooen\Handle\ConnectionContext;
 use Swooen\Server\Swoole\Http\HttpBooter;
+use Swooen\Server\Swoole\Http\SwooleHttpRequestPacker;
+use Swooen\Server\Swoole\SwooleConnectionRepository;
+use Swooen\Server\Swoole\Http\WebSocket\WebSocketConnection;
 use Swoole\WebSocket\Server;
+use Swooen\Handle\PackageDispatcher;
+use Swooen\Package\Package;
 
 /**
  * @author WZZ
  */
 class WebSocketBooter extends HttpBooter {
+
+	/**
+	 * @var SwooleConnectionRepository
+	 */
+	protected $connections;
+
+	/**
+	 * @var PackageDispatcher
+	 */
+	protected $dispatcher;
+
+	/**
+	 * @var Application
+	 */
+	protected $app;
 
 	protected function createServer(): self {
 		\Swoole\Coroutine::set([
@@ -27,23 +41,39 @@ class WebSocketBooter extends HttpBooter {
 	}
 
     public function boot(Application $app): void {
+		$this->connections = new SwooleConnectionRepository();
 		$this->createServer();
 		$this->initOnWorkerStart($app);
 		$this->initOnRequest($app);
 		$this->initOnclose($app);
+		$this->initSocket($app);
+		$this->app = $app;
+		$this->dispatcher = $this->createDispatcher($app);
 		$this->server->start();
 	}
 
-	protected function initSocket() {
-		$this->server->on('open', function (\Swoole\WebSocket\Server $server, \Swoole\Http\Request $sreq) {
-			$factory = $this->getConnectionFactory();
-			assert($factory instanceof WebSocketConnectionFactory);
-			$factory->onConnected($server, $sreq);
+	public function handle(Package $package, WebSocketConnection $webSocketConnection) {
+		$writer = new WebSocketWriter($webSocketConnection);
+		$context = $this->createContext($this->app);
+		$this->dispatcher->dispatch($context, $package, $writer);
+	}
+
+	public function createConnectionContext(Application $app): ConnectionContext {
+		return $app->make(ConnectionContext::class);	
+	}
+
+	protected function initSocket(Application $app) {
+		$this->server->on('open', function (\Swoole\WebSocket\Server $server, \Swoole\Http\Request $sreq) use ($app) {
+			$conn = new WebSocketConnection($this, $this->createConnectionContext($app), $server, $sreq->fd, SwooleHttpRequestPacker::packRequest($sreq));
+			$this->connections->add($conn);
+			$conn->startLoop();
 		});
 		$this->server->on('message', function (\Swoole\WebSocket\Server $server, \Swoole\WebSocket\Frame $frame) {
-			$factory = $this->getConnectionFactory();
-			assert($factory instanceof WebSocketConnectionFactory);
-			$factory->onFrame($server, $frame);
+			if ($this->connections->has($frame->fd)) {
+				$conn = $this->connections->get($frame->fd);
+				assert($conn instanceof WebSocketConnection);
+				$conn->pushFrame($frame);
+			}
 		});
 	}
 

@@ -1,8 +1,6 @@
 <?php
 namespace Swooen\Server\Swoole;
 
-use Swooen\Handle\PackageDispatcher;
-use Swooen\IO\Connection\BaseConnection as ConnectionBaseConnection;
 use Swooen\Package\Package;
 use Swoole\Coroutine\Channel;
 
@@ -18,14 +16,19 @@ abstract class SwooleConnection {
 	protected $fd;
 
 	/**
-	 * @var PackageDispatcher
+	 * @var Channel
 	 */
-	protected $dispatcher;
+	protected $packageChannel;
 
-	public function __construct(\Swoole\Server $server, $fd, PackageDispatcher $packageDispatcher) {
+	/**
+	 * @var SwooleConnectionRepository
+	 */
+	protected $repository;
+
+	public function __construct(\Swoole\Server $server, $fd) {
 		$this->server = $server;
 		$this->fd = $fd;
-		$this->dispatcher = $packageDispatcher;
+		$this->packageChannel = new Channel(32);
 	}
 
 	/**
@@ -33,6 +36,7 @@ abstract class SwooleConnection {
 	 */
 	public function onClientClosed() {
 		$this->closed = true;
+		$this->repository->remove($this);
 		$this->packageChannel->push(null);
 	}
 
@@ -42,20 +46,33 @@ abstract class SwooleConnection {
 
 	public function terminate() {
 		$this->server->close($this->fd);
-		$this->factory->removeConnection($this);
+		$this->repository->remove($this);
 	}
 
 	public function getFd() {
 		return $this->fd;
 	}
 
-	public function dispatchPackage(Package $package) {
+	public function queuePackage(Package $package) {
 		$this->packageChannel->push($package, -1);
 	}
+
 	
-	public function listenPackage(callable $callable) {
+	public function startLoop() {
 		while ($package = $this->packageChannel->pop(-1)) {
-			$callable($package, $this);
+			if ($package instanceof Package) {
+				$this->handlePackage($package);
+			}
 		}
+	}
+
+	abstract function handlePackage(Package $package);
+
+	/**
+	 * Set the value of repository
+	 */
+	public function setRepository(SwooleConnectionRepository $repository): self {
+		$this->repository = $repository;
+		return $this;
 	}
 }
