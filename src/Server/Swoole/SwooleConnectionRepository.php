@@ -40,7 +40,7 @@ class SwooleConnectionRepository {
 	}
 
 	public function add(SwooleConnection $conn): self {
-		$this->connections[$conn->getFd()] = $conn;
+		$this->connections[$conn->getFd()] = $conn->setRepository($this);
 		return $this;
 	}
 }

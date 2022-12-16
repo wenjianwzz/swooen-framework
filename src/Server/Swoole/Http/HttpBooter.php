@@ -58,7 +58,7 @@ class HttpBooter extends ServerBooter {
 			try {
 				$dispatcher->dispatch($context, $package, $writer);
 			} catch (\Throwable $t) {
-				echo 'Uncaught Exception' . $t->getTraceAsString() . PHP_EOL;
+				echo 'Uncaught Exception ' . $t->getMessage() . PHP_EOL . $t->getTraceAsString() . PHP_EOL;
 				if ($app->has(LoggerInterface::class)) {
 					try {
 						$logger = $app->make(LoggerInterface::class);

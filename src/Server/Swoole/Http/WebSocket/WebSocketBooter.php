@@ -1,6 +1,7 @@
 <?php
 namespace Swooen\Server\Swoole\Http\WebSocket;
 
+use Psr\Log\LoggerInterface;
 use Swooen\Application;
 use Swooen\Handle\ConnectionContext;
 use Swooen\Server\Swoole\Http\HttpBooter;
@@ -10,6 +11,8 @@ use Swooen\Server\Swoole\Http\WebSocket\WebSocketConnection;
 use Swoole\WebSocket\Server;
 use Swooen\Handle\PackageDispatcher;
 use Swooen\Package\Package;
+use Swooen\Package\RawPackage;
+use Swooen\Server\Swoole\SwooleConnection;
 
 /**
  * @author WZZ
@@ -34,6 +37,8 @@ class WebSocketBooter extends HttpBooter {
 	protected function createServer(): self {
 		\Swoole\Coroutine::set([
 			'hook_flags'=> SWOOLE_HOOK_ALL,
+			'socket_read_timeout' => -1,
+			'socket_write_timeout' => -1,
 		]);
 		$this->server = new Server($this->host, $this->port, SWOOLE_BASE, SWOOLE_SOCK_TCP);
 		echo "accept http/websocket request on {$this->host}: {$this->port}" . PHP_EOL;
@@ -55,7 +60,24 @@ class WebSocketBooter extends HttpBooter {
 	public function handle(Package $package, WebSocketConnection $webSocketConnection) {
 		$writer = new WebSocketWriter($webSocketConnection);
 		$context = $this->createContext($this->app);
-		$this->dispatcher->dispatch($context, $package, $writer);
+		$context->instance(WebSocketConnection::class, $webSocketConnection);
+		$context->instance(SwooleConnection::class, $webSocketConnection);
+		try {
+			$this->dispatcher->dispatch($context, $package, $writer);
+		} catch (\Throwable $t) {
+			echo 'Uncaught Exception ' . $t->getMessage() . PHP_EOL . $t->getTraceAsString() . PHP_EOL;
+			if ($this->app->has(LoggerInterface::class)) {
+				try {
+					$logger = $this->app->make(LoggerInterface::class);
+					assert($logger instanceof LoggerInterface);
+					$logger->emergency($t);
+				} catch (\Throwable $t) {}
+			}
+			if ($writer->writable()) {
+				$package = new RawPackage('Uncaught Exception');
+				$writer->end($package);
+			}
+		}
 	}
 
 	public function createConnectionContext(Application $app): ConnectionContext {
@@ -77,5 +99,13 @@ class WebSocketBooter extends HttpBooter {
 		});
 	}
 
-
+	protected function initOnclose() {
+		$this->server->on('close', function(\Swoole\Server $server, $fd) {
+			if ($this->connections->has($fd)) {
+				$conn = $this->connections->get($fd);
+				assert($conn instanceof WebSocketConnection);
+				$conn->onClientClosed();
+			}
+		});
+	}
 }

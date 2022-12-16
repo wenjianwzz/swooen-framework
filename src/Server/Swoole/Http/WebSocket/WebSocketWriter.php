@@ -24,6 +24,10 @@ class WebSocketWriter extends StdoutWriter {
         }
 	}
 
+	public function terminate() {
+        $this->connection->terminate();
+	}
+
 	public function writable(): bool {
         return $this->connection->writable();
     }

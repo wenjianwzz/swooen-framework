@@ -62,6 +62,9 @@ class WebSocketConnection extends SwooleConnection {
 	}
 
 	public function write(string $content) {
+		if (!$this->writable()) {
+			return false;
+		}
 		assert($this->server instanceof Server);
 		$this->server->push($this->fd, $content, WEBSOCKET_OPCODE_TEXT);
 	}

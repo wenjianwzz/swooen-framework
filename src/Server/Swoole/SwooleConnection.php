@@ -36,7 +36,9 @@ abstract class SwooleConnection {
 	 */
 	public function onClientClosed() {
 		$this->closed = true;
-		$this->repository->remove($this);
+		if ($this->repository) {
+			$this->repository->remove($this);
+		}
 		$this->packageChannel->push(null);
 	}
 
@@ -45,8 +47,12 @@ abstract class SwooleConnection {
 	}
 
 	public function terminate() {
-		$this->server->close($this->fd);
-		$this->repository->remove($this);
+		if ($this->server->exists($this->fd)) {
+			$this->server->close($this->fd);
+		}
+		if ($this->repository) {
+			$this->repository->remove($this);
+		}
 	}
 
 	public function getFd() {
@@ -59,11 +65,13 @@ abstract class SwooleConnection {
 
 	
 	public function startLoop() {
+		echo time(). ' connection[fd='.$this->fd.'] loop started'. PHP_EOL;
 		while ($package = $this->packageChannel->pop(-1)) {
 			if ($package instanceof Package) {
 				$this->handlePackage($package);
 			}
 		}
+		echo time(). ' connection[fd='.$this->fd.'] loop end'. PHP_EOL;
 	}
 
 	abstract function handlePackage(Package $package);
