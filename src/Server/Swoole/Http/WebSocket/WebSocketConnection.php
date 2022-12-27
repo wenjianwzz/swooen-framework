@@ -80,4 +80,11 @@ class WebSocketConnection extends SwooleConnection {
 		$this->queuePackage(new WebSocketClosePackage($this->request));
 		$this->packageChannel->push(null);
 	}
+
+	/**
+	 * Get the value of connectionContext
+	 */
+	public function getConnectionContext(): ?ConnectionContext {
+		return $this->connectionContext;
+	}
 }

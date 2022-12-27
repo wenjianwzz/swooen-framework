@@ -62,6 +62,7 @@ class WebSocketBooter extends HttpBooter {
 		$context = $this->createContext($this->app);
 		$context->instance(WebSocketConnection::class, $webSocketConnection);
 		$context->instance(SwooleConnection::class, $webSocketConnection);
+		$context->instance(ConnectionContext::class, $webSocketConnection->getConnectionContext());
 		try {
 			$this->dispatcher->dispatch($context, $package, $writer);
 		} catch (\Throwable $t) {
