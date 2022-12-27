@@ -53,10 +53,8 @@ class Router extends PackageHandler {
 	}
 
     public function handle(HandleContext $context, Package $package, Writer $writer, callable $next) {
-        if (!$context->has(Route::class)) {
-            $route = $this->dispatch($package);
-            $context->instance(Route::class, $route);
-        }
+        $route = $this->dispatch($package);
+        $context->instance(Route::class, $route);
         $next($context, $package, $writer);
     }
 
