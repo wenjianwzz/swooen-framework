@@ -50,6 +50,7 @@ class WebSocketConnection extends SwooleConnection {
 			$this->buffer .= $frame->data;
 			if ($frame->finish) {
 				$data = $this->buffer;
+				$this->buffer = '';
 				$package = new WebSocketPackage($this->request);
 				$package->setRawData($data);
 				$this->queuePackage($package);
