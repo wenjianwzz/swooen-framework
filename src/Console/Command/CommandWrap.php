@@ -11,7 +11,7 @@ use Symfony\Component\Console\Command\Command as SymfonyCommand;
  * 
  * @author WZZ
  */
-class CommandWrap extends SymfonyCommand implements HandlableCommand {
+class CommandWrap extends Command implements HandlableCommand {
 	use HandlableCommandFeature;
 	/**
 	 * @var Command
@@ -19,7 +19,7 @@ class CommandWrap extends SymfonyCommand implements HandlableCommand {
 	protected $command;
 
 	public function __construct(Command $command) {
-		parent::__construct($command->getName());
+		SymfonyCommand::__construct($command->getName());
 		$this->command = $command;
 		$this->setDefinition($command->getDefinition());
 	}
